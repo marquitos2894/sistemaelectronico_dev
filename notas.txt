@@ -1,0 +1,5 @@
+//01-03-2019
+se añadieron dos campos a la tabla usuario
+1-privilegio tipo:tinyint
+2-tipo tipo:varchar(20)
+3-imagen tipo varchar(500)
