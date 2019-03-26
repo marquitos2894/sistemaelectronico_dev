@@ -92,6 +92,27 @@ class adminControlador extends adminModelo
         {
             $tabla.='<nav aria-label="Page navigation example"><ul class="pagination">';
 
+            if($paginador==1){
+                $tabla.='<li class="page-item"><a class="page-link">Atras</a></li>';
+            }else{
+                $tabla.='<li class="page-item"><a class="page-link" href="'.SERVERURL.'usuariolist/'.($paginador-1).'">Atras</a></li>';
+            }
+
+            for($i=1;$i<=$Npaginas;$i++){
+                if($paginador!=$i){
+                    $tabla.='<li class="active"><a class="page-link" href="'.SERVERURL.'usuariolist/'.$i.'">'.$i.'</a></li>';
+                }else{
+                    $tabla.='<li class="page-item"><a class="page-link">'.$i.'</a></li>';
+                }
+            }
+
+            if($paginador==$Npaginas){
+                $tabla.='<li class="page-item"><a class="page-link">Next</a></li>';
+            }else{
+                $tabla.='<li class="page-item"><a class="page-link" href="'.SERVERURL.'usuariolist/'.($paginador+1).'">Next</a></li>';
+            }
+            
+
             $tabla.='</ul></nav>';
         }
 
