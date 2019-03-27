@@ -3,43 +3,50 @@
     $insAdmin = new adminControlador();
     $pagina= explode("/",$_GET['views']);
 
+    $buscador = "";
+    $text = "";   
+    if(isset($_POST['buscador'])){
+        $buscador=$_POST['buscador'];
+        $text = '<h3><small class="text-muted">su busqueda fue :</small>"'.$buscador.'"</h3>';
+    }
+
     
 ?>
 <div class="container-fluid" >
 
-    <ul class="list-group list-group-horizontal">
-        <li class="list-group-item"><a href="<?php echo SERVERURL;?>usuariolist/">Lista de Usuarios</a></li>
-        <li class="list-group-item"><a href="<?php echo SERVERURL;?>usuario/">+ Nuevo Usuario</a></li>
-    </ul>
-    <div class="card o-hidden border-0 shadow-lg my-5">
-        <div class="text-center">
-            <div class="col-xl-3 col-md-6 mb-4">
-                <div class="card border-left-success shadow h-10 py-2">
-                    <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Lista de usuarios</div>
-                            </div>
-                        </div>
-                    </div>
-            </div>
+    <div class="card text-center">
+        <div class="card-header">
+            <ul class="nav nav-tabs card-header-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active"  href="<?php echo SERVERURL;?>usuariolist/">Lista de Usuarios</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="<?php echo SERVERURL;?>usuario/">Nuevo Usuario</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+                </li>
+            </ul>
         </div>
-            <!-- Nested Row within Card Body -->
-            <div class="row">
-                <div class="col-lg-10">
-                    <div class="p-5">
-                        <div class="text-center">
-                                 <!-- Earnings (Monthly) Card Example -->
-
-                        </div>
-                        <?php 
-                        echo $pagina = $insAdmin->paginador_usuarios($pagina[1],2, $_SESSION['privilegio_sbp'],$_SESSION['id_sbp']);?>
-
-                
+        
+        <div class="card-body">
+            <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                    <form action="" method="POST">
+                        <button class="btn btn-primary" type="submit" id="button-addon1">Buscar</button>
                     </div>
-
-                </div>
-            </div>
+                        <input type="text" class="form-control" name="buscador" value=""  placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1">
+                    </div>
+                </form>
+                <?php echo $text; ?>
+                
+            <?php 
+                    echo $pagina = $insAdmin->paginador_usuarios($pagina[1],2, $_SESSION['privilegio_sbp'],$_SESSION['id_sbp'],$buscador);
+ 
+            ?>
         </div>
     </div>
+
+
+
 </div>

@@ -7,7 +7,7 @@
 
     class emptransModelo extends mainModel{
 
-        public function agregar_emptrans_modelo($datos){
+        protected function agregar_emptrans_modelo($datos){
             $sql=mainModel::conectar()->prepare("insert into emptransporte (razonsocial,ruc) values (:razonsocial,:ruc)");
             $sql->bindParam(":razonsocial",$datos["razonsocial"]);
             $sql->bindParam(":ruc",$datos["ruc"]);
