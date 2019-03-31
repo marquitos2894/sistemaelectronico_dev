@@ -164,6 +164,14 @@ class adminControlador extends adminModelo
     return mainModel::sweet_alert($alerta);
     }
 
+    public function datos_administrador_controlador($tipo,$codigo){
+           $codigo=mainModel::decryption($codigo);
+           $tipo = mainModel::limpiar_cadena($tipo);
+           
+           return adminModelo::datos_administrador_modelo($tipo,$codigo);
+
+    }
+
 }
 
 

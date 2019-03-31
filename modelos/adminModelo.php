@@ -18,6 +18,23 @@ class adminModelo extends mainModel{
         return $sql;
     }
 
+    protected function datos_administrador_modelo($tipo,$codigo){
+        if($tipo == "Unico"){
+        $sql=mainModel::conectar()->prepare("SELECT u.id_usu,u.Correo,u.Clave,u.privilegio,u.tipo,u.estado,
+        p.Nom_per,p.Ape_per,p.Dni_per,p.brevete,p.Direccion_per,p.Region_per,p.Ciudad_per,p.Distrito_per,p.Telefono_per,
+        cp.cargo
+        FROM usuario u
+        INNER JOIN personal p ON u.fk_idper = p.id_per
+        INNER JOIN cargopersonal cp ON p.id_cargo = cp.id_cargo
+        WHERE u.id_usu = :codigo");
+        $sql->bindParam(":codigo",$codigo);   
+        }
+
+        $sql->execute();
+        return $sql;
+
+    }
+
 }
 
 ?>
