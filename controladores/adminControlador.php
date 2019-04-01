@@ -164,14 +164,68 @@ class adminControlador extends adminModelo
     return mainModel::sweet_alert($alerta);
     }
 
+
+    public function Update_administrado_controlador(){
+     echo   $codigo = adminModel::decryption($_POST["codigo_up"]);
+     echo     $correo_per_up = adminModel::limpiar_cadena($_POST["correo_per_up"]);
+     echo    $nom_per_up = adminModel::limpiar_cadena($_POST["nom_per_up"]);
+        $ape_per_up = adminModel::limpiar_cadena($_POST["ape_per_up"]);
+        $dni_per_up = adminModel::limpiar_cadena($_POST["dni_per_up"]);
+        $brevete_up = adminModel::limpiar_cadena($_POST["brevete_up"]);
+        $telefono_up = adminModel::limpiar_cadena($_POST["telefono_up"]);
+        $direccion_up = adminModel::limpiar_cadena($_POST["direccion_up"]);
+        $region_up = adminModel::limpiar_cadena($_POST["region_up"]);
+        $ciudad_up = adminModel::limpiar_cadena($_POST["ciudad_up"]);
+        $distrito_up = adminModel::limpiar_cadena($_POST["distrito_up"]);
+        $correo_usu_up = adminModel::limpiar_cadena($_POST["correo_usu_up"]);
+        $tipo_up = adminModel::limpiar_cadena($_POST["tipo_up"]);
+        $estado_up = adminModel::limpiar_cadena($_POST["estado_up"]);
+        $passwor1_up = adminModel::limpiar_cadena($_POST["passwor1_up"]);
+        $passwor2_up = adminModel::limpiar_cadena($_POST["passwor2_up"]);
+        $password_incial_up = adminModel::limpiar_cadena($_POST["password_incial_up"]);
+
+        $datosUP = [
+            "codigo"=>$codigo,
+            "correo_p"=>$correo_per_up,
+            "nom_p"=>$nom_per_up,
+            "ape_p"=>$ape_per_up,
+            "dni_p"=>$dni_per_up,
+            "brevete_p"=>$brevete_up,
+            "telf_p"=>$telefono_up,
+            "dir_p"=>$direccion_up,
+            "reg_p"=>$region_up,
+            "ciu_p"=>$ciudad_up,
+            "dis_p"=>$distrito_up,
+            "correo_u"=>$correo_usu_up,
+            "tipo_u"=>$tipo_up,
+            "estado_u"=>$estado_up,
+            "pass_u"=>$passwor1_up
+        ];
+
+        if(adminModelo::Update_administrado_modelo($datosUP)){
+            $alerta=[
+                "alerta"=>"recargar",
+                "Titulo"=>"Datos Actualizados",
+                "Texto"=>"Sus datos se actualizaron correctamente",
+                "Tipo"=>"success"
+            ];   
+        }else{
+            $alerta=[
+                "alerta"=>"simple",
+                "Titulo"=>"Ocurrio un error inesperado",
+                "Texto"=>"No hemos podido actualizar los datos, contacte al admin",
+                "Tipo"=>"error"
+            ];
+
+        } 
+        return mainModel::sweet_alert($alerta);
+    }
+
     public function datos_administrador_controlador($tipo,$codigo){
            $codigo=mainModel::decryption($codigo);
            $tipo = mainModel::limpiar_cadena($tipo);
-           
            return adminModelo::datos_administrador_modelo($tipo,$codigo);
-
     }
-
 }
 
 

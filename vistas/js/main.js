@@ -1,5 +1,4 @@
 
-
  $('.FormularioAjax').submit(function(e){
          console.log( "submit" );
         e.preventDefault();
@@ -30,7 +29,7 @@
             cancelButtonText: "Cancelar"
         }).then((result) => {
             if (result.value) {
-                //alert("entro");
+                alert("entro");
             $.ajax({
                 type: metodo,
                 url: accion,

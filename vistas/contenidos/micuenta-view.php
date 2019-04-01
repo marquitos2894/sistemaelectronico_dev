@@ -18,7 +18,8 @@ if($datos->rowCount()==1):
 
 ?>
 <div class="container-fluid" >
-  <form>
+ <!-- Inicia Formulario-->
+  <form action="<?php echo SERVERURL;?>ajax/administradorAjax.php" method="POST" data-form="update" class="FormularioAjax" autocomplete="off"enctype="multipart/form-data" >
     <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
       <li class="nav-item">
         <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">Datos personales</a>
@@ -28,8 +29,7 @@ if($datos->rowCount()==1):
       </li>
 
     </ul>
-  <!-- Inicia Formulario-->
-  
+ 
     <div class="tab-content" id="pills-tabContent">
 
         <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
@@ -39,53 +39,53 @@ if($datos->rowCount()==1):
             </div>
             <div class="card-body">
               
-                    <input type="hidden" name="codigo" value="<?php echo $codigo[1]?>">
+                    <input type="hidden" name="codigo_up" value="<?php echo $codigo[1]?>">
                       <div class="form-row">
                         <div class="form-group col-md-6">
                           <label for="inputEmail4">Email</label>
-                          <input type="email" value="<?php echo $campos["Correo"] ?>" class="form-control" id="inputEmail4" placeholder="Email">
+                          <input type="email" name="correo_per_up" value="<?php echo $campos["Correoe_per"] ?>" class="form-control" id="inputEmail4" placeholder="Email">
                         </div>
                       </div>
                       <div class="form-row">
                         <div class="form-group col-md-6">
                           <label for="inputEmail4">Nombres</label>
-                          <input type="text" value="<?php echo $campos["Nom_per"] ?>" class="form-control" id="inputEmail4" placeholder="Email">
+                          <input type="text" name="nom_per_up" value="<?php echo $campos["Nom_per"] ?>" class="form-control" id="inputEmail4" placeholder="Nombres">
                         </div>
                         <div class="form-group col-md-6">
                           <label for="inputPassword4">Apellidos</label>
-                          <input type="text" value="<?php echo $campos["Ape_per"] ?>" class="form-control" id="inputPassword4" placeholder="Password">
+                          <input type="text" name="ape_per_up" value="<?php echo $campos["Ape_per"] ?>" class="form-control" id="inputPassword4" >
                         </div>
                       </div>
                       <div class="form-row">
                           <div class="form-group col-md-4">
                             <label for="inputCity">DNI</label>
-                            <input type="text" value="<?php echo $campos["Dni_per"] ?>" class="form-control" id="inputCity">
+                            <input type="text" name="dni_per_up" value="<?php echo $campos["Dni_per"] ?>" class="form-control" id="inputCity">
                           </div>
                           <div class="form-group col-md-4">
                             <label for="inputCity">Brevete</label>
-                            <input type="text" value="<?php echo $campos["brevete"] ?>" class="form-control" id="inputCity">
+                            <input type="text" name="brevete_up" value="<?php echo $campos["brevete"] ?>" class="form-control" id="inputCity">
                           </div>
                           <div class="form-group col-md-4">
                             <label for="inputZip">Telefono</label>
-                            <input type="text" value="<?php echo $campos["Telefono_per"] ?>"  class="form-control" id="inputZip">
+                            <input type="text" name="telefono_up" value="<?php echo $campos["Telefono_per"] ?>"  class="form-control" id="inputZip">
                           </div>
                       </div>
                       <div class="form-group">
                           <label for="inputAddress">Direccion</label>
-                          <input type="text"  value="<?php echo $campos["Direccion_per"] ?>" class="form-control" id="inputAddress" placeholder="1234 Main St">
+                          <input type="text" name="direccion_up" value="<?php echo $campos["Direccion_per"] ?>" class="form-control" id="inputAddress" placeholder="1234 Main St">
                       </div>
                       <div class="form-row">
                           <div class="form-group col-md-4">
                             <label for="inputCity">Region</label>
-                            <input type="text" value="<?php echo $campos["Region_per"] ?>" class="form-control" id="inputCity">
+                            <input type="text" name="region_up" value="<?php echo $campos["Region_per"] ?>" class="form-control" id="inputCity">
                           </div>
                           <div class="form-group col-md-4">
                             <label for="inputCity">Ciudad</label>
-                            <input type="text" value="<?php echo $campos["Ciudad_per"] ?>" class="form-control" id="inputCity">
+                            <input type="text" name="ciudad_up" value="<?php echo $campos["Ciudad_per"] ?>" class="form-control" id="inputCity">
                           </div>
                           <div class="form-group col-md-4">
                             <label for="inputZip">Distrito</label>
-                            <input type="text" value="<?php echo $campos["Distrito_per"] ?>"  class="form-control" id="inputZip">
+                            <input type="text" name="distrito_up" value="<?php echo $campos["Distrito_per"] ?>"  class="form-control" id="inputZip">
                           </div>
                       </div>
             </div>
@@ -101,7 +101,7 @@ if($datos->rowCount()==1):
                 <div class="form-row">
                     <div class="form-group col-md-6">
                           <label for="inputEmail4">Email</label>
-                          <input type="email" value="<?php echo $campos["Correo"] ?>" class="form-control" id="inputEmail4" placeholder="Email">
+                          <input type="email" name="correo_usu_up" value="<?php echo $campos["Correo"] ?>" class="form-control" id="inputEmail4" placeholder="Email">
                     </div>
                 </div>
                         <!--div class="form-check">
@@ -125,7 +125,7 @@ if($datos->rowCount()==1):
                 <div class="form-group col-md-6">
                         <label for="inputEmail4">Tipo usuario</label>
                           <div class="form-group">
-                            <select class="custom-select" <?php echo $boolean ?> >
+                            <select class="custom-select" name="tipo_up" <?php echo $boolean ?> >
                               <option selected value="<?php echo $campos["tipo"] ?>"><?php echo $campos["tipo"] ?></option>
                               <option value="admin">admin</option>
                               <option value="estandar">Estandar</option>
@@ -136,7 +136,7 @@ if($datos->rowCount()==1):
                 <div class="form-group">
                         <label for="inputEmail4">Activo/Desactivado</label>
                         <div class="form-group">
-                            <select class="custom-select" <?php echo $boolean ?> >
+                            <select class="custom-select"  name="estado_up" <?php echo $boolean ?> >
                               <option selected value="<?php echo $campos["estado"] ?>"><?php echo $estado =  ($campos["estado"]==1)?'Habilitado' : 'Deshabilitado'; ?></option>
                               <option value="1">Habilitado</option>
                               <option value="2">Deshabilitado</option>
@@ -146,21 +146,21 @@ if($datos->rowCount()==1):
                 <div class="form-row">
                         <div class="form-group col-md-6">
                           <label for="inputEmail4">Password</label>
-                          <input type="password" value="" class="form-control" id="inputEmail" placeholder="Email">
+                          <input type="password" name="passwor1_up"  class="form-control" id="inputEmail" placeholder="Email">
                         </div>
                         <div class="form-group col-md-6">
                           <label for="inputPassword4">Repite Password</label>
-                          <input type="password" value="" class="form-control" id="inputPassword4" placeholder="Password">
+                          <input type="password" name="passwor2_up"  class="form-control" id="inputPassword4" placeholder="Password">
                         </div>
                       </div>
-                <input type="hidden" name="password_incial" value="<?php echo mainModel::encryption($campos["Clave"]) ?>" id="">
+                <input type="hidden" name="password_incial_up" value="<?php echo mainModel::encryption($campos["Clave"]) ?>" >
               </div>
-          </div card>
-        </div 0>
+          </div>
+        </div>
 
   
-    </div 1>
-    <button type="submit" class="btn btn-success btn-lg btn-block">Guardar</button>
+    </div>
+    <button type="submit" class="btn btn-success btn-lg btn-block">Actualizar</button>
   </form>
   <!-- Fin de Formulario-->
 </div>
