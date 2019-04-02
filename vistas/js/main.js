@@ -29,7 +29,7 @@
             cancelButtonText: "Cancelar"
         }).then((result) => {
             if (result.value) {
-                alert("entro");
+                //alert("entro");
             $.ajax({
                 type: metodo,
                 url: accion,
@@ -37,7 +37,7 @@
                 cache: false,
                 contentType: false,
                 processData: false,
-                xhr: function(){
+                /*xhr: function(){
                     var xhr = new window.XMLHttpRequest();
                     xhr.upload.addEventListener("progress", function(evt) {
                       if (evt.lengthComputable) {
@@ -51,7 +51,7 @@
                       }
                     }, false);
                     return xhr;
-                },
+                },*/
                 success: function (data) {
                     respuesta.html(data);
                 },
