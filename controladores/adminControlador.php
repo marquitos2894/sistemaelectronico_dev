@@ -183,41 +183,55 @@ class adminControlador extends adminModelo
         $passwor2_up = mainModel::limpiar_cadena($_POST["passwor2_up"]);
         $password_incial_up = mainModel::limpiar_cadena($_POST["password_incial_up"]);
 
-        $datosUP = [
-            "codigo"=>$codigo,
-            "correo_p"=>$correo_per_up,
-            "nom_p"=>$nom_per_up,
-            "ape_p"=>$ape_per_up,
-            "dni_p"=>$dni_per_up,
-            "brevete_p"=>$brevete_up,
-            "telf_p"=>$telefono_up,
-            "dir_p"=>$direccion_up,
-            "reg_p"=>$region_up,
-            "ciu_p"=>$ciudad_up,
-            "dis_p"=>$distrito_up,
-            "correo_u"=>$correo_usu_up,
-            "tipo_u"=>$tipo_up,
-            "estado_u"=>$estado_up,
-            "pass_u"=>$passwor1_up
-        ];
+            
+            if($passwor1_up!=$passwor2_up){
+                $alerta=[
+                    "alerta"=>"simple",
+                    "Titulo"=>"No coinciden",
+                    "Texto"=>"Los password ingresados tienen que ser iguales",
+                    "Tipo"=>"error"
+                ];
+            }else{
+                $password = $password_incial_up ;
+                if($passwor1_up!="" && $passwor1_up==$passwor2_up){
+                    $password = $passwor1_up;
+                }
+                
+                $datosUP = [
+                    "codigo"=>$codigo,
+                    "correo_p"=>$correo_per_up,
+                    "nom_p"=>$nom_per_up,
+                    "ape_p"=>$ape_per_up,
+                    "dni_p"=>$dni_per_up,
+                    "brevete_p"=>$brevete_up,
+                    "telf_p"=>$telefono_up,
+                    "dir_p"=>$direccion_up,
+                    "reg_p"=>$region_up,
+                    "ciu_p"=>$ciudad_up,
+                    "dis_p"=>$distrito_up,
+                    "correo_u"=>$correo_usu_up,
+                    "tipo_u"=>$tipo_up,
+                    "estado_u"=>$estado_up,
+                    "pass_u"=>$password
+                ];
 
-        if(adminModelo::Update_administrado_modelo($datosUP)){
-            $alerta=[
-                "alerta"=>"recargar",
-                "Titulo"=>"Usuario Actualizado",
-                "Texto"=>"El usuario {$correo_usu_up} fue actualizado correctamente",
-                "Tipo"=>"success"
-            ];
+                if(adminModelo::Update_administrado_modelo($datosUP)){
+                    $alerta=[
+                        "alerta"=>"recargar",
+                        "Titulo"=>"Usuario Actualizado",
+                        "Texto"=>"El usuario {$correo_usu_up} fue actualizado correctamente",
+                        "Tipo"=>"success"
+                    ];
+                }else{
+                    $alerta=[
+                        "alerta"=>"simple",
+                        "Titulo"=>"Ocurrio un error inesperado",
+                        "Texto"=>"No hemos podido actualizar los datos, contacte al admin",
+                        "Tipo"=>"error"
+                    ];
+                }
+            }
 
-        }else{
-            $alerta=[
-                "alerta"=>"simple",
-                "Titulo"=>"Ocurrio un error inesperado",
-                "Texto"=>"No hemos podido actualizar los datos, contacte al admin",
-                "Tipo"=>"error"
-            ];
-
-        } 
         return mainModel::sweet_alert($alerta);
     }
 

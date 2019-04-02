@@ -3,7 +3,7 @@
 define('SERVER','localhost');
 define('DB','ordencompra1');
 define('USER','root');
-define('PASS','');
+define('PASS','marquitosxD');
 define('SGBD','mysql:host='.SERVER.";dbname=".DB);
 define ('METHOD','AES-256-CBC');
 define('SECRET_KEY','$Com@2019');
