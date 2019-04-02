@@ -19,7 +19,7 @@ if($datos->rowCount()==1):
 ?>
 <div class="container-fluid" >
  <!-- Inicia Formulario-->
-  <form action="<?php echo SERVERURL;?>ajax/administradorAjax.php" method="POST" data-form="update" class="FormularioAjax" autocomplete="off"enctype="multipart/form-data" >
+  <form action="<?php echo SERVERURL;?>ajax/administradorAjax.php" method="POST" data-form="update" class="FormularioAjax" autocomplete="off" enctype="multipart/form-data" >
     <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
       <li class="nav-item">
         <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">Datos personales</a>
