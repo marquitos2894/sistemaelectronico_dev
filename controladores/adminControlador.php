@@ -143,7 +143,6 @@ class adminControlador extends adminModelo
         $id = mainModel::limpiar_cadena($id);
 
         $Delusuario=adminModelo::eliminar_usuario_modelo($id);
-        //$Delusuario->rowCount();
         if($Delusuario->rowCount()>=1){
             $alerta=[
                 "alerta"=>"recargar",
@@ -166,23 +165,23 @@ class adminControlador extends adminModelo
 
 
     public function Update_administrado_controlador(){
-     echo   $codigo = adminModel::decryption($_POST["codigo_up"]);
-     echo     $correo_per_up = adminModel::limpiar_cadena($_POST["correo_per_up"]);
-     echo    $nom_per_up = adminModel::limpiar_cadena($_POST["nom_per_up"]);
-        $ape_per_up = adminModel::limpiar_cadena($_POST["ape_per_up"]);
-        $dni_per_up = adminModel::limpiar_cadena($_POST["dni_per_up"]);
-        $brevete_up = adminModel::limpiar_cadena($_POST["brevete_up"]);
-        $telefono_up = adminModel::limpiar_cadena($_POST["telefono_up"]);
-        $direccion_up = adminModel::limpiar_cadena($_POST["direccion_up"]);
-        $region_up = adminModel::limpiar_cadena($_POST["region_up"]);
-        $ciudad_up = adminModel::limpiar_cadena($_POST["ciudad_up"]);
-        $distrito_up = adminModel::limpiar_cadena($_POST["distrito_up"]);
-        $correo_usu_up = adminModel::limpiar_cadena($_POST["correo_usu_up"]);
-        $tipo_up = adminModel::limpiar_cadena($_POST["tipo_up"]);
-        $estado_up = adminModel::limpiar_cadena($_POST["estado_up"]);
-        $passwor1_up = adminModel::limpiar_cadena($_POST["passwor1_up"]);
-        $passwor2_up = adminModel::limpiar_cadena($_POST["passwor2_up"]);
-        $password_incial_up = adminModel::limpiar_cadena($_POST["password_incial_up"]);
+        $codigo = mainModel::decryption($_POST["codigo_up"]);
+        $correo_per_up = mainModel::limpiar_cadena($_POST["correo_per_up"]);
+        $nom_per_up = mainModel::limpiar_cadena($_POST["nom_per_up"]);
+        $ape_per_up = mainModel::limpiar_cadena($_POST["ape_per_up"]);
+        $dni_per_up = mainModel::limpiar_cadena($_POST["dni_per_up"]);
+        $brevete_up = mainModel::limpiar_cadena($_POST["brevete_up"]);
+        $telefono_up = mainModel::limpiar_cadena($_POST["telefono_up"]);
+        $direccion_up = mainModel::limpiar_cadena($_POST["direccion_up"]);
+        $region_up = mainModel::limpiar_cadena($_POST["region_up"]);
+        $ciudad_up = mainModel::limpiar_cadena($_POST["ciudad_up"]);
+        $distrito_up = mainModel::limpiar_cadena($_POST["distrito_up"]);
+        $correo_usu_up = mainModel::limpiar_cadena($_POST["correo_usu_up"]);
+        $tipo_up = mainModel::limpiar_cadena($_POST["tipo_up"]);
+        $estado_up = mainModel::limpiar_cadena($_POST["estado_up"]);
+        $passwor1_up = mainModel::limpiar_cadena($_POST["passwor1_up"]);
+        $passwor2_up = mainModel::limpiar_cadena($_POST["passwor2_up"]);
+        $password_incial_up = mainModel::limpiar_cadena($_POST["password_incial_up"]);
 
         $datosUP = [
             "codigo"=>$codigo,
@@ -205,10 +204,11 @@ class adminControlador extends adminModelo
         if(adminModelo::Update_administrado_modelo($datosUP)){
             $alerta=[
                 "alerta"=>"recargar",
-                "Titulo"=>"Datos Actualizados",
-                "Texto"=>"Sus datos se actualizaron correctamente",
+                "Titulo"=>"Usuario Actualizado",
+                "Texto"=>"El usuario {$correo_usu_up} fue actualizado correctamente",
                 "Tipo"=>"success"
-            ];   
+            ];
+
         }else{
             $alerta=[
                 "alerta"=>"simple",

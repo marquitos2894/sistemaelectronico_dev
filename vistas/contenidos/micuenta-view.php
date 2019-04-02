@@ -6,11 +6,11 @@ $codigo = explode("/",$_GET["views"]);
 $datos=$ClassAdmin -> datos_administrador_controlador("Unico",$codigo[1]);
  
 if($_SESSION['tipo_sbp']=="super"){
-    $boolean = "";
-    $inputType="";
+    $display = "";
+
   }else{
-    $boolean="disabled";
-    $inputType="";
+    $display="none";
+
   }
 
 if($datos->rowCount()==1):
@@ -122,35 +122,37 @@ if($datos->rowCount()==1):
                           <h2><span class="badge badge-danger">3</span><span class="badge badge-primary">VER</span></h2>
                           </label>
                         </div-->
-                <div class="form-group col-md-6">
+                <div class="form-group col-md-6" style="display: <?php echo $display; ?>" >
                         <label for="inputEmail4">Tipo usuario</label>
                           <div class="form-group">
-                            <select class="custom-select" name="tipo_up" <?php echo $boolean ?> >
-                              <option selected value="<?php echo $campos["tipo"] ?>"><?php echo $campos["tipo"] ?></option>
+                            <select class="custom-select" name="tipo_up">
+                              <option selected  value="<?php echo $campos["tipo"]; ?> "><?php echo $campos["tipo"] ?></option>
+                              <option value="admin pro">admin pro</option>
                               <option value="admin">admin</option>
                               <option value="estandar">Estandar</option>
                               <option value="Visita">Visita</option>
                             </select>
                           </div>
                       </div>
-                <div class="form-group">
+                <div class="form-group" style="display: <?php echo $display; ?>">
                         <label for="inputEmail4">Activo/Desactivado</label>
                         <div class="form-group">
-                            <select class="custom-select"  name="estado_up" <?php echo $boolean ?> >
-                              <option selected value="<?php echo $campos["estado"] ?>"><?php echo $estado =  ($campos["estado"]==1)?'Habilitado' : 'Deshabilitado'; ?></option>
+                            <select class="custom-select" name="estado_up" >
+                              <option selected value="<?php echo $campos["estado"]; ?>"><?php echo $estado =  ($campos["estado"]==1)?'Habilitado' : 'Deshabilitado'; ?></option>
                               <option value="1">Habilitado</option>
                               <option value="2">Deshabilitado</option>
                     
                             </select>
                       </div>
+                </div>
                 <div class="form-row">
                         <div class="form-group col-md-6">
                           <label for="inputEmail4">Password</label>
-                          <input type="password" name="passwor1_up"  class="form-control" id="inputEmail" placeholder="Email">
+                          <input type="password" name="passwor1_up"  class="form-control"  placeholder="Password">
                         </div>
                         <div class="form-group col-md-6">
                           <label for="inputPassword4">Repite Password</label>
-                          <input type="password" name="passwor2_up"  class="form-control" id="inputPassword4" placeholder="Password">
+                          <input type="password" name="passwor2_up"  class="form-control" " placeholder="Password">
                         </div>
                       </div>
                 <input type="hidden" name="password_incial_up" value="<?php echo mainModel::encryption($campos["Clave"]) ?>" >
@@ -161,6 +163,7 @@ if($datos->rowCount()==1):
   
     </div>
     <button type="submit" class="btn btn-success btn-lg btn-block">Actualizar</button>
+    <div class="RespuestaAjax"></div>
   </form>
   <!-- Fin de Formulario-->
 </div>
