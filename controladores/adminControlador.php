@@ -183,15 +183,52 @@ class adminControlador extends adminModelo
         $passwor2_up = mainModel::limpiar_cadena($_POST["passwor2_up"]);
         $password_incial_up = mainModel::limpiar_cadena($_POST["password_incial_up"]);
 
-            
+        $sql = mainModel::ejecutar_consulta_simple("SELECT u.Correo,p.Dni_per
+        FROM usuario u
+        INNER JOIN personal p ON  p.id_per = u.fk_idper
+        WHERE id_usu  = {$codigo} ");
+
+        $datos = $sql->fetch();
+        
+       // $valdni = mainModel::ejecutar_consulta_simple("SELECT * FROM personal WHERE Dni_per = {$dni_per_up} ");
+
+            if($correo_usu_up!=$datos["Correo"]){
+            $valcorreo = mainModel::ejecutar_consulta_simple("SELECT Correo FROM usuario WHERE Correo = '{$correo_usu_up}' ");
+                if($valcorreo->rowCount()>=1){                                            
+                        $alerta=[
+                        "alerta"=>"simple",
+                        "Titulo"=>"El dato que ha ingresa ya existe",
+                        "Texto"=>"El correo que ha ingresado  ya se encuentra registrado intente de nuevo ",
+                        "Tipo"=>"error"
+                    ];
+                    return mainModel::sweet_alert($alerta);
+                    exit();
+                }
+            }
+
+            if($dni_per_up!=$datos["Dni_per"]){
+            $valdni = mainModel::ejecutar_consulta_simple("SELECT dni_per FROM personal  WHERE Dni_per = {$dni_per_up} ");
+                if($valdni->rowCount()>=1){                                            
+                        $alerta=[
+                        "alerta"=>"simple",
+                        "Titulo"=>"El dato que ha ingresa ya existe",
+                        "Texto"=>"El DNI que ha ingresado  ya se encuentra registrado intente de nuevo",
+                        "Tipo"=>"error"
+                    ];
+                    return mainModel::sweet_alert($alerta);
+                    exit();
+                }
+            }
+
             if($passwor1_up!=$passwor2_up){
                 $alerta=[
                     "alerta"=>"simple",
-                    "Titulo"=>"No coinciden",
-                    "Texto"=>"Los password ingresados tienen que ser iguales",
+                    "Titulo"=>"Contraseñas no coinciden",
+                    "Texto"=>"Los datos de password ingresados no coinciden",
                     "Tipo"=>"error"
                 ];
-            }else{
+            }
+            else{
                 $password = $password_incial_up ;
                 if($passwor1_up!="" && $passwor1_up==$passwor2_up){
                     $password = $passwor1_up;
