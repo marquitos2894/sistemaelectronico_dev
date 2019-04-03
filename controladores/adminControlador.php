@@ -23,7 +23,7 @@ class adminControlador extends adminModelo
         $inicio=($paginador>0)?(($paginador*$registros)-$registros):0;
         
         $conexion = mainModel::conectar();
-        if(isset($buscador)){
+        if($buscador!=""){
 
             //select limit recibe dos parametros inicio y logitud
             // SQL_CALC_FOUND_ROWS - obtiene la consulta los datos de las columnos de forma temporal y con FOUND_ROWS() -> obtiene el numero de filas
@@ -38,10 +38,10 @@ class adminControlador extends adminModelo
             $datos=$conexion->query("select SQL_CALC_FOUND_ROWS * FROM usuario where id_usu !={$codigo} and id_usu !=3 and estado >= 1   order by Correo asc limit {$inicio},{$registros}");
             $datos = $datos->fetchAll();
             $total = $conexion->query("SELECT FOUND_ROWS()");
-            // pdo:fetchColumn() obtiene la fila 0 de la primera columna y fetchColumn(1) obtiene la fila 1 de la primera columna 
+            
 
         }
-     
+        // pdo:fetchColumn() obtiene la fila 0 de la primera columna y fetchColumn(1) obtiene la fila 1 de la primera columna 
         $total = (int)$total->fetchColumn();
         //devuel valor entero redondeado hacia arriba 4.2 = 5
         $Npaginas = ceil($total/$registros);

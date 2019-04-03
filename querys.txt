@@ -3,3 +3,14 @@ FROM usuario u
 INNER JOIN personal p ON u.fk_idper = p.id_per
 INNER JOIN cargopersonal cp ON p.id_cargo = cp.id_cargo
  WHERE u.id_usu = 2
+
+
+//CONSULTA PERSONAL Y PROVEEDOR Y PROV_PERS
+ select p.id_per,p.Nom_per,p.Ape_per,p.Dni_per,p.idunidad,pr.nombre
+from prov_empl pe
+INNER JOIN personal p
+ON p.id_per = pe.fk_idper
+INNER JOIN proveedor pr 
+ON pr.id_prove = pe.fk_id_prove 
+WHERE pr.id_prove = 195 and p.Estado_per = 1
+

@@ -3,7 +3,7 @@
 class vistasModelo{
 
     protected function obtener_vistas_modelo($vistas){
-        $lista_blanca=["emptrans","inicio","emptranslist","usuariolist","usuario","micuenta"];
+        $lista_blanca=["emptrans","inicio","emptranslist","usuariolist","usuario","micuenta","personal"];
       if(isset($_SESSION['nombre_sbp'])){
         if(in_array($vistas,$lista_blanca)){
             if(is_file("./vistas/contenidos/{$vistas}-view.php")){

@@ -41,7 +41,7 @@
                 <?php echo $text; ?>
                 
             <?php 
-                    echo $pagina = $insAdmin->paginador_usuarios($pagina[1],2, $_SESSION['privilegio_sbp'],$_SESSION['id_sbp'],$buscador);
+                    echo  $insAdmin->paginador_usuarios($pagina[1],2, $_SESSION['privilegio_sbp'],$_SESSION['id_sbp'],$buscador);
  
             ?>
         </div>
