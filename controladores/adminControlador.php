@@ -81,10 +81,10 @@ class adminControlador extends adminModelo
 
                         if($privilegio==1)
                         { 
-                            $tabla.= "<td><a class='far fa-edit' href=".SERVERURL."micuenta/".mainModel::encryption($row[0])."/"."></a></td>";
+                            $tabla.= "<td><a class='far fa-edit' href=".SERVERURL."perfil/".mainModel::encryption($row[0])."/"."></a></td>";
                         }
                         if($privilegio==0){
-                            $tabla.="<td><a class='far fa-edit' href=".SERVERURL."micuenta/".mainModel::encryption($row[0])."/"."></a></td>
+                            $tabla.="<td><a class='far fa-edit' href=".SERVERURL."perfil/".mainModel::encryption($row[0])."/"."></a></td>
                                      <td><form action='".SERVERURL."ajax/administradorAjax.php' method='POST' class='FormularioAjax' 
                                         data-form='delete' entype='multipart/form-data' autocomplete='off'>
                                         <input type='hidden' name='id_usu' value='".mainModel::encryption($row[0])."'

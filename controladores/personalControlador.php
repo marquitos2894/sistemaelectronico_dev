@@ -1,12 +1,12 @@
 <?php 
 
 if($peticionAjax){
-    require_once '../modelos/adminModelo.php';
+    require_once '../modelos/personalModelo.php';
 }else{
-    require_once './modelos/adminModelo.php';
+    require_once './modelos/personalModelo.php';
 }
 
-class personalControlador extends adminModelo {
+class personalControlador extends personalModelo {
 
 
     public function paginador_personal($paginador,$registros){
@@ -33,7 +33,7 @@ class personalControlador extends adminModelo {
         $total = (int)$total->fetchColumn();
         //devuel valor entero redondeado hacia arriba 4.2 = 5
         $Npaginas = ceil($total/$registros);
-        $contenido.="<div class='card-group' style='width: 90%;' >";
+        $contenido.="<div class='card-group' style='width: 90%;' align='center' >";
         foreach(array_slice($datos,0,4) as $row){
             $contenido .="
                 <div class='card'>
@@ -47,8 +47,8 @@ class personalControlador extends adminModelo {
                     </div>
                 </div>";
         }
-        $contenido.="</div>";
-        $contenido.="<div class='card-group' style='width: 90%;' >";
+        $contenido.="</div><br>";
+        $contenido.="<div class='card-group' style='width: 90%;' align='center' >";
         foreach(array_slice($datos,4,8) as $row){
             $contenido .="
                 <div class='card'>
@@ -65,7 +65,21 @@ class personalControlador extends adminModelo {
         $contenido.="</div>";
 
         return $contenido;
-    }   
+    }
+    
+    public function chosen_cargo($val,$vis){
+
+        $consulta = "select * from cargopersonal";
+
+        return mainModel::ejecutar_combo($consulta,$val,$vis);
+    }
+
+    public function chosen_unidad($val,$vis){
+
+        $consulta = "select * from unidad";
+
+        return mainModel::ejecutar_combo($consulta,$val,$vis);
+    }
 
 
 }

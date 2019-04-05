@@ -33,11 +33,11 @@
             <div class="input-group mb-3">
                     <div class="input-group-prepend">
                     <form action="" method="POST">
-                        <button class="btn btn-primary" type="submit" id="button-addon1">Buscar</button>
-                    </div>
-                        <input type="text" class="form-control" name="buscador" value=""  placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1">
-                    </div>
-                </form>
+                            <button class="btn btn-primary" type="submit" id="button-addon1">Buscar</button>
+                        </div>
+                            <input type="text" class="form-control" name="buscador" value=""  placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1">
+                        </div>
+                    </form>
                 <?php echo $text; ?>
                 
             <?php 

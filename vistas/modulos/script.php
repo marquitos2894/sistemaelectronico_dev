@@ -15,6 +15,12 @@
   <script src="<?php echo SERVERURL?>vistas/js/demo/chart-pie-demo.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
 
+<!-- Chosen combobox -->
+<script src="<?php echo SERVERURL?>vistas/js/chosen/chosen.jquery.js"></script>
+<script src="<?php echo SERVERURL?>vistas/js/chosen/init.js"></script>
+<script src="<?php echo SERVERURL?>vistas/js/chosen/jquery-3.2.1.min.js"></script>
+<script src="<?php echo SERVERURL?>vistas/js/chosen/prism.js"></script>
+
   <script src="<?php echo SERVERURL?>vistas/js/main.js"></script>
 
  

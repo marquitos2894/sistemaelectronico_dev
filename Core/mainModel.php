@@ -23,6 +23,18 @@
             return $respuesta;
         }
 
+        protected function ejecutar_combo($consulta,$val,$vis){
+            $respuesta = self::conectar()->prepare($consulta);
+            $respuesta->execute();
+            $respuesta=$respuesta->fetchAll();
+            $contenido ="";
+            foreach($respuesta as $row){
+            $contenido .= "<option value='{$row[$val]}'>{$row[$vis]}</option>";
+            }
+
+            return $contenido;
+        }
+
        /* protected function agregar_emptrans($datos){
             $sql = self::conectar->prepare("insert into emptransporte (razonsocial,ruc) values (:razonsocial,:ruc)")
             $sql->bindParam(":razonsocial",$datos["razonsocial"]);
