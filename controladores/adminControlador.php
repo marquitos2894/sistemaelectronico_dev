@@ -252,7 +252,7 @@ class adminControlador extends adminModelo
                     "pass_u"=>$password
                 ];
 
-                if(adminModelo::Update_administrado_modelo($datosUP)){
+                if(adminModelo::Update_administrado_modelo($datosUP)->rowCount()>=1){
                     $alerta=[
                         "alerta"=>"recargar",
                         "Titulo"=>"Usuario Actualizado",

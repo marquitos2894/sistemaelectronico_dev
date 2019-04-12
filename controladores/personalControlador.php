@@ -66,6 +66,58 @@ class personalControlador extends personalModelo {
 
         return $contenido;
     }
+
+
+
+    public  function save_personal_controlador(){
+        $correo_per= mainModel::limpiar_cadena($_POST["correo_per_in"]);
+        $nom_per = mainModel::limpiar_cadena($_POST["nom_per_in"]);
+        $ape_per = mainModel::limpiar_cadena($_POST["ape_per_in"]);
+        $dni_per = mainModel::limpiar_cadena($_POST["dni_per_in"]);
+        $brevete = mainModel::limpiar_cadena($_POST["brevete_in"]);
+        $telefono = mainModel::limpiar_cadena($_POST["telefono_in"]);
+        $direccion = mainModel::limpiar_cadena($_POST["direccion_in"]);
+        $region = mainModel::limpiar_cadena($_POST["region_in"]);
+        $ciudad = mainModel::limpiar_cadena($_POST["ciudad_in"]);
+        $distrito = mainModel::limpiar_cadena($_POST["distrito_in"]);
+        $cargo = mainModel::limpiar_cadena($_POST["cargo_in"]);
+        $unidad = mainModel::limpiar_cadena($_POST["unidad_in"]);
+
+        $datosIN = [
+            "correo_p"=>$correo_per,
+            "nom_p"=>$nom_per,
+            "ape_p"=>$ape_per,
+            "dni_p"=>$dni_per,
+            "brevete_p"=>$brevete,
+            "telf_p"=>$telefono,
+            "dir_p"=>$direccion,
+            "urlimagen"=>"img3",
+            "reg_p"=>$region,
+            "ciu_p"=>$ciudad,
+            "dis_p"=>$distrito,
+            "cargo"=>$cargo,
+            "unidad"=>$unidad
+        ];
+
+        if(personalModelo::save_personal_modelo($datosIN)->rowCount()>=1){
+            $alerta=[
+                "alerta"=>"simple",
+                "Titulo"=>"Datos guardados",
+                "Texto"=>"Los siguientes datos han sido guardados",
+                "Tipo"=>"success"
+            ];
+        }else{
+            $alerta=[
+                "alerta"=>"simple",
+                "Titulo"=>"Ocurrio un error inesperado",
+                "Texto"=>"No hemos podido actualizar los datos, contacte al admin",
+                "Tipo"=>"error"
+            ];
+        }
+
+        return mainModel::sweet_alert($alerta);
+
+    }
     
     public function chosen_cargo($val,$vis){
 

@@ -73,7 +73,6 @@ class adminModelo extends mainModel{
         $sql->execute();
         return $sql;
 
-
     }
 
 }
