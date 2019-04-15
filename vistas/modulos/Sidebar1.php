@@ -129,6 +129,22 @@
           </div>
         </div>
       </li>
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseAlmacen" aria-expanded="true" aria-controls="collapseAlmacen">
+          <i class="fas fa-fw fa-wrench"></i>
+          <span>Almacen</span>
+        </a>
+        <div id="collapseAlmacen" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+          <div class="bg-white py-2 collapse-inner rounded">
+            <h6 class="collapse-header">Registro</h6>
+            <a class="collapse-item" href="<?php echo SERVERURL;?>NuevoAlmacen/">Nuevo Almacen</a>
+            <h6 class="collapse-header">Lista almacenes</h6>
+            <a class="collapse-item" href="<?php echo SERVERURL;?>componentes/">Almacen: A </a>
+            <a class="collapse-item" href="<?php echo SERVERURL;?>componentes/">Almacen: B </a>
+            <a class="collapse-item" href="utilities-other.html">Other</a>
+          </div>
+        </div>
+      </li>
 
       <!-- Nav Item - Charts -->
       <li class="nav-item">
