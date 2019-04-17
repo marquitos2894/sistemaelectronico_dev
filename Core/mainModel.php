@@ -23,6 +23,15 @@
             return $respuesta;
         }
 
+        protected function obtener_consulta_json($consulta){
+            $respuesta = self::conectar()->prepare($consulta);
+            $respuesta->execute();
+            $respuesta=$respuesta->fetchAll(PDO::FETCH_ASSOC);
+            $json = json_encode($respuesta);
+
+            return $json;
+        }
+
         protected function ejecutar_combo($consulta,$val,$vis){
             $respuesta = self::conectar()->prepare($consulta);
             $respuesta->execute();
