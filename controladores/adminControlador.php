@@ -10,7 +10,7 @@ class adminControlador extends adminModelo
 {
 
 
-    public function paginador_usuarios($paginador,$registros,$privilegio,$codigo,$buscador){
+    public function paginador_usuarios($paginador,$registros,$privilegio,$codigo,$buscador,$vista){
 
 
         $paginador=mainModel::limpiar_cadena($paginador);
@@ -93,10 +93,9 @@ class adminControlador extends adminModelo
                                         <div class='RespuestaAjax'></div>   
                                         </form></td>";
                         }   
-                        
-            $tabla.="</tr>";
-
-                    $contador++;
+                            
+                $tabla.="</tr>";
+                $contador++;
             }
            
         }else
@@ -107,33 +106,7 @@ class adminControlador extends adminModelo
 
         $tabla.='</tbody></table></div>';
 
-        if($total>=1 && $paginador<=$Npaginas)
-        {
-            $tabla.='<nav aria-label="Page navigation example"><ul class="pagination">';
-
-            if($paginador==1){
-                $tabla.='<li class="page-item"><a class="page-link">Atras</a></li>';
-            }else{
-                $tabla.='<li class="page-item"><a class="page-link" href="'.SERVERURL.'usuariolist/'.($paginador-1).'">Atras</a></li>';
-            }
-
-            for($i=1;$i<=$Npaginas;$i++){
-                if($paginador!=$i){
-                    $tabla.='<li class="active"><a class="page-link" href="'.SERVERURL.'usuariolist/'.$i.'">'.$i.'</a></li>';
-                }else{
-                    $tabla.='<li class="page-item"><a class="page-link">'.$i.'</a></li>';
-                }
-            }
-
-            if($paginador==$Npaginas){
-                $tabla.='<li class="page-item"><a class="page-link">Next</a></li>';
-            }else{
-                $tabla.='<li class="page-item"><a class="page-link" href="'.SERVERURL.'usuariolist/'.($paginador+1).'">Next</a></li>';
-            }
-            
-
-            $tabla.='</ul></nav>';
-        }
+        $tabla.= mainModel::paginador($total,$paginador,$Npaginas,$vista);
 
         return $tabla;
     }

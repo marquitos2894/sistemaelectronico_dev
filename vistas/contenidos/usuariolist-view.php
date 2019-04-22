@@ -5,10 +5,12 @@
 
     $buscador = "";
     $text = "";   
-    if(isset($_POST['buscador'])){
+    if(isset($_POST['buscador']) && $_POST['buscador'] != ""){
         $buscador=$_POST['buscador'];
         $text = '<h3><small class="text-muted">su busqueda fue :</small>"'.$buscador.'"</h3>';
-    }
+    }else{
+        $text="";
+      }
 
     
 ?>
@@ -41,7 +43,7 @@
                 <?php echo $text; ?>
                 
             <?php 
-                    echo  $insAdmin->paginador_usuarios($pagina[1],2, $_SESSION['privilegio_sbp'],$_SESSION['id_sbp'],$buscador);
+                    echo  $insAdmin->paginador_usuarios($pagina[1],2, $_SESSION['privilegio_sbp'],$_SESSION['id_sbp'],$buscador,$pagina[0]);
  
             ?>
         </div>

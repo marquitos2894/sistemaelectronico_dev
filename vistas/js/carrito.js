@@ -24,7 +24,7 @@
 
         this.getCarrito = JSON.parse(localStorage.getItem("carrito"));
 
-        this.agregarItem = function(item,componentes){
+        this.agregarItem = function(item,componentes,valor){
                 for(i of componentes){
                     if(i.id_comp == item){
                     var registro = i;
@@ -36,13 +36,14 @@
 
                 for(i of this.getCarrito){
                     if(i.id_comp == item){
-                        i.cantidad++;
+                        i.cantidad=parseFloat(i.cantidad) + parseFloat(valor);
+                        i.cantidad=valor;
                         localStorage.setItem("carrito", JSON.stringify(this.getCarrito));
                         return;
                     }
                 }
 
-                registro.cantidad = 1;
+                registro.cantidad = valor;
                 this.getCarrito.push(registro);
                 localStorage.setItem("carrito", JSON.stringify(this.getCarrito));
             }
@@ -61,7 +62,7 @@
     // esta funcion me simula una clase
     function Carrito_View(){
         //simula un metod o es u metodo
-        this.renderCatalogo = function(componentes){
+        /*this.renderCatalogo = function(componentes){
             console.log(componentes);
             let template = `<table class="table">
                                 <thead>
@@ -92,7 +93,7 @@
             template  += `</tbody></table>`;
 
             $('#catalogo').innerHTML = template;
-        }
+        }*/
 
         /*this.showModal = function(){
             $("#modal").classList.toggle('is-active');
@@ -113,7 +114,7 @@
                 $("#productosCarrito").innerHTML = template;
             }else{
                 $("#productosCarrito").innerHTML = "";   
-                let template = `<table class="table">
+                let template = `<div class="table-responsive"><table class="table table-bordered">
                 <thead>
                     <tr>
                         <th scope="col">#</th>
@@ -132,21 +133,21 @@
                             <td>${i.descripcion}</td>
                             <td>${i.nparte1}</td>
                             <td><strong>${i.stock}</strong></td>
-                            <td><input type="number" value="${i.cantidad}" /></td>
+                            <td><input type="number" value="${i.cantidad}" readonly /></td>
                             <td><p class="field"><a href="#" class="button is-danger" id="deleteProducto" data-producto="${i.id_comp}">delete</a></p></td>
                         </tr>
                     `;
                     j++;
                 }
-                template  += `</tbody></table>`;    
+                template  += `</tbody></table></div>`;    
                 $('#productosCarrito').innerHTML=template;
             }
-            $('#totalCarrito').innerHTML="S/."+carrito.getTotal();
+     
         }
 
         this.TotalProductos = function(){
             var total = carrito.getCarrito.length;
-            $('#totalProductos> strong').innerHTML = total;
+            //$('#totalProductos> strong').innerHTML = total;
         }
     }
 
@@ -170,18 +171,24 @@
                     }
                 
                     
-                    carrito_view.renderCatalogo(reg);
+                    //carrito_view.renderCatalogo(reg);
                     console.log(carrito.getCarrito);
-                    console.log(carrito.catalogo);
+               
 
-                    $("#catalogo").addEventListener("click",function(ev){
-                        
-                        if(ev.target.id=="addItem"){
-                        carrito.agregarItem(ev.target.dataset.producto,reg);
-                        carrito_view.renderCarrito();
-                        carrito_view.TotalProductos();
-                        }
-                    });
+ 
+
+                  $("#catalogo").addEventListener("keyup",function(ev1){                         
+                        $("#catalogo").addEventListener("click",function(ev){
+                                if(ev.target.id=="addItem"){
+                                console.log(ev.target)
+                                console.log(ev1.target.value)
+                                carrito.agregarItem(ev.target.dataset.producto,reg,ev1.target.value);
+                                carrito_view.renderCarrito();
+                                //carrito_view.TotalProductos();
+                                //console.log(ev.target.value) 
+                                }
+                        })
+                    })
                     
                     $("#productosCarrito").addEventListener("click",function(ev){
                         ev.preventDefault();
