@@ -25,6 +25,7 @@
         this.getCarrito = JSON.parse(localStorage.getItem("carrito"));
 
         this.agregarItem = function(item,componentes,valor){
+                
                 for(i of componentes){
                     if(i.id_comp == item){
                     var registro = i;
@@ -35,17 +36,27 @@
                 }
 
                 for(i of this.getCarrito){
+
                     if(i.id_comp == item){
-                        i.cantidad=parseFloat(i.cantidad) + parseFloat(valor);
-                        i.cantidad=valor;
+                        if(parseFloat(valor) > parseFloat(i.stock)){
+                            i.cantidad = i.stock;
+                        }else{
+                            i.cantidad=valor;                           
+                        }
+
+                        i.solicitado = valor;
+                        //registro.solicitado = valor;
+                        //i.cantidad=parseFloat(i.cantidad) + parseFloat(valor);
                         localStorage.setItem("carrito", JSON.stringify(this.getCarrito));
                         return;
                     }
                 }
 
+                registro.solicitado = valor;
                 registro.cantidad = valor;
                 this.getCarrito.push(registro);
                 localStorage.setItem("carrito", JSON.stringify(this.getCarrito));
+                return;
             }
 
         this.eliminarItem = function(item){
@@ -121,7 +132,8 @@
                         <th scope="col">Descriocion</th>
                         <th scope="col">Nparte</th>
                         <th scope="col">Stock</th>
-                        <th scope="col">Salida</th>
+                        <th scope="col">Solicitado</th>
+                        <th scope="col">Entregado</th>
                         <th scope="col">Quitar</th>
                     </tr>
                 </thead><tbody>`;
@@ -133,6 +145,7 @@
                             <td>${i.descripcion}</td>
                             <td>${i.nparte1}</td>
                             <td><strong>${i.stock}</strong></td>
+                            <td><input type="number" value="${i.solicitado}" readonly /></td>
                             <td><input type="number" value="${i.cantidad}" readonly /></td>
                             <td><p class="field"><a href="#" class="button is-danger" id="deleteProducto" data-producto="${i.id_comp}">delete</a></p></td>
                         </tr>
@@ -170,25 +183,22 @@
                         var reg = data;
                     }
                 
-                    
                     //carrito_view.renderCatalogo(reg);
                     console.log(carrito.getCarrito);
                
 
- 
 
-                  $("#catalogo").addEventListener("keyup",function(ev1){                         
                         $("#catalogo").addEventListener("click",function(ev){
                                 if(ev.target.id=="addItem"){
-                                console.log(ev.target)
-                                console.log(ev1.target.value)
-                                carrito.agregarItem(ev.target.dataset.producto,reg,ev1.target.value);
+                                console.log(ev.target)                          
+                                cant=document.getElementById("salida"+ev.target.dataset.producto).value;
+                                carrito.agregarItem(ev.target.dataset.producto,reg,cant);
                                 carrito_view.renderCarrito();
                                 //carrito_view.TotalProductos();
                                 //console.log(ev.target.value) 
                                 }
                         })
-                    })
+            
                     
                     $("#productosCarrito").addEventListener("click",function(ev){
                         ev.preventDefault();

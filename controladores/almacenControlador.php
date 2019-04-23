@@ -22,11 +22,18 @@ Class almacenControlador extends almacenModelo {
 
         $conexion = mainModel::conectar();
         if($buscador!=""){
-            $datos=$conexion->query("SELECT SQL_CALC_FOUND_ROWS * FROM componentes WHERE descripcion Like '%{$buscador}%' or nparte1 like '%{$buscador}%' or nparte2 like '%{$buscador}%' or nparte3 like '%{$buscador}%' or codigo like '%{$buscador}%' and est=1 LIMIT {$inicio},{$registros} ");
+            $datos=$conexion->query("SELECT c.id_comp,c.codigo,c.descripcion,c.nparte1,c.nparte2,c.nparte3,c.unidad_med,ac.stock,ac.fk_idalm
+                                     FROM componentes c
+                                     INNER JOIN almacen_componente ac
+                                     ON ac.fk_idcomp = c.id_comp WHERE c.descripcion Like '%{$buscador}%' or c.nparte1 like '%{$buscador}%' or c.nparte2 like '%{$buscador}%' or c.nparte3 like '%{$buscador}%' or c.codigo like '%{$buscador}%' and ac.est=1 LIMIT {$inicio},{$registros} ");
             $datos = $datos->fetchAll();
             $total = $conexion->query("SELECT FOUND_ROWS()");
         }else{
-        $datos=$conexion->query("SELECT SQL_CALC_FOUND_ROWS * FROM componentes WHERE est = 1 LIMIT {$inicio},{$registros}");
+        $datos=$conexion->query("SELECT c.id_comp,c.codigo,c.descripcion,c.nparte1,c.nparte2,c.nparte3,c.unidad_med,ac.stock,ac.fk_idalm
+                                 FROM componentes c
+                                 INNER JOIN almacen_componente ac
+                                 ON ac.fk_idcomp = c.id_comp WHERE ac.est = 1 LIMIT {$inicio},{$registros}");
+
             $datos = $datos->fetchAll();
             $total = $conexion->query("SELECT FOUND_ROWS()");
         }
@@ -43,15 +50,14 @@ Class almacenControlador extends almacenModelo {
                 <th scope="col">Codigo Int.</th>
                 <th scope="col">NParte</th>
                 <th scope="col">Stock</th>
-                <th scope="col">Salida</th>
+                <th scope="col">Solicitado</th>
                 <th scope="col">Agregar</th>';
                 //programar privilegios
         $tabla.="</tr>
-                </thead>
-                <tbody>";
+        </thead>
+        <tbody>";
         if($total>=1 && $paginador<=$Npaginas)
         {
-
         $contador = $inicio+1;
             foreach($datos as $row){
                 $tabla .="<tr>
@@ -60,14 +66,14 @@ Class almacenControlador extends almacenModelo {
                             <td>{$row['codigo']}</td>
                             <td>{$row['nparte1']}</td>
                             <td>{$row['stock']}</td>
-                            <td><input type='number' id='salida'/></td>
+                            <td><input type='number'  id='salida$row[0]' /></td>
                             <td> <a href='#' class='card-footer-item' id='addItem' data-producto='$row[0]'>+</a></td>";
                             $contador++;
                 $tabla.="</tr>";
             }
 
         }else{
-            $tabla.='<tr><td colspan="4"> No existen registros</td> </tr>';
+            $tabla.='<tr><td colspan="4"> No existen registros</td></tr>';
         }
 
         $tabla.='</tbody></table></div>';
@@ -78,7 +84,10 @@ Class almacenControlador extends almacenModelo {
 
 
     function obtener_consulta_json_controlador(){
-        $consulta = "select * from componentes";
+        $consulta = "SELECT c.id_comp,c.codigo,c.descripcion,c.nparte1,c.nparte2,c.nparte3,c.unidad_med,ac.stock,ac.fk_idalm
+                    FROM componentes c
+                    INNER JOIN almacen_componente ac
+                    ON ac.fk_idcomp = c.id_comp WHERE ac.est = 1";
         return mainModel::obtener_consulta_json($consulta);
     }
 

@@ -2,7 +2,7 @@ SELECT  u.id_usu,u.Correo,u.Clave,u.privilegio,u.tipo,u.estado,p.Nom_per,p.Ape_p
 FROM usuario u
 INNER JOIN personal p ON u.fk_idper = p.id_per
 INNER JOIN cargopersonal cp ON p.id_cargo = cp.id_cargo
- WHERE u.id_usu = 2
+ WHERE u.id_usu = 2;
 
 
 //CONSULTA PERSONAL Y PROVEEDOR Y PROV_PERS
@@ -12,10 +12,11 @@ INNER JOIN personal p
 ON p.id_per = pe.fk_idper
 INNER JOIN proveedor pr 
 ON pr.id_prove = pe.fk_id_prove 
-WHERE pr.id_prove = 195 and p.Estado_per = 1
+WHERE pr.id_prove = 195 and p.Estado_per = 1;
 
 
-//table componentes
+******************************************************
+//////////// TABLE componente ///////////////
 
 create table componentes(
 id_comp int primary key auto_increment,
@@ -27,9 +28,27 @@ nparte3 varchar(15),
 medida varchar(15),
 marca varchar(20),
 unidad_med varchar(10),
-stock int,
-stock_min int,
-stock_max int,
-fkid_sist int,
-fkid_alm int
+est tinyint
 )
+
+se agregro est tinyint default 1;
+
+******************************************************
+//////////// TABLE  almacen_componente ///////////////
+
+create table almacen_componente (
+id int primary key auto_increment,
+fk_idalm int,
+fk_idcomp int,
+stock double(5,2),
+stock_min double(5,2),
+stock_max double(5,2),
+Referencia varchar(50),
+modelo_equipo varchar(50),
+fk_idsist int,
+fk_idequipo int
+)
+
+se agregro est tinyint default 1;
+
+///////////////////////////////
