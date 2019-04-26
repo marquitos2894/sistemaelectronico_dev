@@ -68,8 +68,6 @@ class personalControlador extends personalModelo {
         return $contenido;
     }
 
-
-
     public  function save_personal_controlador(){
         $correo_per= mainModel::limpiar_cadena($_POST["correo_per_in"]);
         $nom_per = mainModel::limpiar_cadena($_POST["nom_per_in"]);

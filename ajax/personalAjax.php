@@ -7,6 +7,7 @@
 
 
     if(isset($_POST["nom_per_in"])){
+        
         echo $obj_personal -> save_personal_controlador();
 
     }

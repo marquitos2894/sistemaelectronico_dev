@@ -20,8 +20,11 @@
         protected function ejecutar_consulta_simple($consulta){
             $respuesta = self::conectar()->prepare($consulta);
             $respuesta->execute();
+            $respuesta=$respuesta->fetch();
             return $respuesta;
         }
+
+
 
         protected function obtener_consulta_json($consulta){
             $respuesta = self::conectar()->prepare($consulta);

@@ -27,8 +27,9 @@
         this.agregarItem = function(item,componentes,valor){
                 
                 for(i of componentes){
-                    if(i.id_comp == item){
+                    if(i.id == item){
                     var registro = i;
+                    var stock = i.stock;
                     }
                 }
                 if(!registro){
@@ -36,8 +37,8 @@
                 }
 
                 for(i of this.getCarrito){
-
-                    if(i.id_comp == item){
+                     
+                    if(i.id == item){
                         if(parseFloat(valor) > parseFloat(i.stock)){
                             i.cantidad = i.stock;
                         }else{
@@ -52,8 +53,14 @@
                     }
                 }
 
+                if(parseFloat(valor) > parseFloat(i.stock)){
+                    registro.cantidad=stock
+                }else{
+                    registro.cantidad=valor                                 
+                }
+
                 registro.solicitado = valor;
-                registro.cantidad = valor;
+                //registro.cantidad = valor;
                 this.getCarrito.push(registro);
                 localStorage.setItem("carrito", JSON.stringify(this.getCarrito));
                 return;
@@ -131,6 +138,7 @@
                         <th scope="col">#</th>
                         <th scope="col">Descriocion</th>
                         <th scope="col">Nparte</th>
+                        <th scope="col">Ubicacion</th>
                         <th scope="col">Stock</th>
                         <th scope="col">Solicitado</th>
                         <th scope="col">Entregado</th>
@@ -144,11 +152,20 @@
                             <td>${j}</td>
                             <td>${i.descripcion}</td>
                             <td>${i.nparte1}</td>
+                            <td>${i.u_nombre}-${i.u_seccion}</td>
                             <td><strong>${i.stock}</strong></td>
-                            <td><input type="number" value="${i.solicitado}" readonly /></td>
-                            <td><input type="number" value="${i.cantidad}" readonly /></td>
+                            <td>${i.solicitado}</td>
+                            <td>${i.cantidad}</td>
                             <td><p class="field"><a href="#" class="button is-danger" id="deleteProducto" data-producto="${i.id_comp}">delete</a></p></td>
                         </tr>
+                        <div style="display:none; "><input type="hidden" name="id[]" value="${i.id_comp}">
+                        <tr><input type="hidden" name="dv_descripcion[]" value="${i.descripcion}">
+                        <input type="hidden" name="dv_nparte1[]" value="${i.nparte1}">
+                        <input type="hidden" name="dv_stock[]" value="${i.stock}">
+                        <input type="hidden" name="dv_solicitado[]" value="${i.solicitado}">
+                        <input type="hidden" name="dv_entregado[]" value="${i.cantidad}">
+                        <input type="hidden" name="dv_unombre[]" value="${i.u_nombre}">
+                        <input type="hidden" name="dv_useccion[]" value="${i.u_seccion}"></tr><div>
                     `;
                     j++;
                 }
@@ -170,6 +187,7 @@
     var carrito_view = new Carrito_View();
 
     document.addEventListener('DOMContentLoaded',function(){
+
                 const datos = new FormData();
                 datos.append('id_alm', '1');
                 fetch('../ajax/almacenAjax.php',{
@@ -185,8 +203,6 @@
                 
                     //carrito_view.renderCatalogo(reg);
                     console.log(carrito.getCarrito);
-               
-
 
                         $("#catalogo").addEventListener("click",function(ev){
                                 if(ev.target.id=="addItem"){
