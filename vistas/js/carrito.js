@@ -27,7 +27,7 @@
         this.agregarItem = function(item,componentes,valor){
                 
                 for(i of componentes){
-                    if(i.id == item){
+                    if(i.id_ac == item){
                     var registro = i;
                     var stock = i.stock;
                     }
@@ -38,7 +38,7 @@
 
                 for(i of this.getCarrito){
                      
-                    if(i.id == item){
+                    if(i.id_ac == item){
                         if(parseFloat(valor) > parseFloat(i.stock)){
                             i.cantidad = i.stock;
                         }else{
@@ -53,7 +53,7 @@
                     }
                 }
 
-                if(parseFloat(valor) > parseFloat(i.stock)){
+                if(parseFloat(valor) > parseFloat(stock)){
                     registro.cantidad=stock
                 }else{
                     registro.cantidad=valor                                 
@@ -136,6 +136,7 @@
                 <thead>
                     <tr>
                         <th scope="col">#</th>
+                        <th scope="col">Cod.Interno</th>
                         <th scope="col">Descriocion</th>
                         <th scope="col">Nparte</th>
                         <th scope="col">Ubicacion</th>
@@ -150,6 +151,7 @@
                     template += `
                         <tr>
                             <td>${j}</td>
+                            <td>${i.codigo}</td>
                             <td>${i.descripcion}</td>
                             <td>${i.nparte1}</td>
                             <td>${i.u_nombre}-${i.u_seccion}</td>
@@ -158,8 +160,10 @@
                             <td>${i.cantidad}</td>
                             <td><p class="field"><a href="#" class="button is-danger" id="deleteProducto" data-producto="${i.id_comp}">delete</a></p></td>
                         </tr>
-                        <div style="display:none; "><input type="hidden" name="id[]" value="${i.id_comp}">
-                        <tr><input type="hidden" name="dv_descripcion[]" value="${i.descripcion}">
+                        <div style="display:none; ">
+                        <tr>
+                        <input type="hidden" name="id_ac[]" value="${i.id_ac}">
+                        <input type="hidden" name="dv_descripcion[]" value="${i.descripcion}">
                         <input type="hidden" name="dv_nparte1[]" value="${i.nparte1}">
                         <input type="hidden" name="dv_stock[]" value="${i.stock}">
                         <input type="hidden" name="dv_solicitado[]" value="${i.solicitado}">

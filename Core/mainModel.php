@@ -68,9 +68,9 @@
                 }
     
                 if($paginador==$Npaginas){
-                    $tabla.='<li class="page-item"><a class="page-link">Next</a></li>';
+                    $tabla.='<li class="page-item"><a class="page-link">Siguiente</a></li>';
                 }else{
-                    $tabla.='<li class="page-item"><a class="page-link" href="'.SERVERURL.''.$vista.'/'.($paginador+1).'">Next</a></li>';
+                    $tabla.='<li class="page-item"><a class="page-link" href="'.SERVERURL.''.$vista.'/'.($paginador+1).'">Siguiente</a></li>';
                 }
                 
     
@@ -191,6 +191,18 @@
 
             return $alerta;
         }
+
+        protected function bootstrap_alert($datos){
+
+            $alerta= "<div class='alert alert-{$datos['tipo']} alert-dismissible fade show' role='alert'>
+                        {$datos['mensaje']}
+                        <button type='button' class='close' data-dismiss='alert' aria-label='Close'>
+                            <span aria-hidden='true'>&times;</span>
+                        </button>
+                    </div>";
+            return $alerta;
+        }
+    
     }
 
 ?>
