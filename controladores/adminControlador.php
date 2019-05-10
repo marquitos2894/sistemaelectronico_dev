@@ -24,23 +24,18 @@ class adminControlador extends adminModelo
         
         $conexion = mainModel::conectar();
         if($buscador!=""){
-
             //select limit recibe dos parametros inicio y logitud
             // SQL_CALC_FOUND_ROWS - obtiene la consulta los datos de las columnos de forma temporal y con FOUND_ROWS() -> obtiene el numero de filas
             $datos=$conexion->query("select SQL_CALC_FOUND_ROWS * FROM usuario where id_usu !={$codigo} and id_usu !=3 and Correo like '%{$buscador}%'  and estado >= 1  order by Correo asc limit {$inicio},{$registros}");
-            $datos = $datos->fetchAll();
-            $total = $conexion->query("SELECT FOUND_ROWS()");
             // pdo:fetchColumn() obtiene la fila 0 de la primera columna y fetchColumn(1) obtiene la fila 1 de la primera columna 
-
         }else{
                 //select limit recibe dos parametros inicio y logitud
             // SQL_CALC_FOUND_ROWS - obtiene la consulta los datos de las columnos de forma temporal y con FOUND_ROWS() -> obtiene el numero de filas
             $datos=$conexion->query("select SQL_CALC_FOUND_ROWS * FROM usuario where id_usu !={$codigo} and id_usu !=3 and estado >= 1   order by Correo asc limit {$inicio},{$registros}");
-            $datos = $datos->fetchAll();
-            $total = $conexion->query("SELECT FOUND_ROWS()");
-            
-
         }
+        $datos = $datos->fetchAll();
+        $total = $conexion->query("SELECT FOUND_ROWS()");    
+
         // pdo:fetchColumn() obtiene la fila 0 de la primera columna y fetchColumn(1) obtiene la fila 1 de la primera columna 
         $total = (int)$total->fetchColumn();
         //devuel valor entero redondeado hacia arriba 4.2 = 5

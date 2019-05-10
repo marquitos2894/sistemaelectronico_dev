@@ -60,20 +60,36 @@
                 }
     
                 for($i=1;$i<=$Npaginas;$i++){
+                    
+                    if($Npaginas<=5){
+                        if($paginador!=$i){
+                            $tabla.='<li class="active"><a class="page-link" href="'.SERVERURL.''.$vista.'/'.$i.'">'.$i.'</a></li>';
+                        }else{
+                            $tabla.='<li class="page-item"><a class="page-link">'.$i.'</a></li>';
+                        }
+                    }
+                 
+                }
+                if ($Npaginas>=6){
                     if($paginador!=$i){
-                        $tabla.='<li class="active"><a class="page-link" href="'.SERVERURL.''.$vista.'/'.$i.'">'.$i.'</a></li>';
+                        $tabla.='<li class="active"><a class="page-link" href="'.SERVERURL.''.$vista.'/1">inicio</a></li>';
+                        $tabla.='<li class="active"><a class="page-link" href="'.SERVERURL.''.$vista.'/'.$paginador.'">'.$paginador.'</a></li>';
+                        $tabla.='<li class="active"><a class="page-link" href="'.SERVERURL.''.$vista.'/'.($paginador+1).'">'.($paginador+1).'</a></li>';
+                        $tabla.='<li class="active"><a class="page-link" href="'.SERVERURL.''.$vista.'/'.($paginador+2).'">'.($paginador+2).'</a></li>';
+                        $tabla.='<li class="active"><a class="page-link" href="'.SERVERURL.''.$vista.'/'.($paginador+3).'">'.($paginador+3).'</a></li>';
+                        $tabla.='<li class="active"><a class="page-link" href="'.SERVERURL.''.$vista.'/'.($paginador+4).'">'.($paginador+4).'</a></li>';
                     }else{
-                        $tabla.='<li class="page-item"><a class="page-link">'.$i.'</a></li>';
+                        $tabla.='<li class="page-item"><a class="page-link">'.$paginador.'</a></li>';
                     }
                 }
-    
+                    
                 if($paginador==$Npaginas){
                     $tabla.='<li class="page-item"><a class="page-link">Siguiente</a></li>';
                 }else{
                     $tabla.='<li class="page-item"><a class="page-link" href="'.SERVERURL.''.$vista.'/'.($paginador+1).'">Siguiente</a></li>';
+                  
                 }
                 
-    
                 $tabla.='</ul></nav>';
             }
             
@@ -153,7 +169,26 @@
                         )
                     </script>    
                 ";
-            }else if($datos["alerta"]=="recargar"){
+            }else if($datos["alerta"]=="recargar_tiempo"){
+                $alerta ="
+                <script>
+            
+                Swal.fire({
+                    title: '{$datos['Titulo']}',
+                    text: '{$datos['Texto']}',
+                    type: '{$datos['Tipo']}',
+                    showCancelButton: true,     
+                    confirmButtonText: 'Aceptar',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.value) {
+                        setTimeout('document.location.reload()',{$datos['tiempo']});
+                      }
+                    });
+                </script>";
+                
+            }
+            else if($datos["alerta"]=="recargar"){
                 $alerta ="
                 <script>
             
@@ -170,6 +205,7 @@
                       }
                     });
                 </script>";
+                
             }else if($datos["alerta"]=="limpiar"){
                 $alerta ="
                 <script>

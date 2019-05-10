@@ -29,6 +29,26 @@ class almacenModelo extends mainModel{
 
     }
 
+
+    protected function save_vingreso_modelo($datos){
+        $conex = mainModel::conectar();
+        $sql = $conex->prepare("INSERT INTO vale_ingreso(fk_idusuario,fk_idpersonal,nombres,d_identidad,ref_documento,ref_nrodocumento,fecha,turno,comentario)
+                                VALUES (:fk_idusuario,:fk_idpersonal,:nombres,:d_identidad,:documento,:ref_documento,:fecha,:turno,:comentario)");
+        
+        $sql->bindParam(":fk_idusuario",$datos["fk_idusuario"]);
+        $sql->bindParam(":fk_idpersonal",$datos["fk_idpersonal"]);
+        $sql->bindParam(":nombres",$datos["nombre_per"]);
+        $sql->bindParam(":d_identidad",$datos["dni_per"]);
+        $sql->bindParam(":fecha",$datos["fecha"]);
+        $sql->bindParam(":turno",$datos["turno"]);
+        $sql->bindParam(":documento",$datos["documento"]);
+        $sql->bindParam(":ref_documento",$datos["ref_documento"]);
+        $sql->bindParam(":comentario",$datos["comentario"]);
+        $sql->execute();
+        $id=$conex->lastInsertId();     
+        return $id;
+    }   
+
     protected function save_dvsalida_modelo($id_vsalida,$id_ac,$dv_descripcion,$dv_nparte1,$dv_stock,$dv_solicitado,$dv_entregado,$dv_unombre,$dv_useccion){
         $conex = mainModel::conectar();
         $mensaje = [];
@@ -70,6 +90,9 @@ class almacenModelo extends mainModel{
         return $return;
     }
     
+    protected function save_dvingreso_modelo(){
+        $conex = mainModel::conectar();
+    }
 }
 
 

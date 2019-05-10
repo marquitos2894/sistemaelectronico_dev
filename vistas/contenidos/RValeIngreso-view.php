@@ -22,10 +22,10 @@
             <a class="nav-link " href="<?php echo SERVERURL;?>componentes/">Almacen</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link active;alert alert-danger" href="<?php echo SERVERURL;?>RValeSalida/">Vale salida</a>
+            <a class="nav-link" href="<?php echo SERVERURL;?>RValeSalida/">Vale salida</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="<?php echo SERVERURL;?>RValeIngreso/">Vale de ingreso</a>
+            <a class="nav-link active;alert alert-success" href="#">Vale de ingreso</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" href="#">+Nuevo componente</a>
@@ -43,11 +43,12 @@
                         <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                         Detalle de componentes
                         </button>
+                        
                     </h2>
                 </div>
                 <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
                     <div class="card-body">
-                            <div class="columns is-multiline" id="catalogo">
+                            <div class="columns is-multiline" id="productosin">
                                 <form action="" method="POST">
                                         <div class="input-group mb-3">                        
                                                 <div class="input-group-prepend">                            
@@ -57,15 +58,15 @@
                                         </div>
                                 </form>
 
-                                <?php echo $text; ?>   
-                                <?php  echo $almCont->paginador_componentes($pagina[1],5,"",$buscador,$pagina[0],"Salida");?>   
+                                <?php echo $text;?>   
+                                <?php  echo $almCont->paginador_componentes($pagina[1],5,"",$buscador,$pagina[0],"ingreso");?>   
                             </div>
                     </div>
                 </div>
             </div>
 
             <form action="<?php echo SERVERURL;?>ajax/almacenAjax.php"  method="POST" data-form="save" class="FormularioAjax" autocomplete="off" enctype="multipart/form-data" >
-                <div id="productosCarritoS">
+                <div id="productosCarritoIn">
                                 <!-- item de local storage para salida del almacen-->
                 </div>  
                 <input type="hidden" name="usuario" value="<?php echo $_SESSION['id_sbp'];?>"/>
@@ -73,7 +74,7 @@
                     <div class="card-header" id="headingTwo">
                         <h2 class="mb-0">
                             <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#Productos" aria-expanded="false" aria-controls="collapseTwo">
-                            Datos de vale de salida
+                            Datos de vale de ingreso
                             </button>
                         </h2>
                     </div>
@@ -92,7 +93,7 @@
                                                     <label for="inputEmail4">Solicitado por</label>                              
                                                     <select data-placeholder="Seleccione personal" name="personal" class="chosen-select" >
                                                         <option value=""></option>
-                                                        <?php echo $almCont->chosen_personal(0,1)?>
+                                                        <?php echo $almCont->chosen_personal(0,1) ?>
                                                     </select>
                                                 </div>
                                                 <div class="form-group col-10"> 
@@ -114,15 +115,16 @@
                                         <blockquote class="">
                                             <div class="form-row">                                  
                                                 <div class="form-group col-10"> 
-                                                    <label for="inputEmail4">Cod. Equipo</label>                              
-                                                    <select name="codequipo" data-placeholder="Seleccione Equipo"  class="chosen-select" >
-                                                        <option value=""></option>
-                                                        <?php echo $almCont->chosen_equipo(0,1)?>
-                                                    </select>
+                                                    <label for="inputEmail4">Tipo Documento</label>                              
+                                                    <input list="documento" name="documento">
+                                                    <datalist id="documento">
+                                                    <option value="Guia resmion">
+                                                    <option value="Devolucion">
+                                                    </datalist>
                                                 </div>
                                                 <div class="form-group col-10"> 
-                                                    <label for="inputEmail4">Horometro</label>                              
-                                                    <input type="number" name="horometro" class="form-control"  placeholder="Horometro">
+                                                    <label for="inputEmail4">Ref. Documento</label>                              
+                                                    <input type="text" name="ref_documento" class="form-control"  placeholder="Referencia documento">
                                                 </div>
                                             </div>
                                             <footer class="blockquote-footer">Someone famous in <cite title="Source Title">Source Title</cite></footer>
@@ -134,14 +136,14 @@
                                     <label for="exampleFormControlTextarea1">Comentario de salida de los repuestos</label>
                                     <textarea  name="comentario" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
                             </div>
-                            <input type="hidden" value="valesalida" name="vale"/>
-                            <button type="submit" class="btn btn-danger btn-lg btn-block">Emitir Vale de salida</button>
+                            <input type="hidden" value="valeingreso" name="vale"/>
+                            <button type="submit" class="btn btn-success btn-lg btn-block">Emitir Vale de Ingreso</button>
                         </div>
                     </div>
                 </div>
                 <div class="RespuestaAjax"></div>
             </form>
         </div>
-    <script src="../vistas/js/carrito.js"></script>
+    
 </div>
-
+<script src="../vistas/js/carritoIn.js"></script>

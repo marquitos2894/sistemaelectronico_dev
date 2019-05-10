@@ -5,133 +5,158 @@
     }
 
 
-    function Carrito() {
 
-        /*this.catalogo = [{id:'P01',nombre:'Lapiz',precio:5,imagen:'lapiz.jpg',descripcion:'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'},
-                        {id:'P02',nombre:'Colores',precio:50,imagen:'colores.jpg',descripcion:'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'},
-                        {id:'P03',nombre:'Libreta',precio:30,imagen:'libreta.jpg',descripcion:'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'},
-                        {id:'P04',nombre:'Mochila',precio:500,imagen:'mochila.jpg',descripcion:'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'},
-                        {id:'P06',nombre:'Pluma',precio:7.50,imagen:'pluma.jpg',descripcion:'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'},
-                        {id:'P07',nombre:'Plumon',precio:20,imagen:'plumon.jpg',descripcion:'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'},
-                        {id:'P08',nombre:'Regla',precio:10,imagen:'regla.png',descripcion:'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'}];*/
-    
+
+/*    async function ver(){
+
+        //const datos = new FormData();
+        //datos.append('id_alm', '1');
+        /*let response1 =  await fetch('../ajax/almacenAjax.php?id_alm=1');
+        let user = await response1.json();
+        return user;
+
+        const datos = new FormData();
+        datos.append('id_alm', '1');
+        let response = await fetch('../ajax/almacenAjax.php',{
+            method : 'POST',
+            body :  datos
+        });
+        let data = await response.json();
        
-        this.constructor = function(){
-            if(!localStorage.getItem("carrito")){
-                localStorage.setItem('carrito','[]');
-            }
+}*/
+
+    function Carrito1(){
+
+        this.constructor = async function(){
+
+                if(!localStorage.getItem("carritoS")){
+                    localStorage.setItem('carritoS','[]');
+                }
+                
+                
+                if(!localStorage.getItem("BDproductos") || localStorage.getItem("BDproductos")=="[]"){
+                    /* Promisse */
+                    /*const datos = new FormData();
+                    datos.append('id_alm', '1');
+                    let response = await fetch('../ajax/almacenAjax.php',{
+                        method : 'POST',
+                        body :  datos
+                    }) 
+                    .then(res =>  res.json())
+                    .then(data =>{                      
+                        localStorage.setItem('BDproductos',JSON.stringify(data));
+                    });*/
+                    
+                    /* Async await */
+                    const datos = new FormData();
+                    datos.append('id_alm', '1');
+                    let response = await fetch('../ajax/almacenAjax.php',{
+                        method : 'POST',
+                        body :  datos
+                    });
+                    let data = await response.json();
+                    localStorage.setItem('BDproductos',JSON.stringify(data));           
+                } 
         }
 
-        this.getCarrito = JSON.parse(localStorage.getItem("carrito"));
+  
 
-        this.agregarItem = function(item,componentes,valor){
-                
-                for(i of componentes){
-                    if(i.id_ac == item){
-                    var registro = i;
-                    var stock = i.stock;
-                    }
-                }
-                if(!registro){
-                    return;
-                }
+        this.getBDproductos = JSON.parse(localStorage.getItem('BDproductos'));
+        this.getCarritoS = JSON.parse(localStorage.getItem("carritoS"));
+  
+        console.log(this.getBDproductos);
+        console.log(this.getCarritoS);
 
-                for(i of this.getCarrito){
-                     
-                    if(i.id_ac == item){
-                        if(parseFloat(valor) > parseFloat(i.stock)){
-                            i.cantidad = i.stock;
-                        }else{
-                            i.cantidad=valor;                           
-                        }
 
-                        i.solicitado = valor;
-                        //registro.solicitado = valor;
-                        //i.cantidad=parseFloat(i.cantidad) + parseFloat(valor);
-                        localStorage.setItem("carrito", JSON.stringify(this.getCarrito));
-                        return;
-                    }
-                }
 
-                if(parseFloat(valor) > parseFloat(stock)){
-                    registro.cantidad=stock
-                }else{
-                    registro.cantidad=valor                                 
-                }
-
-                registro.solicitado = valor;
-                //registro.cantidad = valor;
-                this.getCarrito.push(registro);
-                localStorage.setItem("carrito", JSON.stringify(this.getCarrito));
-                return;
+        this.agregarItemCarritoS = function(item,valor){
+            
+            if(!this.getBDproductos || this.getCarritoS==null ){
+                location.reload();
             }
 
-        this.eliminarItem = function(item){
-            for(i in this.getCarrito){
-                if(this.getCarrito[i].id_comp == item){
-                    this.getCarrito.splice(i,1);
+    
+
+            for(i of this.getBDproductos){
+                if(i.id_ac == item){
+                    var registro = i;
+                    var stock = i.stock;      
+                }
+            }
+      
+            if(!registro){
+                return;
+            }
+           
+            for(i of this.getCarritoS){                   
+                if(i.id_ac == item){                     
+                    if(parseFloat(valor) > parseFloat(i.stock)){
+                        i.cantidad = i.stock;
+                    }else if(valor==""){
+                        if(i.cantidad<stock){  
+                        i.cantidad = parseFloat(i.cantidad) + 1;
+                        valor = i.cantidad;
+                        }else{
+                            i.cantidad = i.stock;
+                            valor = parseFloat(i.cantidad)+parseFloat(registro.j);                        
+                            registro.j = registro.j +1;
+                        }                         
+                    }else{
+                        i.cantidad=valor;                           
+                    }                       
+                    i.solicitado = valor;
+                    //registro.solicitado = valor;
+                    //i.cantidad=parseFloat(i.cantidad) + parseFloat(valor);
+                    localStorage.setItem("carritoS", JSON.stringify(this.getCarritoS));
+                    return;
+                }
+            }
+            
+            if(parseFloat(stock)==0){
+                alert("Item fuera de stock");
+                return;
+            }
+            else if(parseFloat(valor) > parseFloat(stock)){
+                registro.cantidad=stock
+            }else if(valor==""){
+                registro.cantidad=1
+                registro.j=1;
+                valor = 1;
+            }else{
+                registro.cantidad=valor                                 
+            }
+
+            registro.solicitado = valor;
+            //registro.cantidad = valor;
+            this.getCarritoS.push(registro);
+            localStorage.setItem("carritoS", JSON.stringify(this.getCarritoS));
+            return;
+        }
+
+        
+        this.eliminarItemCS = function(item){
+            for(i in this.getCarritoS){
+                if(this.getCarritoS[i].id_ac == item){
+                    this.getCarritoS.splice(i,1);
                     console.log("eliminado")
                 }
             }
-            localStorage.setItem("carrito", JSON.stringify(this.getCarrito));
-        }
+            localStorage.setItem("carritoS", JSON.stringify(this.getCarritoS));
+            return;
+        }     
+        
     }
-    
-    // esta funcion me simula una clase
-    function Carrito_View(){
-        //simula un metod o es u metodo
-        /*this.renderCatalogo = function(componentes){
-            console.log(componentes);
-            let template = `<table class="table">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">#</th>
-                                        <th scope="col">Descriocion</th>
-                                        <th scope="col">Nparte</th>
-                                        <th scope="col">Stock</th>
-                                        <th scope="col">Agregras</th>
-                                    </tr>
-                                </thead>
-                                <tbody>`;
-             let j=1;                   
-            for(let i in componentes){
-                //console.log(i);
-               template += `
-                    
-                        <tr>
-                            <th scope="row">${j}</th>
-                            <td>${componentes[i].descripcion}</td>
-                            <td>${componentes[i].nparte1}</td>
-                            <td>${componentes[i].stock}</td>
-                            <td> <a href="#" class="card-footer-item" id="addItem" data-producto="${componentes[i].id_comp}">+</a></td>
-                        </tr>       
-                `;
-                j++;
-            }
-            template  += `</tbody></table>`;
 
-            $('#catalogo').innerHTML = template;
-        }*/
+    function CarritoView(){
 
-        /*this.showModal = function(){
-            $("#modal").classList.toggle('is-active');
-            this.renderCarrito();        
-        }
-
-        this.hideModal = function(ev){
-            if(ev.target.classList.contains("toggle")){
-                //$("#modal").classList.toggle('is-active');
-                this.showModal();
-            }
-        }*/
-
-        this.renderCarrito = function(){
-
-            if(carrito.getCarrito.length <= 0){
-                var template = `<div class="is-12"><p class="title is-1 has-text-centered">El carrito esta vacio</p></div><br>`;
-                $("#productosCarrito").innerHTML = template;
+        this.renderCarritoS = function(){
+            if(carrito.getCarritoS.length <= 0){
+                var template = `<div class="alert alert-danger" role="alert">
+                El carrito esta vacio !!
+                </div><br>`;
+                $("#productosCarritoS").innerHTML = template;
             }else{
-                $("#productosCarrito").innerHTML = "";   
+                $("#productosCarritoS").innerHTML = "";   
                 let template = `<div class="table-responsive"><table class="table table-bordered">
                 <thead>
                     <tr>
@@ -147,9 +172,9 @@
                     </tr>
                 </thead><tbody>`;
                 let j=1;
-                for(i of carrito.getCarrito){
+                for(i of carrito.getCarritoS){
                     template += `
-                        <tr>
+                        <tr class="alert alert-danger">
                             <td>${j}</td>
                             <td>${i.codigo}</td>
                             <td>${i.descripcion}</td>
@@ -158,11 +183,12 @@
                             <td><strong>${i.stock}</strong></td>
                             <td>${i.solicitado}</td>
                             <td>${i.cantidad}</td>
-                            <td><p class="field"><a href="#" class="button is-danger" id="deleteProducto" data-producto="${i.id_comp}">delete</a></p></td>
+                            <td><p class="field"><a href="#" class="button is-danger" id="deleteProducto" data-producto="${i.id_ac}">x</a></p></td>
                         </tr>
-                        <div style="display:none; ">
+                        <div style="display:none;">
                         <tr>
                         <input type="hidden" name="id_ac[]" value="${i.id_ac}">
+                        <input type="hidden" name="dv_codigo[]" value="${i.codigo}">
                         <input type="hidden" name="dv_descripcion[]" value="${i.descripcion}">
                         <input type="hidden" name="dv_nparte1[]" value="${i.nparte1}">
                         <input type="hidden" name="dv_stock[]" value="${i.stock}">
@@ -174,67 +200,41 @@
                     j++;
                 }
                 template  += `</tbody></table></div>`;    
-                $('#productosCarrito').innerHTML=template;
+                $('#productosCarritoS').innerHTML=template;
             }
      
         }
 
-        this.TotalProductos = function(){
-            var total = carrito.getCarrito.length;
-            //$('#totalProductos> strong').innerHTML = total;
-        }
     }
 
 
-    //instaciamos la funcion Carrito
-    var carrito = new Carrito();
-    var carrito_view = new Carrito_View();
+    var carrito = new Carrito1();
+    var view = new CarritoView();
 
-    document.addEventListener('DOMContentLoaded',function(){
-
-                const datos = new FormData();
-                datos.append('id_alm', '1');
-                fetch('../ajax/almacenAjax.php',{
-                    method : 'POST',
-                    body :  datos
-                })
-                .then(res => res.json())
-                .then(data =>{
-                    //console.log(this.componentes = data);
-                    for(i in data){
-                        var reg = data;
-                    }
-                
-                    //carrito_view.renderCatalogo(reg);
-                    console.log(carrito.getCarrito);
-
-                        $("#catalogo").addEventListener("click",function(ev){
-                                if(ev.target.id=="addItem"){
-                                console.log(ev.target)                          
-                                cant=document.getElementById("salida"+ev.target.dataset.producto).value;
-                                carrito.agregarItem(ev.target.dataset.producto,reg,cant);
-                                carrito_view.renderCarrito();
-                                //carrito_view.TotalProductos();
-                                //console.log(ev.target.value) 
-                                }
-                        })
-            
-                    
-                    $("#productosCarrito").addEventListener("click",function(ev){
-                        ev.preventDefault();
-                        if(ev.target.id == "deleteProducto"){
-                            carrito.eliminarItem(ev.target.dataset.producto);
-                            carrito_view.renderCarrito();
-                            //carrito_view.TotalProductos();
-                        }
-                    });
-                
-                });
-                carrito.constructor();
-                carrito_view.renderCarrito();
-    
+    document.addEventListener("DOMContentLoaded",function(){
+        carrito.constructor();
+        view.renderCarritoS(); 
     });
 
 
+    $("#catalogo").addEventListener("click",function(ev){
+        if(ev.target.id=="addItem"){
+        console.log(ev.target);                    
+        cant=document.getElementById("salida"+ev.target.dataset.producto).value;
+        carrito.agregarItemCarritoS(ev.target.dataset.producto,cant);
+        view.renderCarritoS();
+        //carrito_view.TotalProductos();
+        //console.log(ev.target.value) 
+        }   
+    }); 
+
+    $('#productosCarritoS').addEventListener("click",function(ev){
+        ev.preventDefault();
+        if(ev.target.id == "deleteProducto"){
+            carrito.eliminarItemCS(ev.target.dataset.producto);
+            view.renderCarritoS();
+        }
+
+    });
 
 })();

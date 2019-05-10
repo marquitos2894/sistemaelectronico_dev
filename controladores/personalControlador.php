@@ -28,7 +28,7 @@ class personalControlador extends personalModelo {
         WHERE pr.id_prove = 195 and p.Estado_per = 1 limit {$inicio},{$registros}");
 
         $datos = $datos->fetchAll();
-        $json = json_encode($datos);
+        //$json = json_encode($datos);
         $total = $conexion->query("SELECT FOUND_ROWS()");
 
         $total = (int)$total->fetchColumn();

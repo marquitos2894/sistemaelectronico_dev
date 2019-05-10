@@ -10,10 +10,16 @@
    }
 
 
-   if(isset($_POST["usuario"])){
-     
+   if(isset($_POST["usuario"]) && $_POST["vale"]=="valesalida" ){
       echo $almCont->save_vsalida_controlador();
-      echo "<script>localStorage.setItem('carrito','[]');</script>";
-   }  
+      echo "<script>localStorage.setItem('carritoS','[]');</script>";
+   } 
+   
+
+   if(isset($_POST["usuario"]) && $_POST["vale"]=="valeingreso" ){
+      echo $almCont->save_vingreso_controlador();
+      echo "<script>localStorage.setItem('carritoIn','[]');</script>";
+   } 
+   
 
 ?>
