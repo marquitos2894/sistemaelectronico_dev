@@ -28,14 +28,16 @@
             <a class="nav-link active;alert alert-success" href="#">Vale de ingreso</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="#">+Nuevo componente</a>
+            <a class="nav-link" href="<?php echo SERVERURL;?>newcomponente/">+Nuevo componente</a>
         </li>
+        <li class="nav-item">
+                <a class="nav-link " href="#" aria-disabled="true">Ingreso Almacen</a>
+            </li>
         <li class="nav-item">
             <a class="nav-link " href="#" aria-disabled="true">Import</a>
         </li>
-    </ul><br>
+</ul><br>
 
-    
         <div class="accordion" id="accordionExample">
             <div class="card">
                 <div class="card-header" id="headingOne">
@@ -43,23 +45,34 @@
                         <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                         Detalle de componentes
                         </button>
-                        
                     </h2>
                 </div>
                 <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
                     <div class="card-body">
                             <div class="columns is-multiline" id="productosin">
-                                <form action="" method="POST">
+                                <!--form action="" method="POST">
                                         <div class="input-group mb-3">                        
                                                 <div class="input-group-prepend">                            
                                                     <button class="btn btn-primary" type="submit" id="button-addon1">Buscar</button>
                                                 </div>
                                                 <input type="text" name="buscador" class="form-control" placeholder="Buscar componentes"  aria-describedby="button-addon1">
                                         </div>
-                                </form>
+                                </form-->
 
-                                <?php echo $text;?>   
-                                <?php  echo $almCont->paginador_componentes($pagina[1],5,"",$buscador,$pagina[0],"ingreso");?>   
+                                <?php //echo $text;?>   
+                                <?php  //echo $almCont->paginador_componentes($pagina[1],5,"",$buscador,$pagina[0],"ingreso");?>   
+                                <div class="card shadow mb-4">
+                                    <div class="card-header py-3">
+                                    <h6 class="m-0 font-weight-bold text-primary">Componentes</h6>
+                                    </div>
+                                     
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <div id="tablecomp">  </div> 
+                                        </div>
+                                    </div>
+                                </div>  
+                            
                             </div>
                     </div>
                 </div>

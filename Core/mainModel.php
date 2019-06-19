@@ -58,7 +58,6 @@
                 }else{
                     $tabla.='<li class="page-item"><a class="page-link" href="'.SERVERURL.''.$vista.'/'.($paginador-1).'">Atras</a></li>';
                 }
-    
                 for($i=1;$i<=$Npaginas;$i++){
                     
                     if($Npaginas<=5){
@@ -237,6 +236,10 @@
                         </button>
                     </div>";
             return $alerta;
+        }
+
+        protected function localstorage_null($localstorage){
+            $vaciar = "<script></script>";
         }
     
     }

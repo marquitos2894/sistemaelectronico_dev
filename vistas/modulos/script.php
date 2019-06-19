@@ -23,4 +23,11 @@
 
   <script src="<?php echo SERVERURL?>vistas/js/main.js"></script>
 
+  <!-- Page level plugins -->
+  <script src="<?php echo SERVERURL?>vistas/vendor/datatables/jquery.dataTables.min.js"></script>
+  <script src="<?php echo SERVERURL?>vistas/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+  <!-- Page level custom scripts -->
+  <script src="<?php echo SERVERURL?>vistas/js/demo/datatables-demo.js"></script>
+
  

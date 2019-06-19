@@ -32,9 +32,47 @@
                 if(!localStorage.getItem("carritoS")){
                     localStorage.setItem('carritoS','[]');
                 }
-                
-                
+
                 if(!localStorage.getItem("BDproductos") || localStorage.getItem("BDproductos")=="[]"){
+                    const datos = new FormData();
+                    datos.append('id_alm', '1');
+                    let response = await fetch('../ajax/almacenAjax.php',{
+                        method : 'POST',
+                        body :  datos
+                    });
+                    let data = await response.json();
+                    console.log("json")
+                    await localStorage.setItem('BDproductos',JSON.stringify(data)); 
+                    this.getBDproductos = await JSON.parse(localStorage.getItem('BDproductos')); 
+                    console.log("localStorage")
+                    await render.Renderbd(this.getBDproductos);
+                    console.log("render")
+
+                    this.getBDproductos = JSON.parse(localStorage.getItem('BDproductos'));
+                    this.getCarritoS = JSON.parse(localStorage.getItem("carritoS"));
+                    
+                    view.renderCarritoS(); 
+                    console.log("carritoin");
+                    console.log(this.getBDproductos);
+                    console.log(this.getCarritoS);
+            
+
+                }else{
+
+                    this.getBDproductos = await JSON.parse(localStorage.getItem('BDproductos'));
+                    render.Renderbd(this.getBDproductos);
+
+                    this.getBDproductos = JSON.parse(localStorage.getItem('BDproductos'));
+                    this.getCarritoS = JSON.parse(localStorage.getItem("carritoS"));
+                    
+                    view.renderCarritoS(); 
+                    console.log("carritoin");
+                    console.log(this.getBDproductos);
+                    console.log(this.getCarritoS);
+                }
+                
+                
+                /*if(!localStorage.getItem("BDproductos") || localStorage.getItem("BDproductos")=="[]"){
                     /* Promisse */
                     /*const datos = new FormData();
                     datos.append('id_alm', '1');
@@ -48,7 +86,7 @@
                     });*/
                     
                     /* Async await */
-                    const datos = new FormData();
+                    /*const datos = new FormData();
                     datos.append('id_alm', '1');
                     let response = await fetch('../ajax/almacenAjax.php',{
                         method : 'POST',
@@ -56,16 +94,11 @@
                     });
                     let data = await response.json();
                     localStorage.setItem('BDproductos',JSON.stringify(data));           
-                } 
+            } */
         }
 
   
 
-        this.getBDproductos = JSON.parse(localStorage.getItem('BDproductos'));
-        this.getCarritoS = JSON.parse(localStorage.getItem("carritoS"));
-  
-        console.log(this.getBDproductos);
-        console.log(this.getCarritoS);
 
 
 
@@ -146,6 +179,32 @@
         }     
         
     }
+    function render(){
+        
+        this.Renderbd = function (lista){
+            let template = ``;
+            let j = 1;
+            for(i of lista){
+
+            template += `
+              <tr>
+                <td>${j}</td>
+                <td>${i.codigo}</td>
+                <td>${i.descripcion}</td>
+                <td>${i.nparte1}</td>
+                <td>${i.Nombre_Equipo}</td>
+                <td>${i.u_nombre}-${i.u_seccion}</td>
+                <td>${i.unidad_med}</td>
+                <td>${i.stock}</td>
+                <td><input type='number' id='salida${i.id_ac}' /></td>
+                <td> <a href='#' class='card-footer-item' id='addItem' data-producto='${i.id_ac}'>+</a></td>
+              </tr>
+                `;
+                j++;
+            }
+            $("#bdcomponentes").innerHTML = template;       
+        }
+    }
 
     function CarritoView(){
 
@@ -210,10 +269,11 @@
 
     var carrito = new Carrito1();
     var view = new CarritoView();
+    var render = new render();
 
     document.addEventListener("DOMContentLoaded",function(){
         carrito.constructor();
-        view.renderCarritoS(); 
+        //view.renderCarritoS(); 
     });
 
 

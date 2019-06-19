@@ -47,7 +47,8 @@ class almacenModelo extends mainModel{
         $sql->execute();
         $id=$conex->lastInsertId();     
         return $id;
-    }   
+    }
+
 
     protected function save_dvsalida_modelo($id_vsalida,$id_ac,$dv_descripcion,$dv_nparte1,$dv_stock,$dv_solicitado,$dv_entregado,$dv_unombre,$dv_useccion){
         $conex = mainModel::conectar();
@@ -90,8 +91,29 @@ class almacenModelo extends mainModel{
         return $return;
     }
     
-    protected function save_dvingreso_modelo(){
+    protected function save_dvingreso_modelo($id_vingreso,$dvi_id_ac,$dvi_codigo,$dvi_descripcion,$dvi_nparte1,$dvi_stock,$dvi_ingreso,$dvi_nom_equipo,$fk_id_equipo){
         $conex = mainModel::conectar();
+        $mensaje = [];
+        $sql="";
+        $i=0;
+        foreach($dvi_descripcion[0] as $valor){
+            $sql = $conex->prepare("INSERT INTO detalle_vale_ingreso (fk_id_vingreso,fk_id_ac,dvi_codigo,dvi_descripcion,dvi_nparte1,dvi_stock,dvi_ingreso,dvi_nombre_equipo,fk_id_equipo) 
+                                                        VALUES(:fk_id_vingreso,:fk_id_ac,:dvi_codigo,:dvi_descripcion,:dvi_nparte1,:dvi_stock,:dvi_ingreso,:dvi_nombre_equipo,:fk_id_equipo);
+                                                        UPDATE almacen_componente ac SET ac.stock = (ac.stock + :dvi_ingreso) WHERE ac.id_ac = {$dvi_id_ac[0][$i]}");
+            $sql->bindParam(":fk_id_vingreso",$id_vingreso);
+            $sql->bindParam(":fk_id_ac",$dvi_id_ac[0][$i]);
+            $sql->bindParam(":dvi_codigo",$dvi_codigo[0][$i]);
+            $sql->bindParam(":dvi_descripcion",$dvi_descripcion[0][$i]);
+            $sql->bindParam(":dvi_nparte1",$dvi_nparte1[0][$i]);
+            $sql->bindParam(":dvi_stock",$dvi_stock[0][$i]);
+            $sql->bindParam(":dvi_ingreso",$dvi_ingreso[0][$i]);
+            $sql->bindParam(":dvi_nombre_equipo",$dvi_nom_equipo[0][$i]);
+            $sql->bindParam(":fk_id_equipo",$fk_id_equipo[0][$i]);
+            $sql->execute();
+            $i++;
+        }
+        return $sql;
+  
     }
 }
 

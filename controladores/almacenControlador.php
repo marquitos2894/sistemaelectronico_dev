@@ -78,6 +78,7 @@ Class almacenControlador extends almacenModelo {
         }
 
         $tabla.='</tbody></table></div>';
+   
         $tabla.= mainModel::paginador($total,$paginador,$Npaginas,$vista);
         return $tabla;
     }
@@ -148,6 +149,7 @@ Class almacenControlador extends almacenModelo {
                     "tiempo"=>5000
                 ];
                 $datos = ["tipo"=>"success","mensaje"=>"<h5><strong>Vale de salida N°{$id_vsalida}</strong> generado con exito !! haga click aqui para ver su registro, o la pagina se actualizara en 5s</h5> "];
+                
                 echo mainModel::bootstrap_alert($datos);
                 //echo "<script>setTimeout('document.location.reload()',10000)</script>";
             }
@@ -189,13 +191,14 @@ Class almacenControlador extends almacenModelo {
         $dni_per = mainModel::limpiar_cadena($datospersonal['dni_per']);
         
         //Detalle
-        $id_ac[]=$_POST["id_ac"];
-        $dv_codigo[]=$_POST["dv_codigo"];
-        $dv_descripcion[]=$_POST["dv_descripcion"];
-        $dv_nparte1[]=$_POST["dv_nparte1"];
-        $dv_stock[]=$_POST["dv_stock"];
-        $dv_unombre[]=$_POST["dv_unombre"];
-        $dv_useccion[]=$_POST["dv_useccion"];
+        $dvi_id_ac[]=$_POST["id_ac"];
+        $dvi_codigo[]=$_POST["dv_codigo"];
+        $dvi_descripcion[]=$_POST["dv_descripcion"];
+        $dvi_nparte1[]=$_POST["dv_nparte1"];
+        $dvi_stock[]=$_POST["dv_stock"];
+        $dvi_ingreso[]=$_POST["dv_ingreso"];
+        $dvi_fkid_equipo[]=$_POST["dv_id_equipo"];
+        $dvi_nom_equipo[]=$_POST["dv_nom_equipo"];
 
         
         $datos = [
@@ -211,17 +214,34 @@ Class almacenControlador extends almacenModelo {
         ];
 
         $id_vingreso=almacenModelo::save_vingreso_modelo($datos);
+        $ingreso=almacenModelo::save_dvingreso_modelo($id_vingreso,$dvi_id_ac,$dvi_codigo,$dvi_descripcion,$dvi_nparte1,$dvi_stock,$dvi_ingreso,$dvi_nom_equipo,$dvi_fkid_equipo);
         if($id_vingreso!=0){
+             if($ingreso->rowCount()>0){
+                $alerta=[
+                    "alerta"=>"recargar_tiempo",
+                    "Titulo"=>"Vale Ingreso N°{$id_vingreso} generado! ",
+                    "Texto"=>"Los siguientes datos han sido guardados",
+                    "Tipo"=>"success",
+                    "tiempo"=>5000
+                ];
+                $datos = ["tipo"=>"success","mensaje"=>"<h5><strong>Vale de ingreso N°{$id_vingreso}</strong> generado con exito !! haga click aqui para ver su registro, o la pagina se actualizara en 5s</h5> "];
+                echo mainModel::bootstrap_alert($datos);
+             }else {
+                $alerta=[
+                    "alerta"=>"simple",
+                    "Titulo"=>"Ocurrio un error inesperado",
+                    "Texto"=>"No hemos podido registrar el vale de ingreso, contacte al admin",
+                    "Tipo"=>"error"
+                ];
+             }   
             
-        $alerta=[
-            "alerta"=>"recargar_tiempo",
-            "Titulo"=>"Vale salida N°{$id_vingreso} generado! ",
-            "Texto"=>"Los siguientes datos han sido guardados",
-            "Tipo"=>"success",
-            "tiempo"=>5000
-        ];
-        $datos = ["tipo"=>"success","mensaje"=>"<h5><strong>Vale de salida N°{$id_vingreso}</strong> generado con exito !! haga click aqui para ver su registro, o la pagina se actualizara en 5s</h5> "];
-        echo mainModel::bootstrap_alert($datos);
+        }else{
+            $alerta=[
+                "alerta"=>"simple",
+                "Titulo"=>"Ocurrio un error inesperado",
+                "Texto"=>"No hemos podido registrar el vale de ingreso, contacte al admin",
+                "Tipo"=>"error"
+            ];
         }
 
 
@@ -230,12 +250,12 @@ Class almacenControlador extends almacenModelo {
 
 
     public function obtener_consulta_json_controlador(){
-        $consulta = "SELECT ac.id_ac,c.id_comp,c.codigo,c.descripcion,c.nparte1,
-        c.nparte2,c.nparte3,c.unidad_med,ac.stock,ac.fk_idalm,ac.u_nombre,ac.u_seccion,e.Nombre_Equipo
+        $consulta = "SELECT ac.id_ac,c.id_comp,c.descripcion,c.nparte1,
+        c.nparte2,c.nparte3,c.unidad_med,ac.stock,ac.fk_idalm,ac.u_nombre,ac.u_seccion,e.Nombre_Equipo,e.Id_Equipo
         FROM componentes c
         INNER JOIN almacen_componente ac ON ac.fk_idcomp = c.id_comp 
         INNER JOIN equipos e  ON e.Id_Equipo = ac.fk_idequipo 
-        WHERE ac.est = 1 ";
+        WHERE ac.est = 1  ";
         return mainModel::obtener_consulta_json($consulta);
     }
 

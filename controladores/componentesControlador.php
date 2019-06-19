@@ -89,6 +89,39 @@ Class componentesControlador extends componentesModelo {
      
     }
 
+    public function save_componente_controlador(){
+        
+        $descripcion =  mainModel::limpiar_cadena($_POST["descripcion"]);
+        $nparte1 =  mainModel::limpiar_cadena($_POST["nparte1"]);
+        $nparte2 =  mainModel::limpiar_cadena($_POST["nparte2"]);
+        $nparte3 =  mainModel::limpiar_cadena($_POST["nparte3"]);
+        $marca =  mainModel::limpiar_cadena($_POST["marca"]);
+        //$tipo =  mainModel::limpiar_cadena($_POST["tipo"]);
+        $unidad_med=  mainModel::limpiar_cadena($_POST["unidad_med"]);
+        $medida=  mainModel::limpiar_cadena($_POST["medida"]);
+        $control_stock= mainModel::limpiar_cadena($_POST["control_stock"]);
+        $control_stock = $control_stock == 'on'? $control_stock = 1 : $control_stock =0;
+        $stock_min=  mainModel::limpiar_cadena($_POST["stock_min"]);
+        $stock_max=  mainModel::limpiar_cadena($_POST["stock_max"]);
+
+        $datos = [
+            "descripcion"=>$descripcion,
+            "nparte1"=>$nparte1,
+            "nparte2"=>$nparte2,
+            "nparte3"=>$nparte3,
+            "marca"=>$marca,
+            "unidad_med"=>$unidad_med,
+            "medida"=>$medida,
+            "control_stock"=>$control_stock,
+            "stock_min"=>$stock_min,
+            "stock_max"=>$stock_max
+        ];
+
+     $resp = componentesModelo::save_componentenes_modelo($datos);   
+
+
+    }
+
 }
 
 

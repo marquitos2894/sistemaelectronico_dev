@@ -17,25 +17,27 @@
 ?>
 
 <div class="container-fluid">
-<ul class="nav nav-tabs">
-        <li class="nav-item">
-            <a class="nav-link " href="<?php echo SERVERURL;?>componentes/">Almacen</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link active;alert alert-danger" href="<?php echo SERVERURL;?>RValeSalida/">Vale salida</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="<?php echo SERVERURL;?>RValeIngreso/">Vale de ingreso</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#">+Nuevo componente</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link " href="#" aria-disabled="true">Import</a>
-        </li>
-    </ul><br>
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link " href="<?php echo SERVERURL;?>componentes/">Almacen</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active;alert alert-danger" href="<?php echo SERVERURL;?>RValeSalida/">Vale salida</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="<?php echo SERVERURL;?>RValeIngreso/">Vale de ingreso</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="<?php echo SERVERURL;?>newcomponente/" >+Nuevo componente</a>
+            </li>
+            <li class="nav-item">
+                    <a class="nav-link " href="#" aria-disabled="true">Ingreso Almacen</a>
+                </li>
+            <li class="nav-item">
+                <a class="nav-link "  aria-disabled="true">Import</a>
+            </li>
+        </ul><br>
 
-    
         <div class="accordion" id="accordionExample">
             <div class="card">
                 <div class="card-header" id="headingOne">
@@ -48,22 +50,64 @@
                 <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
                     <div class="card-body">
                             <div class="columns is-multiline" id="catalogo">
-                                <form action="" method="POST">
+                                <!--form action="" method="POST">
                                         <div class="input-group mb-3">                        
                                                 <div class="input-group-prepend">                            
                                                     <button class="btn btn-primary" type="submit" id="button-addon1">Buscar</button>
                                                 </div>
                                                 <input type="text" name="buscador" class="form-control" placeholder="Buscar componentes"  aria-describedby="button-addon1">
                                         </div>
-                                </form>
+                                </form-->
 
-                                <?php echo $text; ?>   
-                                <?php  echo $almCont->paginador_componentes($pagina[1],5,"",$buscador,$pagina[0],"Salida");?>   
+                                <?php //echo $text; ?>   
+                                <?php  //echo $almCont->paginador_componentes($pagina[1],5,"",$buscador,$pagina[0],"Salida");?>   
+                                <div class="card shadow mb-4">
+                                    <div class="card-header py-3">
+                                    <h6 class="m-0 font-weight-bold text-primary">Componentes</h6>
+                                    </div>
+                                    <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Cod.Interno</th>
+                                                <th>Descripcion</th>
+                                                <th>Nparte1</th>
+                                                <th>Equipo</th>
+                                                <th>Ubicacion</th>
+                                                <th>U.M</th>
+                                                <th>Stock</th>
+                                                <th>Solicitado</th>
+                                                <th>Add</th>
+                                            </tr>
+                                        </thead>
+                                        <tfoot>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Cod.Interno</th>
+                                                <th>Descripcion</th>
+                                                <th>Nparte1</th>
+                                                <th>Equipo</th>
+                                                <th>Ubicacion</th>
+                                                <th>U.M</th>
+                                                <th>Stock</th>
+                                                <th>Solicitado</th>
+                                                <th>Add</th>
+                                            </tr>
+                                        </tfoot>
+                                        <tbody id="bdcomponentes" >
+                                            
+
+                                        </tbody>
+                                        </table>
+                                    </div>
+                                    </div>
+                                </div>  
                             </div>
                     </div>
                 </div>
             </div>
-
             <form action="<?php echo SERVERURL;?>ajax/almacenAjax.php"  method="POST" data-form="save" class="FormularioAjax" autocomplete="off" enctype="multipart/form-data" >
                 <div id="productosCarritoS">
                                 <!-- item de local storage para salida del almacen-->
