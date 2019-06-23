@@ -30,6 +30,9 @@
             <a class="nav-link" href="<?php echo SERVERURL;?>newcomponente/">+Nuevo componente</a>
         </li>
         <li class="nav-item">
+          <a class="nav-link " href="<?php echo SERVERURL;?>ingresoAlmacen/" aria-disabled="true">Ingreso Almacen</a>
+        </li>
+        <li class="nav-item">
             <a class="nav-link " href="#" aria-disabled="true">Import</a>
         </li>
     </ul><br>

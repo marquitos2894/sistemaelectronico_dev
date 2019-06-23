@@ -31,7 +31,7 @@
             <a class="nav-link" href="<?php echo SERVERURL;?>newcomponente/">+Nuevo componente</a>
         </li>
         <li class="nav-item">
-                <a class="nav-link " href="#" aria-disabled="true">Ingreso Almacen</a>
+                <a class="nav-link " href="<?php echo SERVERURL;?>ingresoAlmacen/" aria-disabled="true">Ingreso Almacen</a>
             </li>
         <li class="nav-item">
             <a class="nav-link " href="#" aria-disabled="true">Import</a>
@@ -68,7 +68,39 @@
                                      
                                     <div class="card-body">
                                         <div class="table-responsive">
-                                            <div id="tablecomp">  </div> 
+                                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                                <thead>
+                                                    <tr>
+                                                        <th>#</th>
+                                                        <th>Cod.Interno</th>
+                                                        <th>Descripcion</th>
+                                                        <th>Nparte1</th>
+                                                        <th>Equipo</th>
+                                                        <th>Ubicacion</th>
+                                                        <th>U.M</th>
+                                                        <th>Stock</th>
+                                                        <th>Ingreso</th>
+                                                        <th>Add</th>
+                                                    </tr>
+                                                </thead>
+                                                <tfoot>
+                                                    <tr>
+                                                        <th>#</th>
+                                                        <th>Cod.Interno</th>
+                                                        <th>Descripcion</th>
+                                                        <th>Nparte1</th>
+                                                        <th>Equipo</th>
+                                                        <th>Ubicacion</th>
+                                                        <th>U.M</th>
+                                                        <th>Stock</th>
+                                                        <th>Ingreso</th>
+                                                        <th>Add</th>
+                                                    </tr>
+                                                </tfoot>
+                                                <tbody>
+                                                <?php echo $almCont->databale_componentes(1); ?>
+                                                </tbody>
+                                                </table>
                                         </div>
                                     </div>
                                 </div>  

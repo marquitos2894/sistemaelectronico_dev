@@ -22,10 +22,9 @@
             body :  datos
         });
         let data = await response.json();
-       
 }*/
 
-     function Carrito1(){
+    function Carrito1(){
 
         this.constructor = async function(){
 
@@ -33,7 +32,7 @@
                     localStorage.setItem("carritoIn","[]");             
                 }
   
-               /*if(!localStorage.getItem("BDproductos") || localStorage.getItem("BDproductos")=="[]"){
+               /*if(!localStorage.getItem("BDproductos") ){
                     /* Promisse */
                     /*const datos = new FormData();
                     datos.append('id_alm', '1');
@@ -60,7 +59,7 @@
                     localStorage.setItem('BDproductos',JSON.stringify(data));      
                 }*/
 
-                if(!localStorage.getItem("BDproductos") || localStorage.getItem("BDproductos")=="[]"){
+                if(!localStorage.getItem("carritoIn") || localStorage.getItem("carritoIn")=="[]"){
 
                     const datos = new FormData();
                     datos.append('id_alm', '1');
@@ -84,34 +83,34 @@
                     
                     await view.renderCarritoIn();
                     await console.log("carritoin");
-
                     await  console.log(this.getBDproductos);
                     await  console.log(this.getCarritoIn);
 
-                    await  console.log(this.getBDproductos.length);
+                    //await  console.log(this.getBDproductos.length);
 
                 }else{
 
                     this.getBDproductos = await JSON.parse(localStorage.getItem('BDproductos'));
-                    await  render.Renderbd(this.getBDproductos);
-                    console.log("render")
+                    //await  render.Renderbd(this.getBDproductos);
+                    //console.log("render")
                     //render.Renderbd(data);
                     console.log(this.getBDproductos.length);
 
-                    this.getBDproductos = JSON.parse(localStorage.getItem('BDproductos'));
+                    //this.getBDproductos = JSON.parse(localStorage.getItem('BDproductos'));
                     this.getCarritoIn =  JSON.parse(localStorage.getItem('carritoIn'));
 
                     view.renderCarritoIn();
                     console.log("carritoin");
-                    console.log(this.getBDproductos);
+                    //console.log(this.getBDproductos);
                     console.log(this.getCarritoIn);
                 }
+                
         }
 
         this.agregarItem = function(item,cant){
-            if(!this.getBDproductos || this.getCarritoIn==null){
+            /*if(!this.getBDproductos || this.getCarritoIn==null){
                 location.reload();
-            }
+            }*/
         
             for(i of this.getBDproductos){
                 if(i.id_ac == item){
@@ -138,6 +137,7 @@
             }else{
             datos.cantidad = cant;
             }
+
             this.getCarritoIn.push(datos);
             localStorage.setItem("carritoIn",JSON.stringify(this.getCarritoIn));          
         }
@@ -220,7 +220,7 @@
 
     function CarritoView(){
 
-        this.renderCarritoIn =   function(){
+        this.renderCarritoIn = function(){
 
             if(carrito.getCarritoIn.length<=0){
                 var template = `<div class="alert alert-success" role="alert">
@@ -285,7 +285,7 @@
 
 
 
-    window.addEventListener("DOMContentLoaded", async function(){
+    document.addEventListener("DOMContentLoaded", async function(){
         await carrito.constructor();
         await console.log("constructor");
 
@@ -309,14 +309,14 @@
         }
     });
 
-   window.addEventListener("onload", async function(e) {
+   /*window.addEventListener("onload", async function(e) {
         
         //await carrito.constructor();
         //$("#bdcomponentes").innerHTML = await render.Renderbd();
         console.log(this.getBDproductos = await JSON.parse(localStorage.getItem('BDproductos')) );
         await render.Renderbd(this.getBDproductos);
         console.log("window");
-    });
+    });*/
 
 
 

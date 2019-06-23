@@ -83,6 +83,41 @@ Class almacenControlador extends almacenModelo {
         return $tabla;
     }
 
+    public function databale_componentes($id){
+        
+      $conexion = mainModel::conectar();
+      $datos = $conexion->prepare("SELECT ac.id_ac,c.id_comp,c.descripcion,c.nparte1,
+      c.nparte2,c.nparte3,c.unidad_med,ac.stock,ac.fk_idalm,ac.u_nombre,ac.u_seccion,e.Nombre_Equipo,e.Id_Equipo
+      FROM componentes c
+      INNER JOIN almacen_componente ac ON ac.fk_idcomp = c.id_comp 
+      INNER JOIN equipos e  ON e.Id_Equipo = ac.fk_idequipo 
+      WHERE ac.est = {$id}  "); 
+      $datos->execute();
+      $datos=$datos->fetchAll(); 
+       
+      $dtable = '';
+      $contador = 1;
+      foreach($datos as $row){
+        $dtable .="
+                <tr>
+                    <td>{$contador}</td>
+                    <td>{$row['id_comp']}</td>
+                    <td>{$row['descripcion']}</td>
+                    <td>{$row['nparte1']}</td>
+                    <td>{$row['Nombre_Equipo']}</td>
+                    <td>{$row['u_nombre']}-{$row['u_seccion']}</td>
+                    <td>{$row['unidad_med']}</td>
+                    <td>{$row['stock']}</td>
+                    <td><input type='number' id='salida{$row['id_ac']}' /></td>
+                    <td> <a href='#productosCarritoIn' class='card-footer-item' id='addItem' data-producto='{$row['id_ac']}'>+</a></td>
+                </tr>
+        ";
+      }
+
+    
+      return $dtable;
+
+    }
     public function save_vsalida_controlador(){
 
         $fk_idusuario = mainModel::limpiar_cadena($_POST["usuario"]);

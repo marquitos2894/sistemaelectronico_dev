@@ -122,6 +122,37 @@ Class componentesControlador extends componentesModelo {
 
     }
 
+    public function componentes_general(){
+        $conexion = mainModel::conectar();
+        $datos = $conexion->prepare("call v_comp_general");
+        $datos->execute();
+        $datos=$datos->fetchAll();
+        $contador = 1;
+        $dtable = "";
+        foreach($datos as $row){
+            $dtable .="
+                <tr>
+                    <td>{$contador}</td>
+                    <td>{$row['descripcion']}</td>
+                    <td>{$row['id_comp']}</td>
+                    <td>{$row['nparte1']}</td>
+                    <td>{$row['nparte2']}</td>
+                    <td>{$row['nparte3']}</td>
+                    <td>{$row['marca']}</td>
+                    <td><a href='#' class='card-footer-item' id='addItem' data-producto='{$row['id_comp']}' data-toggle='modal' data-target='#exampleModalCenter'>+</a></td>
+                </tr>
+            ";
+            $contador++;
+        }
+
+        return $dtable;
+    }
+
+    public function componentes_gen_json(){
+        $consulta = "SELECT * FROM componentes WHERE est = 1";
+        return mainModel::obtener_consulta_json($consulta);
+    }
+
 }
 
 

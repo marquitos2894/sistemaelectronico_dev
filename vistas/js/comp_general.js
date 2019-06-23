@@ -1,0 +1,183 @@
+(function(){
+  
+    function $1(selector){
+        return document.querySelector(selector);
+    }
+
+    function BDcomponentes(){
+
+        this.constructor = async function(){
+
+            if(!localStorage.getItem("carritoGen")){
+                localStorage.setItem("carritoGen","[]");
+                
+            }
+
+            if(!localStorage.getItem("BDcomp_gen")){
+                localStorage.setItem("BDcomp_gen","[]");
+            }
+    
+            if(localStorage.getItem("BDcomp_gen")=="[]" ){
+                const datos = new FormData();
+                datos.append('comp_gen','true');
+                let response = await fetch('../ajax/componentesAjax.php',{
+                    method: 'POST',
+                    body : datos
+                });
+                let data = await response.json();
+                console.log(data);
+                await localStorage.setItem("BDcomp_gen", JSON.stringify(data))
+                this.getBDcomp_gen = await JSON.parse(localStorage.getItem("BDcomp_gen"));
+                await console.log(this.getBDcomp_gen);
+                this.carrito = JSON.parse(localStorage.getItem("carritoGen"));
+            }else{
+                this.carrito = JSON.parse(localStorage.getItem("carritoGen"));
+                this.getBDcomp_gen = await JSON.parse(localStorage.getItem("BDcomp_gen"));
+                console.log(this.getBDcomp_gen);
+                console.log(this.carrito);
+            }
+
+            
+
+        }
+
+        this.agregarItem = function(item,u_nom,u_sec){
+            for (i of this.getBDcomp_gen){
+                if(i.id_comp == item){
+                    i.u_nom = u_nom;
+                    i.u_sec = u_sec;
+                    var datos = i;
+                }
+            }
+            
+            /*for(i of this.carrito){
+                if(i.id_comp == item){
+
+                }
+            }*/
+            i
+            this.carrito.push(datos);
+            localStorage.setItem("carritoGen",JSON.stringify(this.carrito))
+
+
+        }
+
+        this.eliminarItem = function(item){
+            for(i of this.carrito){
+                if( i.id_comp == item){
+                    this.carrito.splice(i,1);
+                    console.log("eliminado")
+                }
+            }
+            localStorage.setItem("carritoGen",JSON.stringify(this.carrito));
+        }
+
+
+    }
+
+    function Render(){
+        this.renderCarrito = function(){
+            console.log(bdcomp.carrito.length);
+            //productosCarrito
+            if(bdcomp.carrito.length<=0){
+                var template = `<div class="alert alert-primary" role="alert">
+                El carrito esta vacio !!
+                </div><br>`;
+                $1("#productosCarrito").innerHTML = template;
+            }else{
+                $1("#productosCarrito").innerHTML = "";
+                let template = `<div class="table-responsive"><table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Cod.Interno</th>
+                        <th scope="col">Descriocion</th>
+                        <th scope="col">Nparte1</th>
+                        <th scope="col">Nparte2</th>
+                        <th scope="col">Ubicacion</th>
+                        <th scope="col">Delete</th>
+                    </tr>
+                </thead><tbody>`;
+                let j=1;
+                for(i of bdcomp.carrito){
+                    template +=`
+                    <tr class="alert alert-primary">
+                        <td>${j}</td>
+                        <td>${i.id_comp}</td>
+                        <td>${i.descripcion}</td>
+                        <td>${i.nparte1}</td>
+                        <td>${i.nparte2}</td>
+                        <td>${i.u_nom}-${i.u_sec}</td>
+                        <td><p class="field"><a href="#" class="button is-danger" id="deleteProducto" data-producto="${i.id_comp}">x</a></p></td>
+                    </tr>
+                    <div style="display:none;">
+                        <tr>
+                            <input type="hidden" name="id_comp[]" value="${i.id_comp}">
+                            <input type="hidden" name="d_descripcion[]" value="${i.descripcion}">
+                            <input type="hidden" name="d_nparte1[]" value="${i.nparte1}">
+                            <input type="hidden" name="d_nparte2[]" value="${i.nparte2}">
+                            <input type="hidden" name="d_u_nom[]" value="${i.u_nom}">
+                            <input type="hidden" name="d_u_sec[]" value="${i.u_sec}">
+                        </tr>
+                    <div>`;
+                j+=1;
+                }
+                $1("#productosCarrito").innerHTML = template;
+
+            }
+
+        }
+    }
+
+
+
+     var bdcomp = new BDcomponentes();
+     var render = new Render();
+
+    document.addEventListener("DOMContentLoaded", async function(){
+        await bdcomp.constructor();
+        await render.renderCarrito();
+    });
+
+    $1('#componentesin').addEventListener("click",function(ev){
+        ev.preventDefault();
+        if(ev.target.id=="addItem"){
+            let iditem = ev.target.dataset.producto;
+            let template = `<input type="hidden" id="iditem" value="${iditem}" />
+            <div class="form-row">
+                <div class="form-group col-sm-4">
+                <label for="inputEmail4">Ubicacion</label>
+                <input type="text" name="unidad_med" id="u_nom" class="form-control" id="inputEmail4" placeholder="Ubicacion">
+                </div>
+                <div class="form-group col-sm-4">
+                <label for="inputPassword4">Seccion</label>
+                <input type="text" name="medida" id="u_sec" class="form-control" id="inputPassword4" placeholder="Seccion">
+                </div>
+            </div>`;
+            $1('#modal-body').innerHTML = template;
+        }
+    });
+
+    $1('#btnAgregar').addEventListener("click",function(ev){
+        //agregar desde el modal
+        ev.preventDefault();
+        iditem = $1('#iditem').value;
+        u_nom = $1('#u_nom').value;
+        u_sec = $1('#u_sec').value;
+
+        bdcomp.agregarItem(iditem,u_nom,u_sec);
+        console.log(iditem);
+        render.renderCarrito();
+    });
+
+    $1('#productosCarrito').addEventListener("click",function(ev){
+        ev.preventDefault();
+        if(ev.target.id == "deleteProducto"){
+            bdcomp.eliminarItem(ev.target.dataset.producto);
+            render.renderCarrito();
+        }   
+
+    });
+
+
+})();
