@@ -153,6 +153,21 @@ Class componentesControlador extends componentesModelo {
         return mainModel::obtener_consulta_json($consulta);
     }
 
+    public function chosen_equipo($val,$vis){
+        $consulta = "select e.Id_Equipo,e.Nombre_Equipo
+        from equipos e";
+        return mainModel::ejecutar_combo($consulta,$val,$vis);
+    }
+    
+    /*public function validar_equipo($id){
+    $consulta = "SELECT e.Nombre_Equipo FROM equipos e WHERE e.Id_equipo = {$id}";
+    return mainModel::obtener_consulta_json($consulta);
+    }*/
+
+    
+
+
+
 }
 
 

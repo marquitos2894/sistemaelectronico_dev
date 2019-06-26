@@ -18,7 +18,7 @@
 <!-- Chosen combobox -->
 <script src="<?php echo SERVERURL?>vistas/js/chosen/chosen.jquery.js"></script>
 <script src="<?php echo SERVERURL?>vistas/js/chosen/init.js"></script>
-<script src="<?php echo SERVERURL?>vistas/js/chosen/jquery-3.2.1.min.js"></script>
+
 <script src="<?php echo SERVERURL?>vistas/js/chosen/prism.js"></script>
 
   <script src="<?php echo SERVERURL?>vistas/js/main.js"></script>

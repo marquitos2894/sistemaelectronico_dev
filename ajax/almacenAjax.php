@@ -21,6 +21,10 @@
       echo $almCont->save_vingreso_controlador();
       echo "<script>localStorage.setItem('carritoIn','[]');</script>";
    } 
+
+   if(isset($_POST["id_comp"]) && isset($_POST["d_id_equipo"]) ){
+      echo $almCont->save_registro_almacen_controlador();
+   }
    
 
 ?>

@@ -283,6 +283,50 @@ Class almacenControlador extends almacenModelo {
         return mainModel::sweet_alert($alerta);
     }
 
+    public function save_registro_almacen_controlador(){
+       /* $id_comp = mainModel::limpiar_cadena($_POST["id_comp"]);
+        //$d_descripcion = mainModel::limpiar_cadena($_POST["d_descripcion"]);
+        $d_u_nom = mainModel::limpiar_cadena($_POST["d_u_nom"]);
+        $d_u_sec = mainModel::limpiar_cadena($_POST["d_u_sec"]);
+        $d_id_equipo = mainModel::limpiar_cadena($_POST["d_id_equipo"]);
+        $d_referencia = mainModel::limpiar_cadena($_POST["d_referencia"]);*/
+
+        $id_alm = 1;
+        $id_comp[] = $_POST["id_comp"];
+        $d_stock = 0;
+        $d_u_nom[] = $_POST["d_u_nom"];
+        $d_u_sec[] = $_POST["d_u_sec"];
+        $d_id_equipo[] = $_POST["d_id_equipo"];
+        $d_referencia[] = $_POST["d_referencia"];
+
+
+
+       /* $datos =  [
+            "id_alm"=>1,
+            $id_comp[] 
+            "id_comp"=>$id_comp,
+            "d_stock"=>0,
+            "d_u_nom"=>$d_u_nom,
+            "d_u_sec"=>$d_u_sec,
+            "d_id_equipo"=>$d_id_equipo,
+            "d_referencia"=>$d_referencia
+        ];*/
+
+    
+   
+        almacenModelo::save_registro_almacen_modelo($id_comp,$d_u_nom,$d_u_sec,$d_id_equipo,$d_referencia,$id_alm,$d_stock);
+
+        $alerta=[
+            "alerta"=>"simple",
+            "Titulo"=>"Componentes registrados",
+            "Texto"=>"Registrados en su almacen",
+            "Tipo"=>"success"
+        ];
+
+        return mainModel::sweet_alert($alerta);
+
+    }
+
 
     public function obtener_consulta_json_controlador(){
         $consulta = "SELECT ac.id_ac,c.id_comp,c.descripcion,c.nparte1,

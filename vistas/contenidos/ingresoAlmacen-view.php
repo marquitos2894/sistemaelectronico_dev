@@ -66,6 +66,7 @@
                             </tfoot>
                             <tbody>
                                 <?php echo $compCont->componentes_general(); ?>
+                                
                             </tbody>
                         </table>
                     </div>
@@ -76,9 +77,13 @@
         </div>
     </div>
 
-    <div id="productosCarrito">
-        <!-- item de local storage para ingreso al almacen (Nuevo o ubicacion)-->
-    </div> 
+    <form action="<?php echo SERVERURL;?>ajax/almacenAjax.php"  method="POST" data-form="save" class="FormularioAjax" autocomplete="off" enctype="multipart/form-data">
+        <div id="productosCarrito">
+            <!-- item de local storage para ingreso al almacen (Nuevo o ubicacion)-->
+        </div>
+        <input type="submit"  class="btn btn-primary btn-lg btn-block" value="Registrar"/>
+        <div class="RespuestaAjax"></div>
+    </form> 
 
 </div>
 <!-- Button trigger modal -->
@@ -97,9 +102,10 @@
         </button>
       </div>
       <div class="modal-body" id="modal-body">
-        
       </div>
+
       <div class="modal-footer">
+
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
         <button type="button" id="btnAgregar" class="btn btn-primary" data-dismiss="modal">Agregar</button>
       </div>
