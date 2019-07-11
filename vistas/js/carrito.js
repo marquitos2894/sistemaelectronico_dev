@@ -33,40 +33,45 @@
                     localStorage.setItem('carritoS','[]');
                 }
 
+                //if(!localStorage.getItem("carritoS") || localStorage.getItem("carritoS")=="[]"){
                 if(!localStorage.getItem("BDproductos") || localStorage.getItem("BDproductos")=="[]"){
+                    let id_almacen = $('#id_alm_vs').value;
                     const datos = new FormData();
-                    datos.append('id_alm', '1');
+                    datos.append('id_alm', id_almacen);
                     let response = await fetch('../ajax/almacenAjax.php',{
                         method : 'POST',
                         body :  datos
                     });
                     let data = await response.json();
+                    console.log(data);   
                     console.log("json")
+                    
                     await localStorage.setItem('BDproductos',JSON.stringify(data)); 
                     this.getBDproductos = await JSON.parse(localStorage.getItem('BDproductos')); 
                     console.log("localStorage")
-                    await render.Renderbd(this.getBDproductos);
-                    console.log("render")
+
+                    //await render.Renderbd(this.getBDproductos);
+                    //console.log("render")
 
                     this.getBDproductos = JSON.parse(localStorage.getItem('BDproductos'));
                     this.getCarritoS = JSON.parse(localStorage.getItem("carritoS"));
                     
-                    view.renderCarritoS(); 
-                    console.log("carritoin");
-                    console.log(this.getBDproductos);
-                    console.log(this.getCarritoS);
+                   await view.renderCarritoS(); 
+                    
+                   await  console.log(this.getBDproductos);
+                   await console.log(this.getCarritoS);
             
 
                 }else{
 
                     this.getBDproductos = await JSON.parse(localStorage.getItem('BDproductos'));
-                    render.Renderbd(this.getBDproductos);
+                    //render.Renderbd(this.getBDproductos);
 
                     this.getBDproductos = JSON.parse(localStorage.getItem('BDproductos'));
                     this.getCarritoS = JSON.parse(localStorage.getItem("carritoS"));
                     
                     view.renderCarritoS(); 
-                    console.log("carritoin");
+                    console.log("carrito");
                     console.log(this.getBDproductos);
                     console.log(this.getCarritoS);
                 }
@@ -235,7 +240,7 @@
                     template += `
                         <tr class="alert alert-danger">
                             <td>${j}</td>
-                            <td>${i.codigo}</td>
+                            <td>${i.id_comp}</td>
                             <td>${i.descripcion}</td>
                             <td>${i.nparte1}</td>
                             <td>${i.u_nombre}-${i.u_seccion}</td>

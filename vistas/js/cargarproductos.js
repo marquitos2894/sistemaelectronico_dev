@@ -26,7 +26,7 @@
 
     function render(){
         
-        this.Renderbd = function (lista){
+       /* this.Renderbd = function (lista){
             let template = ``;
             let j = 1;
             for(i of lista){
@@ -49,7 +49,7 @@
                 console.log(i);
             }
             $("#bdcomponentes").innerHTML = template;       
-        }
+        }*/
     }
 
     var cargar  = new cargar();

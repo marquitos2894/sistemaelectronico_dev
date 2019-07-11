@@ -4,19 +4,22 @@
       $almCont = new almacenControlador(); 
       
       $pagina = explode("/",$_GET['views']);
-      $buscador = "";
-      $text = "";   
-      if(isset($_POST['buscador']) && $_POST['buscador'] != "" ){
-          $buscador=$_POST['buscador'];
-          $text = '<h3><small class="text-muted">su busqueda fue :</small>"'.$buscador.'"</h3>';
-      }else{
-        $text="";
+
+      $id_alm = $_SESSION["almacen"];
+
+      if($_SESSION["almacen"]==0 ){
+        echo "<script> window.location.href = '../almacen/'; </script>";
       }
+
+      
+      
+      //var_dump($_SESSION["almacen"]);
 
 
 ?>
 
 <div class="container-fluid">
+<?php  include "vistas/modulos/nav-almacen.php";?> 
         <ul class="nav nav-tabs">
             <li class="nav-item">
                 <a class="nav-link " href="<?php echo SERVERURL;?>componentes/">Almacen</a>
@@ -32,6 +35,9 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link " href="<?php echo SERVERURL;?>ingresoAlmacen/" aria-disabled="true">Ingreso Almacen</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link " href="#" aria-disabled="true">Reportes</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link "  aria-disabled="true">Import</a>
@@ -66,11 +72,41 @@
                                     <h6 class="m-0 font-weight-bold text-primary">Componentes</h6>
                                     </div>
                                     <div class="card-body">
-                                    <div class="table-responsive">
-                                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-
-                                        </table>
-                                    </div>
+                                        <div class="table-responsive">
+                                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>#</th>
+                                                            <th>Cod.Interno</th>
+                                                            <th>Descripcion</th>
+                                                            <th>Nparte1</th>
+                                                            <th>Equipo</th>
+                                                            <th>Ubicacion</th>
+                                                            <th>U.M</th>
+                                                            <th>Stock</th>
+                                                            <th>Salida</th>
+                                                            <th>Add</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tfoot>
+                                                        <tr>
+                                                            <th>#</th>
+                                                            <th>Cod.Interno</th>
+                                                            <th>Descripcion</th>
+                                                            <th>Nparte1</th>
+                                                            <th>Equipo</th>
+                                                            <th>Ubicacion</th>
+                                                            <th>U.M</th>
+                                                            <th>Stock</th>
+                                                            <th>Salida</th>
+                                                            <th>Add</th>
+                                                        </tr>
+                                                    </tfoot>
+                                                    <tbody>
+                                                    <?php echo $almCont->databale_componentes($_SESSION["almacen"],"carrito"); ?>
+                                                    </tbody>
+                                                </table>
+                                        </div>
                                     </div>
                                 </div>  
                             </div>
@@ -147,7 +183,8 @@
                                     <label for="exampleFormControlTextarea1">Comentario de salida de los repuestos</label>
                                     <textarea  name="comentario" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
                             </div>
-                            <input type="hidden" value="valesalida" name="vale"/>
+                            <input type="hidden"  name="vale" value="valesalida"/>
+                            <input type="hidden"  name="id_alm_vs" id="id_alm_vs" value="<?php echo $id_alm ?>"/>
                             <button type="submit" class="btn btn-danger btn-lg btn-block">Emitir Vale de salida</button>
                         </div>
                     </div>

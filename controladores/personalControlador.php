@@ -9,7 +9,7 @@ if($peticionAjax){
 class personalControlador extends personalModelo {
 
 
-    public function paginador_personal($paginador,$registros){
+    public function paginador_personal($paginador,$registros,$vista){
 
         $paginador=mainModel::limpiar_cadena($paginador);
         $registros=mainModel::limpiar_cadena($registros);
@@ -19,7 +19,7 @@ class personalControlador extends personalModelo {
         $inicio=($paginador>0)?(($paginador*$registros)-$registros):0;
         
         $conexion = mainModel::conectar();
-        $datos=$conexion->query("select p.id_per,p.Nom_per,p.Ape_per,p.Dni_per,p.idunidad,pr.nombre
+        $datos=$conexion->query("select SQL_CALC_FOUND_ROWS p.id_per,p.Nom_per,p.Ape_per,p.Dni_per,p.idunidad,pr.nombre
         from prov_empl pe
         INNER JOIN personal p
         ON p.id_per = pe.fk_idper
@@ -41,7 +41,7 @@ class personalControlador extends personalModelo {
                     <img src='../vistas/img/avatar1.png' class='card-img-top'>
                     <div class='card-body'>
                     <h5 class='card-title'>{$row["Nom_per"]},{$row["Ape_per"]}</h5>
-                    <p class='card-text'>This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                    <p class='card-text'></p>
                     </div>
                     <div class='card-footer'>
                     <small class='text-muted'>Last updated 3 mins ago</small>
@@ -56,7 +56,7 @@ class personalControlador extends personalModelo {
                     <img src='../vistas/img/avatar1.png' class='card-img-top'>
                     <div class='card-body'>
                     <h5 class='card-title'>{$row[1]},{$row["Ape_per"]}</h5>
-                    <p class='card-text'>This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                    <p class='card-text'> </p>
                     </div>
                     <div class='card-footer'>
                     <small class='text-muted'>Last updated 3 mins ago</small>
@@ -64,7 +64,7 @@ class personalControlador extends personalModelo {
                 </div>";
         }
         $contenido.="</div>";
-
+        $contenido.= mainModel::paginador($total,$paginador,$Npaginas,$vista);
         return $contenido;
     }
 

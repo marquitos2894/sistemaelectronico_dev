@@ -61,7 +61,6 @@
   if(isset($_POST['correo']) && isset($_POST['clave'])){
     
     require_once './controladores/loginControlador.php';
-
     $login = new loginControlador();
     echo $login->iniciar_sesion_controlador();
 

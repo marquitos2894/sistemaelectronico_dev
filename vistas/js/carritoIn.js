@@ -4,8 +4,6 @@
         return document.querySelector(selector);
     }
 
-    console.log('inicio');
-
 
 /*    async function ver(){
 
@@ -59,18 +57,22 @@
                     localStorage.setItem('BDproductos',JSON.stringify(data));      
                 }*/
 
-                if(!localStorage.getItem("carritoIn") || localStorage.getItem("carritoIn")=="[]"){
+                //if(!localStorage.getItem("carritoIn") || localStorage.getItem("carritoIn")=="[]"){
+                if(!localStorage.getItem("BDproductos") || localStorage.getItem("BDproductos")=="[]"){
 
+                    let id_almacen = $('#id_alm_vi').value;
+                    console.log(id_almacen);
                     const datos = new FormData();
-                    datos.append('id_alm', '1');
+                    datos.append('id_alm', id_almacen);
                     let response = await fetch('../ajax/almacenAjax.php',{
                         method : 'POST',
                         body :  datos
                     });
-
                     let data = await response.json();
+                    console.log(data);
                     console.log("json");
                     await localStorage.setItem('BDproductos',JSON.stringify(data));
+                    
                     this.getBDproductos = await JSON.parse(localStorage.getItem('BDproductos')); 
                     console.log("localStorage");
                   

@@ -238,8 +238,14 @@
             return $alerta;
         }
 
-        protected function localstorage_null($localstorage){
-            $vaciar = "<script></script>";
+        protected function localstorage_reiniciar($localstorage){
+            foreach($localstorage as $local){
+             echo $vaciar=  "<script>
+                localStorage.setItem('$local','[]')
+                </script>";
+            }
+       
+            
         }
     
     }

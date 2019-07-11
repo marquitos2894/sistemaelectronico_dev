@@ -4,7 +4,6 @@ require_once './modelos/vistasModelo.php';
 class vistasControladores extends vistasModelo{
 
     public function obtener_plantilla_controlador(){
-
         return require_once './vistas/plantilla.php';
     }
 
@@ -14,8 +13,12 @@ class vistasControladores extends vistasModelo{
             
             $respuesta = vistasModelo::obtener_vistas_modelo($ruta[0]);
         }else{
-
-            $respuesta = "index";
+            if(isset($_SESSION['nombre_sbp'])){
+            $respuesta = vistasModelo::obtener_vistas_modelo("inicio");
+            }else{
+            $respuesta = vistasModelo::obtener_vistas_modelo("login");   
+            }
+            
         
         }
         return $respuesta;

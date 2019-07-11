@@ -2,9 +2,16 @@
     require_once './controladores/componentesControlador.php';
     $compCont = new componentesControlador();
 
+    $id_alm = $_SESSION["almacen"];
+    if($_SESSION["almacen"]==0 ){
+      echo "<script> window.location.href = '../almacen/'; </script>";
+    }
+
 ?>
 
 <div class="container-fluid">
+
+    <?php  include "vistas/modulos/nav-almacen.php";?> 
     <ul class="nav nav-tabs">
                 <li class="nav-item">
                     <a class="nav-link " href="<?php echo SERVERURL;?>componentes/">Almacen</a>
@@ -20,6 +27,9 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link active" href="<?php echo SERVERURL;?>ingresoAlmacen/" aria-disabled="true">Ingreso Almacen</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link " href="#" aria-disabled="true">Reportes</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link " href="#" aria-disabled="true">Import</a>
@@ -81,6 +91,7 @@
         <div id="productosCarrito">
             <!-- item de local storage para ingreso al almacen (Nuevo o ubicacion)-->
         </div>
+        <input type="hidden"  name="id_alm" value="<?php echo $id_alm ?>"/>
         <input type="submit"  class="btn btn-primary btn-lg btn-block" value="Registrar"/>
         <div class="RespuestaAjax"></div>
     </form> 

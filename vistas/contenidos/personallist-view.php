@@ -20,7 +20,7 @@
         </div>
         <br>
 
-     <?php  echo $perCont->paginador_personal($pagina[1],8); ?> 
+     <?php  echo $perCont->paginador_personal($pagina[1],8,$pagina[0]); ?> 
 
 
 </div>

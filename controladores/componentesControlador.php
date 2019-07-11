@@ -103,6 +103,7 @@ Class componentesControlador extends componentesModelo {
         $control_stock = $control_stock == 'on'? $control_stock = 1 : $control_stock =0;
         $stock_min=  mainModel::limpiar_cadena($_POST["stock_min"]);
         $stock_max=  mainModel::limpiar_cadena($_POST["stock_max"]);
+        //$id_alm= mainModel::limpiar_cadena($_POST["id_alm"]);
 
         $datos = [
             "descripcion"=>$descripcion,
@@ -114,10 +115,31 @@ Class componentesControlador extends componentesModelo {
             "medida"=>$medida,
             "control_stock"=>$control_stock,
             "stock_min"=>$stock_min,
-            "stock_max"=>$stock_max
+            "stock_max"=>$stock_max,
+            
         ];
 
-     $resp = componentesModelo::save_componentenes_modelo($datos);   
+     $resp = componentesModelo::save_componentenes_modelo($datos);
+
+     $alerta=[
+        "alerta"=>"recargar",
+        "Titulo"=>"Datos guardados",
+        "Texto"=>"Los siguientes datos han sido guardados",
+        "Tipo"=>"success"
+    ];
+
+    $localStorage = [
+        "BDcomp_gen",
+        "BDproductos",
+        "carritoGen",
+        "carritoIn",
+        "carritoS"
+    ];
+
+        echo mainModel::localstorage_reiniciar($localStorage);
+     return mainModel::sweet_alert($alerta);
+    
+
 
 
     }

@@ -1,4 +1,16 @@
+<?php 
+
+
+      $id_alm = $_SESSION["almacen"];
+      if($_SESSION["almacen"]==0 ){
+        echo "<script> window.location.href = '../almacen/'; </script>";
+      }
+
+
+?>
+
 <div class="container-fluid">
+    <?php  include "vistas/modulos/nav-almacen.php";?> 
     <ul class="nav nav-tabs">
             <li class="nav-item">
                 <a class="nav-link " href="<?php echo SERVERURL;?>componentes/">Almacen</a>
@@ -16,10 +28,13 @@
                 <a class="nav-link " href="<?php echo SERVERURL;?>ingresoAlmacen/" aria-disabled="true">Ingreso Almacen</a>
             </li>
             <li class="nav-item">
+                <a class="nav-link " href="#" aria-disabled="true">Reportes</a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link " href="#" aria-disabled="true">Import</a>
             </li>
     </ul><br>
-    <form action="<?php echo SERVERURL;?>ajax/componentesAjax.php" method="POST" data-form="save" class="" autocomplete="off" enctype="multipart/form-data" >
+    <form action="<?php echo SERVERURL;?>ajax/componentesAjax.php" method="POST" data-form="save" class="FormularioAjax" autocomplete="off" enctype="multipart/form-data" >
     <div class="card border-primary mb-3">
             <div class="card-body text-primary">
                 <h4 class="card-title">Datos del componente</h4>
@@ -96,7 +111,9 @@
                 </div>
             </div>
         </div>
+        
         <button type="submit" class="btn btn-primary">Guardar</button>
+        <div class="RespuestaAjax"></div>
     </form>
 
 </div>

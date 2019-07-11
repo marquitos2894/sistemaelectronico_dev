@@ -6,7 +6,7 @@ require_once '../controladores/componentesControlador.php';
 $compCont = new componentesControlador();
 
 if(isset($_POST["descripcion"])){
-    $compCont->save_componente_controlador();
+  echo $compCont->save_componente_controlador();
 }
 
 if(isset($_POST["comp_gen"])){

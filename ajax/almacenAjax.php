@@ -7,9 +7,18 @@
    //echo $almCont->obtener_consulta_json_controlador(1);
 
    if(isset($_POST["id_alm"])){
+      session_start(['name'=>'SBP']);
       echo $almCont->obtener_consulta_json_controlador($_POST["id_alm"]);
+      if( isset($_POST["id_alm"]) && isset($_POST["nom_almacen"])){
+         $almCont->sesion_almacen($_POST["id_alm"],$_POST["nom_almacen"]);
+      }
+
    }
 
+   if(isset($_POST["logout_alm"])){
+      session_start(['name'=>'SBP']);
+      $almCont->logout_almamcen();
+   }
 
    if(isset($_POST["usuario"]) && $_POST["vale"]=="valesalida" ){
       echo $almCont->save_vsalida_controlador();

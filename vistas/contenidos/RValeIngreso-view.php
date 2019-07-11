@@ -4,19 +4,18 @@
       $almCont = new almacenControlador(); 
       
       $pagina = explode("/",$_GET['views']);
-      $buscador = "";
-      $text = "";   
-      if(isset($_POST['buscador']) && $_POST['buscador'] != "" ){
-          $buscador=$_POST['buscador'];
-          $text = '<h3><small class="text-muted">su busqueda fue :</small>"'.$buscador.'"</h3>';
-      }else{
-        $text="";
+
+      $id_alm = $_SESSION["almacen"];
+      if($_SESSION["almacen"]==0 ){
+        echo "<script> window.location.href = '../almacen/'; </script>";
       }
 
+      
 
 ?>
 
 <div class="container-fluid">
+<?php  include "vistas/modulos/nav-almacen.php";?> 
 <ul class="nav nav-tabs">
         <li class="nav-item">
             <a class="nav-link " href="<?php echo SERVERURL;?>componentes/">Almacen</a>
@@ -31,8 +30,11 @@
             <a class="nav-link" href="<?php echo SERVERURL;?>newcomponente/">+Nuevo componente</a>
         </li>
         <li class="nav-item">
-                <a class="nav-link " href="<?php echo SERVERURL;?>ingresoAlmacen/" aria-disabled="true">Ingreso Almacen</a>
-            </li>
+            <a class="nav-link " href="<?php echo SERVERURL;?>ingresoAlmacen/" aria-disabled="true">Ingreso Almacen</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link " href="#" aria-disabled="true">Reportes</a>
+        </li>
         <li class="nav-item">
             <a class="nav-link " href="#" aria-disabled="true">Import</a>
         </li>
@@ -98,9 +100,9 @@
                                                     </tr>
                                                 </tfoot>
                                                 <tbody>
-                                                <?php echo $almCont->databale_componentes(1); ?>
+                                                <?php echo $almCont->databale_componentes($_SESSION["almacen"],"carrito"); ?>
                                                 </tbody>
-                                                </table>
+                                            </table>
                                         </div>
                                     </div>
                                 </div>  
@@ -182,6 +184,7 @@
                                     <textarea  name="comentario" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
                             </div>
                             <input type="hidden" value="valeingreso" name="vale"/>
+                            <input type="hidden"  name="id_alm_vi" id="id_alm_vi" value="<?php echo $id_alm ?>"/>
                             <button type="submit" class="btn btn-success btn-lg btn-block">Emitir Vale de Ingreso</button>
                         </div>
                     </div>

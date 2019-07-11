@@ -9,7 +9,7 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>SB Admin 2 - Dashboard</title>
+  <title>Conmciv Admin</title>
 
   <!-- Custom fonts for this template-->
   <!--link href="vistas/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -33,7 +33,7 @@
         <div class="sidebar-brand-icon rotate-n-15">
           <i class="fas fa-laugh-wink"></i>
         </div>
-        <div class="sidebar-brand-text mx-3">SB Admin <sup>2</sup></div>
+        <div class="sidebar-brand-text mx-3">Conmciv<sup>1.0</sup></div>
       </a>
 
       <!-- Divider -->
@@ -43,7 +43,7 @@
       <li class="nav-item active">
         <a class="nav-link" href="index.html">
           <i class="fas fa-fw fa-tachometer-alt"></i>
-          <span>Dashboard</span></a>
+          <span>Conmiciv</span></a>
       </li>
 
       <!-- Divider -->
@@ -112,20 +112,17 @@
       <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
           <i class="fas fa-fw fa-folder"></i>
-          <span>Pages</span>
+          <span>Mantenimiento</span>
         </a>
         <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
-            <h6 class="collapse-header">Login Screens:</h6>
-            <a class="collapse-item" href="<?php echo SERVERURL;?>emptranslist/">Empresa de transporte</a>
            
-            <a class="collapse-item" href="register.html">Register</a>
-            <a class="collapse-item" href="forgot-password.html">Forgot Password</a>
             <div class="collapse-divider"></div>
-            <h6 class="collapse-header">Administrador</h6>
             <a class="collapse-item" href="<?php echo SERVERURL;?>usuariolist/">Usuarios</a>
             <a class="collapse-item" href="<?php echo SERVERURL;?>personallist/">Personal</a>
             <a class="collapse-item" href="blank.html">Blank Page</a>
+            <h6 class="collapse-header">Guia remision</h6>  
+            <a class="collapse-item" href="<?php echo SERVERURL;?>emptranslist/">Empresa de transporte</a>
           </div>
         </div>
       </li>
@@ -136,12 +133,28 @@
         </a>
         <div id="collapseAlmacen" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
-            <h6 class="collapse-header">Registro</h6>
+            
             <a class="collapse-item" href="<?php echo SERVERURL;?>NuevoAlmacen/">Nuevo Almacen</a>
-            <h6 class="collapse-header">Lista almacenes</h6>
-            <a class="collapse-item" href="<?php echo SERVERURL;?>componentes/">Almacen: A </a>
-            <a class="collapse-item" href="<?php echo SERVERURL;?>componentes/">Almacen: B </a>
-            <a class="collapse-item" href="utilities-other.html">Other</a>
+            <a class="collapse-item" href="<?php echo SERVERURL;?>almacen/">Almacen</a>
+            <h6 class="collapse-header">Reportes</h6>
+            <a class="collapse-item" href="<?php echo SERVERURL;?>almacen/">Reportes</a>
+          </div>
+        </div>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseGuia" aria-expanded="true" aria-controls="collapsePages">
+          <i class="fas fa-fw fa-folder"></i>
+          <span>Guia Remision</span>
+        </a>
+        <div id="collapseGuia" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+          <div class="bg-white py-2 collapse-inner rounded">
+            <h6 class="collapse-header">paginas</h6>
+            <a class="collapse-item" href="#">Guia remision</a>
+           
+            <div class="collapse-divider"></div>
+            
+
+            <a class="collapse-item" href="blank.html">Blank Page</a>
           </div>
         </div>
       </li>
@@ -186,7 +199,7 @@
           </button>
 
           <!-- Topbar Search -->
-          <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+          <!--form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
             <div class="input-group">
               <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
               <div class="input-group-append">
@@ -195,7 +208,7 @@
                 </button>
               </div>
             </div>
-          </form>
+          </form-->
 
           <!-- Topbar Navbar -->
           <ul class="navbar-nav ml-auto">
@@ -330,8 +343,8 @@
             <!-- Nav Item - User Information -->
             <li class="nav-item dropdown no-arrow">
               <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Valerie Luna</span>
-                <img class="img-profile rounded-circle" src="https://source.unsplash.com/QAB-WJcbgJk/60x60">
+                <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $_SESSION["nombre_sbp"]; ?></span>
+                <img class="img-profile rounded-circle" src="">
               </a>
               <!-- Dropdown - User Information -->
               <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">

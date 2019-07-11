@@ -15,7 +15,7 @@ Class almacenControlador extends almacenModelo {
         $registros=mainModel::limpiar_cadena($registros);
         $privilegio=mainModel::limpiar_cadena($privilegio);
         $tabla='';
-
+        echo $_SESSION['nombre_sbp'];
         $paginador=(isset($paginador) && $paginador>0)?(int)$paginador:1; 
         $inicio=($paginador>0)?(($paginador*$registros)-$registros):0;
 
@@ -83,36 +83,106 @@ Class almacenControlador extends almacenModelo {
         return $tabla;
     }
 
-    public function databale_componentes($id){
+    public function paginador_almacen($paginador,$registros,$vista){
+        $paginador=mainModel::limpiar_cadena($paginador);
+        $registros=mainModel::limpiar_cadena($registros);
+        $vista = mainModel::limpiar_cadena($vista);
+        $contenido ="";
+
+        $paginador=(isset($paginador) && $paginador>0)?(int)$paginador:1; 
+        $inicio=($paginador>0)?(($paginador*$registros)-$registros):0;
+
+        $conexion = mainModel::conectar();
+        $datos = $conexion->query("select SQL_CALC_FOUND_ROWS * from almacen");
+        $datos = $datos->fetchAll();
+        $total = $conexion->query("SELECT FOUND_ROWS()");
+        $total = (int)$total->fetchColumn();
+        $Npaginas = ceil($total/$registros);
+        $contenido .="";
+        $contenido.="<div id='card-almacen' class='card-group' style='width: 80%;' align='center' >";
+        foreach(array_slice($datos,0,4) as $row) {
+            $contenido .= "
+            <div  class='card'>
+                <img src='../vistas/img/almacen.png' class='card-img-top'>
+                <div class='card-body'>
+                <h5 class='card-title'>{$row["Alias"]}</h5>
+                <input type='hidden' id='nom_almacen$row[id_alm]' value='{$row["Alias"]}'/>
+                <p class='card-text'></p>
+                </div>
+                <div class='card-footer'>
+                    <a href='#' class='card-footer-item' id='almacen' data-almacen='$row[id_alm]'>Ingresar</a>
+                </div>
+            </div>";                
+        }
+
+        $contenido.="       
+        <div  class='card'>
+            <img src='' class='card-img-top'>
+            <div class='card-body'>
+            <h5 class='card-title'>Nuevo Almacen</h5>
+            <p class='card-text'></p>
+            </div>
+            <div class='card-footer'>
+            
+            </div>
+        </div>";
+        $contenido.="</div>";
+        $contenido.= mainModel::paginador($total,$paginador,$Npaginas,$vista);
+        return $contenido;
+
+    }
+    public function databale_componentes($id_alm,$tipo){
         
       $conexion = mainModel::conectar();
       $datos = $conexion->prepare("SELECT ac.id_ac,c.id_comp,c.descripcion,c.nparte1,
-      c.nparte2,c.nparte3,c.unidad_med,ac.stock,ac.fk_idalm,ac.u_nombre,ac.u_seccion,e.Nombre_Equipo,e.Id_Equipo
+      c.nparte2,c.nparte3,c.unidad_med,ac.stock,ac.fk_idalm,ac.u_nombre,ac.u_seccion,e.Nombre_Equipo,e.Id_Equipo,ac.Referencia
       FROM componentes c
       INNER JOIN almacen_componente ac ON ac.fk_idcomp = c.id_comp 
       INNER JOIN equipos e  ON e.Id_Equipo = ac.fk_idequipo 
-      WHERE ac.est = {$id}  "); 
+      WHERE ac.est = 1 and ac.fk_idalm = {$id_alm}  "); 
       $datos->execute();
       $datos=$datos->fetchAll(); 
        
       $dtable = '';
       $contador = 1;
-      foreach($datos as $row){
-        $dtable .="
-                <tr>
-                    <td>{$contador}</td>
-                    <td>{$row['id_comp']}</td>
-                    <td>{$row['descripcion']}</td>
-                    <td>{$row['nparte1']}</td>
-                    <td>{$row['Nombre_Equipo']}</td>
-                    <td>{$row['u_nombre']}-{$row['u_seccion']}</td>
-                    <td>{$row['unidad_med']}</td>
-                    <td>{$row['stock']}</td>
-                    <td><input type='number' id='salida{$row['id_ac']}' /></td>
-                    <td> <a href='#productosCarritoIn' class='card-footer-item' id='addItem' data-producto='{$row['id_ac']}'>+</a></td>
-                </tr>
-        ";
+      if($tipo == "simple"){
+        foreach($datos as $row){
+            $dtable .="
+                    <tr>
+                        <td>{$contador}</td>
+                        <td>{$row['id_comp']}</td>
+                        <td>{$row['descripcion']}</td>
+                        <td>{$row['nparte1']}</td>
+                        <td>{$row['nparte2']}</td>
+                        <td>{$row['nparte3']}</td>
+                        <td>{$row['u_nombre']}-{$row['u_seccion']}</td>
+                        <td>{$row['stock']}</td>
+                        <td>{$row['unidad_med']}</td>
+                        <td>{$row['Nombre_Equipo']}</td>
+                        <td>{$row['Referencia']}</td>
+                    </tr>
+            ";
+          }
+      }else{
+        foreach($datos as $row){
+            $dtable .="
+                    <tr>
+                        <td>{$contador}</td>
+                        <td>{$row['id_comp']}</td>
+                        <td>{$row['descripcion']}</td>
+                        <td>{$row['nparte1']}</td>
+                        <td>{$row['Nombre_Equipo']}</td>
+                        <td>{$row['u_nombre']}-{$row['u_seccion']}</td>
+                        <td>{$row['unidad_med']}</td>
+                        <td>{$row['stock']}</td>
+                        <td><input type='number' id='salida{$row['id_ac']}' /></td>
+                        <td> <a href='#productosCarritoIn' class='card-footer-item' id='addItem' data-producto='{$row['id_ac']}'>+</a></td>
+                    </tr>
+            ";
+          }
+
       }
+
 
     
       return $dtable;
@@ -126,6 +196,7 @@ Class almacenControlador extends almacenModelo {
         $fk_idequipo=mainModel::limpiar_cadena($_POST["codequipo"]);
         $horometro=mainModel::limpiar_cadena($_POST["horometro"]);
         $comentario=mainModel::limpiar_cadena($_POST["comentario"]);   
+        $id_alm= mainModel::limpiar_cadena($_POST["id_alm_vs"]);
         $objDateTime = new DateTime('NOW');
         $fecha=$objDateTime->format('c');
         $nom_equipo=mainModel::ejecutar_consulta_simple("select e.nombre_equipo from equipos e where id_equipo = {$fk_idequipo} ")['nombre_equipo'];
@@ -155,7 +226,8 @@ Class almacenControlador extends almacenModelo {
             "fecha"=>$fecha,
             "nom_equipo"=>$nom_equipo,
             "nombre_per"=>$nombre_per,
-            "dni_per"=>$dni_per
+            "dni_per"=>$dni_per,
+            "id_alm"=>$id_alm
         ];
 
         $id_vsalida=almacenModelo::save_vsalida_modelo($datos);
@@ -175,6 +247,7 @@ Class almacenControlador extends almacenModelo {
                     "mensaje"=>"<h5><strong>Vale de salida N°{$id_vsalida}</strong> ha sido anulado, verificar su stock </h5>"
                 ];
                 echo mainModel::bootstrap_alert($datos);
+    
             }else{
                 $alerta=[
                     "alerta"=>"recargar_tiempo",
@@ -185,12 +258,21 @@ Class almacenControlador extends almacenModelo {
                 ];
                 $datos = ["tipo"=>"success","mensaje"=>"<h5><strong>Vale de salida N°{$id_vsalida}</strong> generado con exito !! haga click aqui para ver su registro, o la pagina se actualizara en 5s</h5> "];
                 
+                $localStorage = [
+                    "BDcomp_gen",
+                    "BDproductos",
+                    "carritoGen",
+                    "carritoIn",
+                    "carritoS"
+                ];
+
+                echo mainModel::localstorage_reiniciar($localStorage);
                 echo mainModel::bootstrap_alert($datos);
                 //echo "<script>setTimeout('document.location.reload()',10000)</script>";
             }
    
             foreach($info_dvsalida[1] as $i){
-                $mensaje ="El item: | {$i['codigo']} | {$i['descripcion']} | {$i['nparte1']} | {$i['ubicacion']} | No se registro por desbalance de stock, verificar ";
+                $mensaje ="El item: | {$i['id_comp']} | {$i['descripcion']} | {$i['nparte1']} | {$i['ubicacion']} | No se registro por desbalance de stock, verificar ";
                 $datos = [
                     "tipo"=>"danger",
                     "mensaje"=>"$mensaje"
@@ -219,6 +301,7 @@ Class almacenControlador extends almacenModelo {
         $documento=mainModel::limpiar_cadena($_POST["documento"]);
         $ref_documento=mainModel::limpiar_cadena($_POST["ref_documento"]);
         $comentario=mainModel::limpiar_cadena($_POST["comentario"]);
+        $id_alm= mainModel::limpiar_cadena($_POST["id_alm_vi"]);
         $objDateTime = new DateTime('NOW');
         $fecha=$objDateTime->format('c');
         $datospersonal = mainModel::ejecutar_consulta_simple("select  concat(p.nom_per,',',p.Ape_per) as nombres,p.dni_per from personal p where id_per = {$fk_idpersonal} ");
@@ -227,7 +310,7 @@ Class almacenControlador extends almacenModelo {
         
         //Detalle
         $dvi_id_ac[]=$_POST["id_ac"];
-        $dvi_codigo[]=$_POST["dv_codigo"];
+        //$dvi_codigo[]=$_POST["dv_codigo"];
         $dvi_descripcion[]=$_POST["dv_descripcion"];
         $dvi_nparte1[]=$_POST["dv_nparte1"];
         $dvi_stock[]=$_POST["dv_stock"];
@@ -245,11 +328,12 @@ Class almacenControlador extends almacenModelo {
             "comentario"=>$comentario,
             "fecha"=>$fecha,
             "nombre_per"=>$nombre_per,
-            "dni_per"=>$dni_per
+            "dni_per"=>$dni_per,
+            "id_alm"=>$id_alm
         ];
 
         $id_vingreso=almacenModelo::save_vingreso_modelo($datos);
-        $ingreso=almacenModelo::save_dvingreso_modelo($id_vingreso,$dvi_id_ac,$dvi_codigo,$dvi_descripcion,$dvi_nparte1,$dvi_stock,$dvi_ingreso,$dvi_nom_equipo,$dvi_fkid_equipo);
+        $ingreso=almacenModelo::save_dvingreso_modelo($id_vingreso,$dvi_id_ac,$dvi_descripcion,$dvi_nparte1,$dvi_stock,$dvi_ingreso,$dvi_nom_equipo,$dvi_fkid_equipo);
         if($id_vingreso!=0){
              if($ingreso->rowCount()>0){
                 $alerta=[
@@ -260,6 +344,17 @@ Class almacenControlador extends almacenModelo {
                     "tiempo"=>5000
                 ];
                 $datos = ["tipo"=>"success","mensaje"=>"<h5><strong>Vale de ingreso N°{$id_vingreso}</strong> generado con exito !! haga click aqui para ver su registro, o la pagina se actualizara en 5s</h5> "];
+                
+                
+                $localStorage = [
+                    "BDcomp_gen",
+                    "BDproductos",
+                    "carritoGen",
+                    "carritoIn",
+                    "carritoS"
+                ];
+
+                echo mainModel::localstorage_reiniciar($localStorage);
                 echo mainModel::bootstrap_alert($datos);
              }else {
                 $alerta=[
@@ -291,7 +386,7 @@ Class almacenControlador extends almacenModelo {
         $d_id_equipo = mainModel::limpiar_cadena($_POST["d_id_equipo"]);
         $d_referencia = mainModel::limpiar_cadena($_POST["d_referencia"]);*/
 
-        $id_alm = 1;
+        $id_alm= mainModel::limpiar_cadena($_POST["id_alm"]);
         $id_comp[] = $_POST["id_comp"];
         $d_stock = 0;
         $d_u_nom[] = $_POST["d_u_nom"];
@@ -312,8 +407,6 @@ Class almacenControlador extends almacenModelo {
             "d_referencia"=>$d_referencia
         ];*/
 
-    
-   
         almacenModelo::save_registro_almacen_modelo($id_comp,$d_u_nom,$d_u_sec,$d_id_equipo,$d_referencia,$id_alm,$d_stock);
 
         $alerta=[
@@ -322,21 +415,42 @@ Class almacenControlador extends almacenModelo {
             "Texto"=>"Registrados en su almacen",
             "Tipo"=>"success"
         ];
+        
+        $localStorage = [
+            "BDcomp_gen",
+            "BDproductos",
+            "carritoGen",
+            "carritoIn",
+            "carritoS"
+        ];
 
+        echo mainModel::localstorage_reiniciar($localStorage);
         return mainModel::sweet_alert($alerta);
 
     }
 
-
-    public function obtener_consulta_json_controlador(){
+    public function obtener_consulta_json_controlador($id_alm){
+           
         $consulta = "SELECT ac.id_ac,c.id_comp,c.descripcion,c.nparte1,
         c.nparte2,c.nparte3,c.unidad_med,ac.stock,ac.fk_idalm,ac.u_nombre,ac.u_seccion,e.Nombre_Equipo,e.Id_Equipo
         FROM componentes c
         INNER JOIN almacen_componente ac ON ac.fk_idcomp = c.id_comp 
         INNER JOIN equipos e  ON e.Id_Equipo = ac.fk_idequipo 
-        WHERE ac.est = 1  ";
+        WHERE ac.fk_idalm = {$id_alm} ";
         return mainModel::obtener_consulta_json($consulta);
+
     }
+
+    public function sesion_almacen($id_alm,$nombre_almacen){
+        $_SESSION["almacen"]=$id_alm;
+        $_SESSION["nom_almacen"]=$nombre_almacen;
+    }
+
+    public function logout_almamcen(){
+        $_SESSION["almacen"]=0;
+        $_SESSION["nom_almacen"]="";
+    }
+    
 
     public function chosen_personal($val,$vis){
         $consulta = "select p.id_per, CONCAT(p.Nom_per,',',p.Ape_per,'-',p.Dni_per)
