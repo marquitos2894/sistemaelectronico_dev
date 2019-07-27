@@ -22,7 +22,7 @@
 <?php  include "vistas/modulos/nav-almacen.php";?> 
         <ul class="nav nav-tabs">
             <li class="nav-item">
-                <a class="nav-link " href="<?php echo SERVERURL;?>componentes/">Almacen</a>
+                <a class="nav-link " href="<?php echo SERVERURL;?>insideAlmacen/">Almacen</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link active;alert alert-danger" href="<?php echo SERVERURL;?>RValeSalida/">Vale salida</a>

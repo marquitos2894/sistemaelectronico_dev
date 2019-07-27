@@ -8,7 +8,7 @@ if($peticionAjax){
 
 Class componentesControlador extends componentesModelo {
 
-    public function paginador_componentes($paginador,$registros,$privilegio,$buscador,$vista){
+    /*public function paginador_componentes($paginador,$registros,$privilegio,$buscador,$vista){
 
         $paginador=mainModel::limpiar_cadena($paginador);
         $registros=mainModel::limpiar_cadena($registros);
@@ -87,11 +87,98 @@ Class componentesControlador extends componentesModelo {
         $tabla.= mainModel::paginador($total,$paginador,$Npaginas,$vista);
         return $tabla;
      
+    }*/
+
+    public function paginador_componentes($paginador,$registros,$privilegio,$buscador,$vista){
+
+        $paginador=mainModel::limpiar_cadena($paginador);
+        $registros=mainModel::limpiar_cadena($registros);
+        $privilegio=mainModel::limpiar_cadena($privilegio);
+        $tabla='';
+        //echo $_SESSION['nombre_sbp'];
+        $paginador=(isset($paginador) && $paginador>0)?(int)$paginador:1; 
+        $inicio=($paginador>0)?(($paginador*$registros)-$registros):0;
+
+        $conexion = mainModel::conectar();
+        
+        if($buscador!=""){
+            $datos=$conexion->query("SELECT SQL_CALC_FOUND_ROWS *
+                                    FROM componentes c WHERE ( c.descripcion  like '%$buscador%' or c.nparte1 like '%$buscador%' or c.nparte2 like '%$buscador%' or c.nparte3 like '%$buscador%'  )  LIMIT {$inicio},{$registros} ");
+            
+        }else{
+            $datos=$conexion->query("SELECT SQL_CALC_FOUND_ROWS *
+                                    FROM componentes  WHERE est = 1  LIMIT {$inicio},{$registros}");           
+        }
+        //$datos->execute();
+        $datos = $datos->fetchAll();
+        $total = $conexion->query("SELECT FOUND_ROWS()");
+        $total = (int)$total->fetchColumn();
+
+        
+        //devuel valor entero redondeado hacia arriba 4.2 = 5
+        $Npaginas = ceil($total/$registros);
+        $tabla.="<div><table class='table table-bordered'>
+        <thead>
+            <tr>
+                <th scope='col'>Cod.Interno</th>
+                <th scope='col'>Descripcion</th>               
+                <th scope='col'>NParte</th>
+                <th scope='col'>NParte2</th>
+                <th scope='col'>NParte3</th>
+                <th scope='col'>Marca</th>
+                <th scope='col'>U.M</th>
+                <th scope='col'>Control Stock</th>
+                <th colspan='2' scope='col'>Acciones</th>";
+                //programar privilegios
+        $tabla.="</tr>
+        </thead>
+        <tbody id='datatable' >";
+        if($total>=1 && $paginador<=$Npaginas)
+        {
+        
+            foreach($datos as $row){
+                $tabla .="<tr >
+                            <td>{$row['id_comp']}</td>
+                            <td>{$row['descripcion']}</td>                      
+                            <td>{$row['nparte1']}</td>
+                            <td>{$row['nparte2']}</td>
+                            <td>{$row['nparte3']}</td>
+                            <td>{$row['marca']}</td>
+                            <td>{$row['unidad_med']}</td>";
+                            if($row['control_stock']==1){
+                    $tabla .="<td><span style='width:40%' class='badge badge-primary'><i class='fas fa-check'></i></span></td>";      
+                            }else{
+                    $tabla .="<td><span style='width:40%' class='badge badge-danger'><i class='fas fa-window-close'></i></span></td>";                    
+                            }                            
+                $tabla .="<td><a style='font-size: 1.5em;'  class='fas fa-edit' href='{$row['id_comp']}' id='EditItem' data-producto='{$row['id_comp']}' data-toggle='modal' data-target='#ModalEdit'></a> </td>";
+                            
+                $tabla .="<td><form action='".SERVERURL."ajax/administradorAjax.php' method='POST' class='FormularioAjax' 
+                data-form='delete' entype='multipart/form-data' autocomplete='off'>
+                <input type='hidden' name='id_usu' value='".mainModel::encryption($row[0])."'/>
+                
+                <i class='far fa-trash-alt'><button type='submit' class='far fa-trash-alt'></button></i>
+                <div class='RespuestaAjax'></div>   
+                </form></td>";
+                      
+                $tabla.="</tr>";
+            }
+        }else{
+            $tabla.='<tr><td colspan="7"> No existen registros</td></tr>';
+        }
+
+        $tabla.='</tbody></table></div>';
+   
+        $tabla.= mainModel::paginador($total,$paginador,$Npaginas,$vista);
+        return $tabla;
+    }
+    //VALIDARA al buscador por variables del paginador,y problemas en la consulta entre limit
+    public function validar_paginador_controlador($buscador,$vista,$eliminar_buscador){
+        return mainModel::validar_paginador($buscador,$vista,$eliminar_buscador);
     }
 
     public function save_componente_controlador(){
         
-        $descripcion =  mainModel::limpiar_cadena($_POST["descripcion"]);
+        $descripcion =  mainModel::limpiar_cadena($_POST["descripcion_formEdit"]);
         $nparte1 =  mainModel::limpiar_cadena($_POST["nparte1"]);
         $nparte2 =  mainModel::limpiar_cadena($_POST["nparte2"]);
         $nparte3 =  mainModel::limpiar_cadena($_POST["nparte3"]);
@@ -119,29 +206,68 @@ Class componentesControlador extends componentesModelo {
             
         ];
 
-     $resp = componentesModelo::save_componentenes_modelo($datos);
+        $resp = componentesModelo::save_componentenes_modelo($datos);
 
-     $alerta=[
-        "alerta"=>"recargar",
-        "Titulo"=>"Datos guardados",
-        "Texto"=>"Los siguientes datos han sido guardados",
-        "Tipo"=>"success"
-    ];
+        $alerta=[
+            "alerta"=>"recargar",
+            "Titulo"=>"Datos guardados",
+            "Texto"=>"Los siguientes datos han sido guardados",
+            "Tipo"=>"success"
+        ];
 
-    $localStorage = [
-        "BDcomp_gen",
-        "BDproductos",
-        "carritoGen",
-        "carritoIn",
-        "carritoS"
-    ];
+        $localStorage = [
+            "BDcomp_gen",
+            "BDproductos",
+            "carritoGen",
+            "carritoIn",
+            "carritoS"
+        ];
 
         echo mainModel::localstorage_reiniciar($localStorage);
-     return mainModel::sweet_alert($alerta);
-    
+        return mainModel::sweet_alert($alerta);
 
+    }
 
+    public function update_componente_controlador(){
+        $id_comp = mainModel::limpiar_cadena($_POST["id_comp_formEdit"]);
+        $descripcion = mainModel::limpiar_cadena($_POST["descripcion_formEdit"]);
+        $nparte1 = mainModel::limpiar_cadena($_POST["nparte1"]);
+        $nparte2 = mainModel::limpiar_cadena($_POST["nparte2"]);
+        $nparte3 = mainModel::limpiar_cadena($_POST["nparte3"]);
+        $marca = mainModel::limpiar_cadena($_POST["marca"]);
+        $unidad_med = mainModel::limpiar_cadena($_POST["unidad_med"]);
+        $control_stock = mainModel::limpiar_cadena($_POST["control_stock"]);
 
+        $datos = [
+            "id_comp"=>$id_comp,
+            "descripcion"=>$descripcion,
+            "nparte1"=>$nparte1,
+            "nparte2"=>$nparte2,
+            "nparte3"=>$nparte3,
+            "marca"=>$marca,
+            "unidad_med"=>$unidad_med,
+            "control_stock"=>$control_stock
+        ];
+        
+        $resp = componentesModelo::update_componente_modelo($datos);
+
+        if($resp->rowCount()>=1){
+            $alerta=[
+                "alerta"=>"recargar",
+                "Titulo"=>"Datos Actualizados",
+                "Texto"=>"Los siguientes datos han sido Actualizados",
+                "Tipo"=>"success"
+            ];
+        }else{
+            $alerta=[
+                "alerta"=>"simple",
+                "Titulo"=>"Ocurrio un error inesperado",
+                "Texto"=>"No hemos podido actualizar el componente seleccionado",
+                "Tipo"=>"error"
+            ];
+        }
+
+        return mainModel::sweet_alert($alerta);
     }
 
     public function componentes_general(){
@@ -161,7 +287,7 @@ Class componentesControlador extends componentesModelo {
                     <td>{$row['nparte2']}</td>
                     <td>{$row['nparte3']}</td>
                     <td>{$row['marca']}</td>
-                    <td><a href='#' class='card-footer-item' id='addItem' data-producto='{$row['id_comp']}' data-toggle='modal' data-target='#exampleModalCenter'>+</a></td>
+                    <td><a href='#' class='card-footer-item' id='addItem'  data-producto='{$row['id_comp']}' data-toggle='modal' data-target='#exampleModalCenter'>+</a></td>
                 </tr>
             ";
             $contador++;
@@ -175,9 +301,12 @@ Class componentesControlador extends componentesModelo {
         return mainModel::obtener_consulta_json($consulta);
     }
 
-    public function chosen_equipo($val,$vis){
-        $consulta = "select e.Id_Equipo,e.Nombre_Equipo
-        from equipos e";
+    public function dato_componente($id_comp){
+        $consulta = "SELECT * FROM componentes WHERE id_comp = {$id_comp}"; 
+        return mainModel::obtener_consulta_json($consulta);
+    }
+
+    public function select_combo($consulta,$val,$vis){
         return mainModel::ejecutar_combo($consulta,$val,$vis);
     }
     

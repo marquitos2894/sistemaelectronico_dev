@@ -9,7 +9,7 @@ if($peticionAjax){
 
 Class almacenControlador extends almacenModelo {
     
-    public function paginador_componentes($paginador,$registros,$privilegio,$buscador,$vista,$TipoVale){
+    /*public function paginador_componentes_vales($paginador,$registros,$privilegio,$buscador,$vista,$TipoVale){
 
         $paginador=mainModel::limpiar_cadena($paginador);
         $registros=mainModel::limpiar_cadena($registros);
@@ -81,7 +81,9 @@ Class almacenControlador extends almacenModelo {
    
         $tabla.= mainModel::paginador($total,$paginador,$Npaginas,$vista);
         return $tabla;
-    }
+    }*/
+
+    
 
     public function paginador_almacen($paginador,$registros,$vista){
         $paginador=mainModel::limpiar_cadena($paginador);
@@ -135,7 +137,7 @@ Class almacenControlador extends almacenModelo {
         
       $conexion = mainModel::conectar();
       $datos = $conexion->prepare("SELECT ac.id_ac,c.id_comp,c.descripcion,c.nparte1,
-      c.nparte2,c.nparte3,c.unidad_med,ac.stock,ac.fk_idalm,ac.u_nombre,ac.u_seccion,e.Nombre_Equipo,e.Id_Equipo,ac.Referencia
+      c.nparte2,c.nparte3,c.unidad_med,ac.stock,ac.fk_idalm,ac.u_nombre,ac.u_seccion,e.Nombre_Equipo,e.Id_Equipo,ac.Referencia,ac.control_stock
       FROM componentes c
       INNER JOIN almacen_componente ac ON ac.fk_idcomp = c.id_comp 
       INNER JOIN equipos e  ON e.Id_Equipo = ac.fk_idequipo 
@@ -156,35 +158,44 @@ Class almacenControlador extends almacenModelo {
                         <td>{$row['nparte2']}</td>
                         <td>{$row['nparte3']}</td>
                         <td>{$row['u_nombre']}-{$row['u_seccion']}</td>
-                        <td>{$row['stock']}</td>
-                        <td>{$row['unidad_med']}</td>
+                        <td>{$row['stock']}</td>";
+                        if($row['control_stock']==1){
+                            $dtable .="<td><span style='font-size: 1.2rem; color: Tomato;'><i class='fas fa-check'></i></span></td>";
+                        }else{
+                            $dtable .="<td><span style='font-size: 1.2rem;'><i class='fas fa-times'></i></span></td>";
+                        }
+        
+            $dtable .="<td>{$row['unidad_med']}</td>
                         <td>{$row['Nombre_Equipo']}</td>
                         <td>{$row['Referencia']}</td>
+                        <td><a href='#'  data-toggle='modal' data-target='#config_comp' ><span style='font-size: 1.5rem;' ><i id='controlstock' data-producto='{$row['id_ac']}' class='fas fa-cog'></i></span></a></td>
+
                     </tr>
             ";
+            $contador++;
           }
-      }else{
-        foreach($datos as $row){
-            $dtable .="
-                    <tr>
-                        <td>{$contador}</td>
-                        <td>{$row['id_comp']}</td>
-                        <td>{$row['descripcion']}</td>
-                        <td>{$row['nparte1']}</td>
-                        <td>{$row['Nombre_Equipo']}</td>
-                        <td>{$row['u_nombre']}-{$row['u_seccion']}</td>
-                        <td>{$row['unidad_med']}</td>
-                        <td>{$row['stock']}</td>
-                        <td><input type='number' id='salida{$row['id_ac']}' /></td>
-                        <td> <a href='#productosCarritoIn' class='card-footer-item' id='addItem' data-producto='{$row['id_ac']}'>+</a></td>
-                    </tr>
-            ";
-          }
-
-      }
-
-
+        }else{
+            foreach($datos as $row){
+                $dtable .="
+                        <tr>
+                            <td>{$contador}</td>
+                            <td>{$row['id_comp']}</td>
+                            <td>{$row['descripcion']}</td>
+                            <td>{$row['nparte1']}</td>
+                            <td>{$row['Nombre_Equipo']}</td>
+                            <td>{$row['u_nombre']}-{$row['u_seccion']}</td>
+                            <td>{$row['unidad_med']}</td>
+                            <td>{$row['stock']}</td>
+                            <td><input type='number' id='salida{$row['id_ac']}' /></td>
+                            <td> <a href='#productosCarritoIn' class='card-footer-item' id='addItem' data-producto='{$row['id_ac']}'>+</a></td>
+                        </tr>
+                ";
+                $contador++;
+              }
     
+          }
+      
+
       return $dtable;
 
     }
@@ -215,7 +226,6 @@ Class almacenControlador extends almacenModelo {
         $dv_unombre[]=$_POST["dv_unombre"];
         $dv_useccion[]=$_POST["dv_useccion"];
         
-
         $datos = [
             "fk_idusuario"=>$fk_idusuario,
             "fk_idpersonal"=>$fk_idpersonal,
@@ -231,7 +241,8 @@ Class almacenControlador extends almacenModelo {
         ];
 
         $id_vsalida=almacenModelo::save_vsalida_modelo($datos);
-        $info_dvsalida=almacenModelo::save_dvsalida_modelo($id_vsalida,$id_ac,$dv_descripcion,$dv_nparte1,$dv_stock,$dv_solicitado,$dv_entregado,$dv_unombre,$dv_useccion);
+        $id_vsalida=$id_vsalida[0][0];
+        $info_dvsalida=almacenModelo::save_dvsalida_modelo($id_vsalida,$id_ac,$dv_descripcion,$dv_nparte1,$dv_stock,$dv_solicitado,$dv_entregado,$dv_unombre,$dv_useccion,$id_alm);
         if($id_vsalida!=0){
             if($info_dvsalida[0]==""){
             mainModel::ejecutar_consulta_simple("UPDATE vale_salida SET est = 0 WHERE id_vsalida = {$id_vsalida}");                       
@@ -333,7 +344,8 @@ Class almacenControlador extends almacenModelo {
         ];
 
         $id_vingreso=almacenModelo::save_vingreso_modelo($datos);
-        $ingreso=almacenModelo::save_dvingreso_modelo($id_vingreso,$dvi_id_ac,$dvi_descripcion,$dvi_nparte1,$dvi_stock,$dvi_ingreso,$dvi_nom_equipo,$dvi_fkid_equipo);
+        $id_vingreso = $id_vingreso[0][0];
+        $ingreso=almacenModelo::save_dvingreso_modelo($id_vingreso,$dvi_id_ac,$dvi_descripcion,$dvi_nparte1,$dvi_stock,$dvi_ingreso,$dvi_nom_equipo,$dvi_fkid_equipo,$id_alm);
         if($id_vingreso!=0){
              if($ingreso->rowCount()>0){
                 $alerta=[
@@ -429,7 +441,12 @@ Class almacenControlador extends almacenModelo {
 
     }
 
-    public function obtener_consulta_json_controlador($id_alm){
+    public function obtener_consulta_json_controlador($consulta){
+
+        return mainModel::obtener_consulta_json($consulta);
+    }
+
+   /* public function obtener_consulta_json_controlador($id_alm){
            
         $consulta = "SELECT ac.id_ac,c.id_comp,c.descripcion,c.nparte1,
         c.nparte2,c.nparte3,c.unidad_med,ac.stock,ac.fk_idalm,ac.u_nombre,ac.u_seccion,e.Nombre_Equipo,e.Id_Equipo
@@ -439,7 +456,9 @@ Class almacenControlador extends almacenModelo {
         WHERE ac.fk_idalm = {$id_alm} ";
         return mainModel::obtener_consulta_json($consulta);
 
-    }
+    }*/
+
+    
 
     public function sesion_almacen($id_alm,$nombre_almacen){
         $_SESSION["almacen"]=$id_alm;

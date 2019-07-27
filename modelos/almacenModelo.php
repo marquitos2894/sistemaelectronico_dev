@@ -11,8 +11,11 @@ class almacenModelo extends mainModel{
 
     protected function save_vsalida_modelo($datos){
         $conex  = mainModel::conectar();
-        $sql=$conex->prepare("INSERT INTO vale_salida (fk_idusuario,fk_idpersonal,fk_idalm,nombres,d_identidad,fecha,turno,fk_idequipo,nom_equipo,horometro,comentario)
-                                                            VALUES (:fk_idusuario,:fk_idpersonal,:fk_idalm,:nombres,:d_identidad,:fecha,:turno,:fk_idequipo,:nom_equipo,:horometro,:comentario)");
+        /*$sql=$conex->prepare("INSERT INTO vale_salida (fk_idusuario,fk_idpersonal,fk_idalm,nombres,d_identidad,fecha,turno,fk_idequipo,nom_equipo,horometro,comentario)
+                                                            VALUES (:fk_idusuario,:fk_idpersonal,:fk_idalm,:nombres,:d_identidad,:fecha,:turno,:fk_idequipo,:nom_equipo,:horometro,:comentario)");*/
+
+        $sql=$conex->prepare("call i_valesalida(:fk_idalm,:fk_idusuario,:fk_idpersonal,:nombres,:d_identidad,:fecha,:turno,:fk_idequipo,:nom_equipo,:horometro,:comentario)");
+
         $sql->bindParam(":fk_idusuario",$datos["fk_idusuario"]);
         $sql->bindParam(":fk_idpersonal",$datos["fk_idpersonal"]);
         $sql->bindParam(":fk_idalm",$datos["id_alm"]);
@@ -25,17 +28,19 @@ class almacenModelo extends mainModel{
         $sql->bindParam(":horometro",$datos["horometro"]);
         $sql->bindParam(":comentario",$datos["comentario"]);
         $sql->execute();
-        $id=$conex->lastInsertId();     
-        return $id;
+        $sql=$sql->fetchAll();
+        //$id=$conex->lastInsertId();     
+        return $sql;
 
     }
 
 
     protected function save_vingreso_modelo($datos){
         $conex = mainModel::conectar();
-        $sql = $conex->prepare("INSERT INTO vale_ingreso(fk_idusuario,fk_idpersonal,fk_idalm,nombres,d_identidad,ref_documento,ref_nrodocumento,fecha,turno,comentario)
-                                VALUES (:fk_idusuario,:fk_idpersonal,:fk_idalm,:nombres,:d_identidad,:documento,:ref_documento,:fecha,:turno,:comentario)");
+        /*$sql = $conex->prepare("INSERT INTO vale_ingreso(fk_idusuario,fk_idpersonal,fk_idalm,nombres,d_identidad,ref_documento,ref_nrodocumento,fecha,turno,comentario)
+                                VALUES (:fk_idusuario,:fk_idpersonal,:fk_idalm,:nombres,:d_identidad,:documento,:ref_documento,:fecha,:turno,:comentario)");*/
         
+        $sql = $conex->prepare("call i_valeingreso(:fk_idalm,:fk_idusuario,:fk_idpersonal,:nombres,:d_identidad,:documento,:ref_documento,:fecha,:turno,:comentario)");
         $sql->bindParam(":fk_idusuario",$datos["fk_idusuario"]);
         $sql->bindParam(":fk_idpersonal",$datos["fk_idpersonal"]);
         $sql->bindParam(":fk_idalm",$datos["id_alm"]);
@@ -47,12 +52,13 @@ class almacenModelo extends mainModel{
         $sql->bindParam(":ref_documento",$datos["ref_documento"]);
         $sql->bindParam(":comentario",$datos["comentario"]);
         $sql->execute();
-        $id=$conex->lastInsertId();     
-        return $id;
+        $sql = $sql->fetchAll();
+        //$id=$conex->lastInsertId();     
+        return $sql;
     }
 
 
-    protected function save_dvsalida_modelo($id_vsalida,$id_ac,$dv_descripcion,$dv_nparte1,$dv_stock,$dv_solicitado,$dv_entregado,$dv_unombre,$dv_useccion){
+    protected function save_dvsalida_modelo($id_vsalida,$id_ac,$dv_descripcion,$dv_nparte1,$dv_stock,$dv_solicitado,$dv_entregado,$dv_unombre,$dv_useccion,$id_alm){
         $conex = mainModel::conectar();
         $mensaje = [];
         $sql="";
@@ -64,8 +70,8 @@ class almacenModelo extends mainModel{
             $stock = $datoscomponente["stock"];
             
             if($salida<=$stock){
-                $sql=$conex->prepare("INSERT INTO detalle_vale_salida(fk_vsalida,fk_id_ac,dv_descripcion,dv_nparte1,dv_stock,dv_solicitado,dv_entregado,dv_unombre,dv_useccion)
-                VALUES (:fk_vsalida,:fk_id_ac,:dv_descripcion,:dv_nparte1,:dv_stock,:dv_solicitado,:dv_entregado,:dv_unombre,:dv_useccion);
+                $sql=$conex->prepare("INSERT INTO detalle_vale_salida(fk_vsalida,fk_id_ac,dv_descripcion,dv_nparte1,dv_stock,dv_solicitado,dv_entregado,dv_unombre,dv_useccion,fk_id_almacen)
+                VALUES (:fk_vsalida,:fk_id_ac,:dv_descripcion,:dv_nparte1,:dv_stock,:dv_solicitado,:dv_entregado,:dv_unombre,:dv_useccion,:fk_id_almacen);
                 UPDATE almacen_componente ac SET ac.stock = (ac.stock - :salida) WHERE ac.id_ac = {$id_ac[0][$i]}");
                 $sql->bindParam(":fk_vsalida",$id_vsalida);
                 $sql->bindParam(":fk_id_ac",$id_ac[0][$i]);
@@ -77,6 +83,7 @@ class almacenModelo extends mainModel{
                 $sql->bindParam(":dv_unombre",$dv_unombre[0][$i]);
                 $sql->bindParam(":dv_useccion",$dv_useccion[0][$i]);
                 $sql->bindParam(":salida",$salida);
+                $sql->bindParam(":fk_id_almacen",$id_alm);
                 $sql->execute();
     
             }else{
@@ -93,14 +100,14 @@ class almacenModelo extends mainModel{
         return $return;
     }
     
-    protected function save_dvingreso_modelo($id_vingreso,$dvi_id_ac,$dvi_descripcion,$dvi_nparte1,$dvi_stock,$dvi_ingreso,$dvi_nom_equipo,$fk_id_equipo){
+    protected function save_dvingreso_modelo($id_vingreso,$dvi_id_ac,$dvi_descripcion,$dvi_nparte1,$dvi_stock,$dvi_ingreso,$dvi_nom_equipo,$fk_id_equipo,$id_alm){
         $conex = mainModel::conectar();
         $mensaje = [];
         $sql="";
         $i=0;
         foreach($dvi_descripcion[0] as $valor){
-            $sql = $conex->prepare("INSERT INTO detalle_vale_ingreso (fk_id_vingreso,fk_id_ac,dvi_descripcion,dvi_nparte1,dvi_stock,dvi_ingreso,dvi_nombre_equipo,fk_id_equipo) 
-                                                        VALUES(:fk_id_vingreso,:fk_id_ac,:dvi_descripcion,:dvi_nparte1,:dvi_stock,:dvi_ingreso,:dvi_nombre_equipo,:fk_id_equipo);
+            $sql = $conex->prepare("INSERT INTO detalle_vale_ingreso (fk_id_vingreso,fk_id_ac,dvi_descripcion,dvi_nparte1,dvi_stock,dvi_ingreso,dvi_nombre_equipo,fk_id_equipo,fk_id_almacen) 
+                                                        VALUES(:fk_id_vingreso,:fk_id_ac,:dvi_descripcion,:dvi_nparte1,:dvi_stock,:dvi_ingreso,:dvi_nombre_equipo,:fk_id_equipo,:fk_id_almacen);
                                                         UPDATE almacen_componente ac SET ac.stock = (ac.stock + :dvi_ingreso) WHERE ac.id_ac = {$dvi_id_ac[0][$i]}");
             $sql->bindParam(":fk_id_vingreso",$id_vingreso);
             $sql->bindParam(":fk_id_ac",$dvi_id_ac[0][$i]);
@@ -110,6 +117,7 @@ class almacenModelo extends mainModel{
             $sql->bindParam(":dvi_ingreso",$dvi_ingreso[0][$i]);
             $sql->bindParam(":dvi_nombre_equipo",$dvi_nom_equipo[0][$i]);
             $sql->bindParam(":fk_id_equipo",$fk_id_equipo[0][$i]);
+            $sql->bindParam(":fk_id_almacen",$id_alm);
             $sql->execute();
             $i++;
         }

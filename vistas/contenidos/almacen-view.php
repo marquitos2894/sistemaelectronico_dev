@@ -7,7 +7,7 @@
 
     if($_SESSION["almacen"]!=0 ){
         echo $_SESSION["almacen"];
-        echo "<script> window.location.href = '../componentes/'; </script>";
+        echo "<script> window.location.href = '../insideAlmacen/'; </script>";
     }
 ?>
 

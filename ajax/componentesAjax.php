@@ -14,8 +14,18 @@ if(isset($_POST["comp_gen"])){
 }
 
 if(isset($_POST["combo_eq"])){
-    echo $compCont->chosen_equipo(0,1);
+    echo $compCont->select_combo("select e.Id_Equipo,e.Nombre_Equipo
+    from equipos e",0,1);
 }
+
+if(isset($_POST["id_comp"])){
+  echo $compCont->dato_componente($_POST["id_comp"]);
+}
+
+if(isset($_POST["descripcion_formEdit"]) && isset($_POST["nparte1"])){
+  echo $compCont->update_componente_controlador();
+}
+
 
 
 /*if(isset($_POST["id_equipo"])){

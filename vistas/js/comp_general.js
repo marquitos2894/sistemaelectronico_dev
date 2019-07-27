@@ -77,7 +77,6 @@
             }
             localStorage.setItem("carritoGen",JSON.stringify(this.carrito));
         }
-
     }
 
     function consultaBD(){
@@ -171,7 +170,6 @@
         ev.preventDefault();
         if(ev.target.id=="addItem"){
             let iditem = ev.target.dataset.producto;
-
             const datos = new FormData();
             datos.append('combo_eq','true');
             let response = await fetch('../ajax/componentesAjax.php',{

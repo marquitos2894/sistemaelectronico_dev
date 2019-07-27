@@ -1,11 +1,9 @@
 <?php 
 
-
       $id_alm = $_SESSION["almacen"];
       if($_SESSION["almacen"]==0 ){
         echo "<script> window.location.href = '../almacen/'; </script>";
       }
-
 
 ?>
 
@@ -13,7 +11,7 @@
     <?php  include "vistas/modulos/nav-almacen.php";?> 
     <ul class="nav nav-tabs">
             <li class="nav-item">
-                <a class="nav-link " href="<?php echo SERVERURL;?>componentes/">Almacen</a>
+                <a class="nav-link " href="<?php echo SERVERURL;?>insideAlmacen/">Almacen</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="<?php echo SERVERURL;?>RValeSalida/">Vale salida</a>

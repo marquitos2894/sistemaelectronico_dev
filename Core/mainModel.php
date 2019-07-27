@@ -48,14 +48,17 @@
         }
 
         protected function paginador($total,$paginador,$Npaginas,$vista){
+            
             $tabla='';
             if($total>=1 && $paginador<=$Npaginas)
             {  
                 $tabla.='<nav aria-label="Page navigation example"><ul class="pagination">';
     
                 if($paginador==1){
+              
                     $tabla.='<li class="page-item"><a class="page-link">Atras</a></li>';
                 }else{
+                
                     $tabla.='<li class="page-item"><a class="page-link" href="'.SERVERURL.''.$vista.'/'.($paginador-1).'">Atras</a></li>';
                 }
                 for($i=1;$i<=$Npaginas;$i++){
@@ -93,6 +96,19 @@
             }
             
             return $tabla;
+        }
+
+         //VALIDARA al buscador por variables del paginador,y problemas en la consulta entre limit
+        protected function validar_paginador($buscador,$vista,$eliminar_buscador){
+            $reload = "<script>window.location.replace('".SERVERURL."{$vista}/');</script>";
+            if(isset($buscador) && $buscador !=""){
+                $_SESSION['session_'.$vista] = $buscador;
+                return $reload;
+            }
+            if(isset($eliminar_buscador)){
+                unset($_SESSION['session_'.$vista]);
+                return $reload;
+            }
         }
 
        /* protected function agregar_emptrans($datos){
@@ -240,8 +256,9 @@
 
         protected function localstorage_reiniciar($localstorage){
             foreach($localstorage as $local){
-             echo $vaciar=  "<script>
-                localStorage.setItem('$local','[]')
+             echo $vaciar=  
+                "<script>
+                    localStorage.setItem('$local','[]')
                 </script>";
             }
        

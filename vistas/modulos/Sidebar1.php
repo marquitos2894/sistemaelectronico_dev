@@ -112,7 +112,7 @@
       <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
           <i class="fas fa-fw fa-folder"></i>
-          <span>Mantenimiento</span>
+          <span>Persona</span>
         </a>
         <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
@@ -120,9 +120,20 @@
             <div class="collapse-divider"></div>
             <a class="collapse-item" href="<?php echo SERVERURL;?>usuariolist/">Usuarios</a>
             <a class="collapse-item" href="<?php echo SERVERURL;?>personallist/">Personal</a>
-            <a class="collapse-item" href="blank.html">Blank Page</a>
-            <h6 class="collapse-header">Guia remision</h6>  
-            <a class="collapse-item" href="<?php echo SERVERURL;?>emptranslist/">Empresa de transporte</a>
+            
+          </div>
+        </div>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages-comp" aria-expanded="true" aria-controls="collapsePages">
+          <i class="fas fa-fw fa-folder"></i>
+          <span>Componentes</span>
+        </a>
+        <div id="collapsePages-comp" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+          <div class="bg-white py-2 collapse-inner rounded">
+            <div class="collapse-divider"></div>
+            <a class="collapse-item" href="<?php echo SERVERURL;?>componentes/">Componente</a>
+            <a class="collapse-item" href="<?php echo SERVERURL;?>personallist/">Categoria</a>
           </div>
         </div>
       </li>
@@ -150,7 +161,7 @@
           <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">paginas</h6>
             <a class="collapse-item" href="#">Guia remision</a>
-           
+            <a class="collapse-item" href="<?php echo SERVERURL;?>emptranslist/">Empresa de transporte</a>
             <div class="collapse-divider"></div>
             
 

@@ -82,7 +82,7 @@ class adminControlador extends adminModelo
                             $tabla.="<td><a class='far fa-edit' href=".SERVERURL."perfil/".mainModel::encryption($row[0])."/"."></a></td>
                                      <td><form action='".SERVERURL."ajax/administradorAjax.php' method='POST' class='FormularioAjax' 
                                         data-form='delete' entype='multipart/form-data' autocomplete='off'>
-                                        <input type='hidden' name='id_usu' value='".mainModel::encryption($row[0])."'
+                                        <input type='hidden' name='id_usu' value='".mainModel::encryption($row[0])."'/>
                                         
                                         <i class='far fa-trash-alt'><button type='submit' class='far fa-trash-alt'></button></i>
                                         <div class='RespuestaAjax'></div>   
