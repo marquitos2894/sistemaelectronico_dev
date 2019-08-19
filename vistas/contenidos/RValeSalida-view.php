@@ -31,13 +31,10 @@
                 <a class="nav-link" href="<?php echo SERVERURL;?>RValeIngreso/">Vale de ingreso</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="<?php echo SERVERURL;?>newcomponente/" >+Nuevo componente</a>
-            </li>
-            <li class="nav-item">
                 <a class="nav-link " href="<?php echo SERVERURL;?>ingresoAlmacen/" aria-disabled="true">Ingreso Almacen</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link " href="#" aria-disabled="true">Reportes</a>
+                <a class="nav-link " href="<?php echo SERVERURL;?>reporteAlmacen" aria-disabled="true">Reportes</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link "  aria-disabled="true">Import</a>
@@ -81,6 +78,7 @@
                                                             <th>Descripcion</th>
                                                             <th>Nparte1</th>
                                                             <th>Equipo</th>
+                                                            <th>Referencia</th>
                                                             <th>Ubicacion</th>
                                                             <th>U.M</th>
                                                             <th>Stock</th>
@@ -95,6 +93,7 @@
                                                             <th>Descripcion</th>
                                                             <th>Nparte1</th>
                                                             <th>Equipo</th>
+                                                            <th>Referencia</th>
                                                             <th>Ubicacion</th>
                                                             <th>U.M</th>
                                                             <th>Stock</th>
@@ -103,6 +102,7 @@
                                                         </tr>
                                                     </tfoot>
                                                     <tbody>
+                                                        
                                                     <?php echo $almCont->databale_componentes($_SESSION["almacen"],"carrito"); ?>
                                                     </tbody>
                                                 </table>
@@ -116,7 +116,8 @@
             <form action="<?php echo SERVERURL;?>ajax/almacenAjax.php"  method="POST" data-form="save" class="FormularioAjax" autocomplete="off" enctype="multipart/form-data" >
                 <div id="productosCarritoS">
                                 <!-- item de local storage para salida del almacen-->
-                </div>  
+                </div>
+                <h4><p style="text-align:center;" ><a  href="#" id="varciarCarrito">Vaciar carrito</a></p></h4> 
                 <input type="hidden" name="usuario" value="<?php echo $_SESSION['id_sbp'];?>"/>
                 <div class="card">
                     <div class="card-header" id="headingTwo">
@@ -132,7 +133,7 @@
                             <div class="card-deck">
                                 <div class="card">
                                     <div class="card-header">
-                                        Quote
+                                        Receptor
                                     </div>
                                     <div class="card-body">
                                         <blockquote >
@@ -141,10 +142,10 @@
                                                     <label for="inputEmail4">Solicitado por</label>                              
                                                     <select data-placeholder="Seleccione personal" name="personal" class="chosen-select" >
                                                         <option value=""></option>
-                                                        <?php echo $almCont->chosen_personal(0,1)?>
+                                                        <?php echo $almCont->combo_personal(0,1)?>
                                                     </select>
                                                 </div>
-                                                <div class="form-group col-10"> 
+                                                <div class="form-group col-10" style="display:none"> 
                                                     <label for="inputEmail4">Turno</label>                              
                                                     <select class="form-control" name="turno">
                                                         <option>Seleccione</option><option value="dia">Dia</option><option value="noche">Noche</option>
@@ -157,24 +158,37 @@
                                 </div>
                                 <div class="card">
                                     <div class="card-header">
-                                        Quote
+                                        Datos equipo
                                     </div>
                                     <div class="card-body">
                                         <blockquote class="">
                                             <div class="form-row">                                  
                                                 <div class="form-group col-10"> 
                                                     <label for="inputEmail4">Cod. Equipo</label>                              
-                                                    <select name="codequipo" data-placeholder="Seleccione Equipo"  class="chosen-select" >
-                                                        <option value=""></option>
-                                                        <?php echo $almCont->chosen_equipo(0,1)?>
+                                                    <select name="codequipo" class="chosen-select" >
+                                                        <option value="1">SIN EQUIPO</option>
+                                                        <?php echo $almCont->select_combo("SELECT e.Id_Equipo,eu.alias_equipounidad
+                                                            FROM equipos e
+                                                            INNER JOIN equipo_unidad eu ON eu.fk_idequipo = e.Id_Equipo
+                                                            WHERE (eu.fk_idunidad = 7 OR eu.fk_idunidad = {$_SESSION['unidad']} ) 
+                                                            AND eu.est_baja = 1 AND eu.est = 1 AND eu.fk_idequipo !=1",
+                                                                 0,1)?>
                                                     </select>
                                                 </div>
                                                 <div class="form-group col-10"> 
                                                     <label for="inputEmail4">Horometro</label>                              
                                                     <input type="number" name="horometro" class="form-control"  placeholder="Horometro">
                                                 </div>
+                                                <div class="form-group col-10"> 
+                                                    <label for="inputEmail4">Datos referencia</label>                              
+                                                    <select name="datos_referencia_vale_salida" data-placeholder="#Sin especificar"  class="chosen-select" >
+                                                        <option value="#Sin especificar">#Sin especificar</option>
+                                                        <?php echo $almCont->combo_DR(1,1)?>
+                                                    </select>
+                                                </div>
+ 
                                             </div>
-                                            <footer class="blockquote-footer">Someone famous in <cite title="Source Title">Source Title</cite></footer>
+                        
                                         </blockquote>
                                     </div>
                                 </div>

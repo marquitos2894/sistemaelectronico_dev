@@ -58,7 +58,7 @@
                 }*/
 
                 //if(!localStorage.getItem("carritoIn") || localStorage.getItem("carritoIn")=="[]"){
-                if(!localStorage.getItem("BDproductos") || localStorage.getItem("BDproductos")=="[]"){
+                if(!localStorage.getItem("BDproductos") || localStorage.getItem("BDproductos")=="[]"){  
 
                     let id_almacen = $('#id_alm_vi').value;
                     console.log(id_almacen);
@@ -70,16 +70,9 @@
                     });
                     let data = await response.json();
                     console.log(data);
-                    console.log("json");
                     await localStorage.setItem('BDproductos',JSON.stringify(data));
-                    
                     this.getBDproductos = await JSON.parse(localStorage.getItem('BDproductos')); 
-                    console.log("localStorage");
-                  
-                    //render.Renderbd(data);
-                    //await render.Renderbd(this.getBDproductos);
-                    //await console.log("render");
-           
+
                     //this.getBDproductos = JSON.parse(localStorage.getItem('BDproductos'));
                     this.getCarritoIn = await JSON.parse(localStorage.getItem('carritoIn'));
                     
@@ -88,32 +81,22 @@
                     await  console.log(this.getBDproductos);
                     await  console.log(this.getCarritoIn);
 
-                    //await  console.log(this.getBDproductos.length);
-
-                }else{
+                } else{
 
                     this.getBDproductos = await JSON.parse(localStorage.getItem('BDproductos'));
-                    //await  render.Renderbd(this.getBDproductos);
-                    //console.log("render")
-                    //render.Renderbd(data);
                     console.log(this.getBDproductos.length);
-
-                    //this.getBDproductos = JSON.parse(localStorage.getItem('BDproductos'));
                     this.getCarritoIn =  JSON.parse(localStorage.getItem('carritoIn'));
 
                     view.renderCarritoIn();
                     console.log("carritoin");
-                    //console.log(this.getBDproductos);
+                    console.log(this.getBDproductos);
                     console.log(this.getCarritoIn);
                 }
                 
         }
 
+
         this.agregarItem = function(item,cant){
-            /*if(!this.getBDproductos || this.getCarritoIn==null){
-                location.reload();
-            }*/
-        
             for(i of this.getBDproductos){
                 if(i.id_ac == item){
                    var datos = i;          
@@ -153,6 +136,12 @@
                 }
             }
             localStorage.setItem("carritoIn", JSON.stringify(this.getCarritoIn));     
+        }
+
+        this.varciarCarrito = function(){
+            
+            this.getCarritoIn.splice(0);
+            localStorage.setItem('carritoIn','[]');
         }
           
     }
@@ -242,6 +231,7 @@
                         <th scope="col">Stock</th>
                         <th scope="col">U.M</th>
                         <th scope="col">Equipo</th>
+                        <th scope="col">Referencia</th>
                         <th scope="col">Ingreso</th>
                         
                     </tr>
@@ -256,20 +246,22 @@
                         <td>${i.nparte1}</td>
                         <td>${i.u_nombre}-${i.u_seccion}</td>
                         <td>${i.stock}</td>
-                        <td>${i.unidad_med}</td>
-                        <td>${i.Nombre_Equipo}</td>
+                        <td>${i.abreviado}</td>
+                        <td>${i.alias_equipounidad}</td>
+                        <td>${i.Referencia}</td>
                         <td>${i.cantidad}</td>
                         <td><p class="field"><a href="#" class="button is-danger" id="deleteProducto" data-producto="${i.id_ac}">x</a></p></td></tr>
                         <div style="display:none;">
                         <tr>
-                        <input type="hidden" name="id_ac[]" value="${i.id_ac}">
+                        <input type="hidden" name="id_ac_carritoin[]" value="${i.id_ac}">
                         <input type="hidden" name="dv_codigo[]" value="${i.codigo}">
                         <input type="hidden" name="dv_descripcion[]" value="${i.descripcion}">
                         <input type="hidden" name="dv_nparte1[]" value="${i.nparte1}">
                         <input type="hidden" name="dv_stock[]" value="${i.stock}">
                         <input type="hidden" name="dv_ingreso[]" value="${i.cantidad}">
                         <input type="hidden" name="dv_id_equipo[]" value="${i.Id_Equipo}">
-                        <input type="hidden" name="dv_nom_equipo[]" value="${i.Nombre_Equipo}">
+                        <input type="hidden" name="dv_nom_equipo[]" value="${i.alias_equipounidad}">
+                        <input type="hidden" name="dv_referencia[]" value="${i.Referencia}">
                         <input type="hidden" name="dv_unombre[]" value="${i.u_nombre}">
                         <input type="hidden" name="dv_useccion[]" value="${i.u_seccion}"></tr><div>`;
                 j+=1;
@@ -310,6 +302,29 @@
             view.renderCarritoIn();
         }
     });
+
+    $("#varciarCarrito").addEventListener("click",function(ev){
+        ev.preventDefault();
+        carrito.varciarCarrito();
+        view.renderCarritoIn();
+    });
+
+    //card_remitente
+    $('#documento').addEventListener("change",function(ev){
+        ev.preventDefault();
+        console.log(document.querySelector('#documento').value);
+        $documento=document.querySelector('#documento').value;
+        if($documento==1){
+            document.querySelector('#card_remitente').setAttribute("style","visibility:hidden"); 
+        }else if($documento==2){
+            document.querySelector('#card_remitente').setAttribute("style","visibility:true");
+        }else{
+            document.querySelector('#card_remitente').setAttribute("style","visibility:hidden"); 
+        }
+
+    });
+
+
 
    /*window.addEventListener("onload", async function(e) {
         

@@ -10,7 +10,7 @@ class loginModelo extends mainModel{
 
     protected function iniciar_sesion_modelo($datos){
 
-        $sql = mainModel::conectar()->prepare("SELECT * FROM usuario WHERE Correo=:correo and Clave=:clave");
+        $sql = mainModel::conectar()->prepare("CALL login(:correo,:clave)");
         $sql->bindParam(':correo',$datos['correo']);
         $sql->bindParam(':clave',$datos['clave']);
         $sql->execute();

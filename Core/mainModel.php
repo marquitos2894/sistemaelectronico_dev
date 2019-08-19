@@ -24,6 +24,12 @@
             return $respuesta;
         }
 
+        protected function ejecutar_consulta_validar($consulta){
+            $respuesta = self::conectar()->prepare($consulta);
+            $respuesta->execute();
+            return $respuesta;
+        }
+
 
 
         protected function obtener_consulta_json($consulta){
@@ -260,9 +266,11 @@
                 "<script>
                     localStorage.setItem('$local','[]')
                 </script>";
-            }
-       
-            
+            }  
+        }
+
+        protected function dateFormat($date){
+            return date("d/m/Y", strtotime($date));
         }
     
     }

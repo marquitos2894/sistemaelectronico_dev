@@ -23,7 +23,6 @@
   <link href="<?php echo SERVERURL?>vistas/css/sb-admin-2.min.css" rel="stylesheet">
 
   <?php  include "vistas/modulos/Estilos.php"; ?>
-
   <?php  include "vistas/modulos/logoutscript.php"; ?>
 </head>
 
@@ -45,9 +44,7 @@
               require_once './vistas/contenidos/404-view.php'; 
             }
             
-          }
-    
-          else{
+          }else{
 
             //session_start(['name'=>'SBP']);
            

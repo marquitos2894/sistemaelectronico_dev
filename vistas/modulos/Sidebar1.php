@@ -125,6 +125,20 @@
         </div>
       </li>
       <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages-equipos" aria-expanded="true" aria-controls="collapsePages">
+          <i class="fas fa-fw fa-folder"></i>
+          <span>Equipos</span>
+        </a>
+        <div id="collapsePages-equipos" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+          <div class="bg-white py-2 collapse-inner rounded">
+            <div class="collapse-divider"></div>
+            <a class="collapse-item" href="<?php echo SERVERURL;?>equipos/">Equipos</a>
+            <a class="collapse-item" href="<?php echo SERVERURL;?>miFlota/">miFlota</a>
+            <a class="collapse-item" href="<?php echo SERVERURL;?>FlotaDeBaja/">FlotaDeBaja</a>  
+          </div>
+        </div>
+      </li>
+      <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages-comp" aria-expanded="true" aria-controls="collapsePages">
           <i class="fas fa-fw fa-folder"></i>
           <span>Componentes</span>
@@ -133,7 +147,8 @@
           <div class="bg-white py-2 collapse-inner rounded">
             <div class="collapse-divider"></div>
             <a class="collapse-item" href="<?php echo SERVERURL;?>componentes/">Componente</a>
-            <a class="collapse-item" href="<?php echo SERVERURL;?>personallist/">Categoria</a>
+            <a class="collapse-item" href="<?php echo SERVERURL;?>unidadmedlist/">Unidad Medida</a>
+            <a class="collapse-item" href="<?php echo SERVERURL;?>datosReferencia/">Datos de referencia</a>  
           </div>
         </div>
       </li>

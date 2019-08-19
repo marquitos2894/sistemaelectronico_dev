@@ -22,21 +22,23 @@ class loginControlador extends loginModelo{
         
         if($datosUsuario->rowCount()==1){
             $row = $datosUsuario->fetch();
-        
             $_SESSION['id_sbp']=$row['id_usu'];
+            $_SESSION['fk_idper_sbp']=$row['fk_idper'];
             $_SESSION['usuario_sbp']=$row['Correo'];
             $_SESSION['nombre_sbp']=$row['Nombre'];
+            $_SESSION['apellido_sbp']=$row['Apellido'];
             $_SESSION['privilegio_sbp']=$row['privilegio'];
             $_SESSION['tipo_sbp']=$row['tipo'];
             $_SESSION['image_sbp']=$row['imagen'];
+            $_SESSION['unidad']=$row['idunidad'];
             $_SESSION['almacen']=0;
             $_SESSION['token_sbp']=md5(uniqid(mt_rand(),true));
-            
-            if($row['tipo']=="super" ){
+            $url = SERVERURL.'inicio';   
+            /*if($row['tipo']=="super" ){
                 $url = SERVERURL.'inicio';
             }else {
                 $url = SERVERURL.'emptrans';
-            }
+            }*/
             return $urllocation = "<script>window.location='{$url}'</script>";
         }else{
             $alerta=[

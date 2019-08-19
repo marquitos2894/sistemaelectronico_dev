@@ -27,13 +27,10 @@
             <a class="nav-link active;alert alert-success" href="#">Vale de ingreso</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="<?php echo SERVERURL;?>newcomponente/">+Nuevo componente</a>
-        </li>
-        <li class="nav-item">
             <a class="nav-link " href="<?php echo SERVERURL;?>ingresoAlmacen/" aria-disabled="true">Ingreso Almacen</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link " href="#" aria-disabled="true">Reportes</a>
+            <a class="nav-link " href="<?php echo SERVERURL;?>reporteAlmacen" aria-disabled="true">Reportes</a>
         </li>
         <li class="nav-item">
             <a class="nav-link " href="#" aria-disabled="true">Import</a>
@@ -78,6 +75,7 @@
                                                         <th>Descripcion</th>
                                                         <th>Nparte1</th>
                                                         <th>Equipo</th>
+                                                        <th>Referencia</th>
                                                         <th>Ubicacion</th>
                                                         <th>U.M</th>
                                                         <th>Stock</th>
@@ -92,6 +90,7 @@
                                                         <th>Descripcion</th>
                                                         <th>Nparte1</th>
                                                         <th>Equipo</th>
+                                                        <th>Referencia</th>
                                                         <th>Ubicacion</th>
                                                         <th>U.M</th>
                                                         <th>Stock</th>
@@ -115,8 +114,11 @@
             <form action="<?php echo SERVERURL;?>ajax/almacenAjax.php"  method="POST" data-form="save" class="FormularioAjax" autocomplete="off" enctype="multipart/form-data" >
                 <div id="productosCarritoIn">
                                 <!-- item de local storage para salida del almacen-->
-                </div>  
+                </div>
+                <h4><p style="text-align:center;" ><a  href="#" id="varciarCarrito">Vaciar carrito</a></p></h4>
+                
                 <input type="hidden" name="usuario" value="<?php echo $_SESSION['id_sbp'];?>"/>
+ 
                 <div class="card">
                     <div class="card-header" id="headingTwo">
                         <h2 class="mb-0">
@@ -129,49 +131,50 @@
                     <div id="Productos" >                    
                         <div class="card-body">
                             <div class="card-deck">
+
                                 <div class="card">
                                     <div class="card-header">
-                                        Quote
+                                        Documnetos
                                     </div>
                                     <div class="card-body">
-                                        <blockquote >
+                                        <blockquote class="">
                                             <div class="form-row">                                  
-                                                <div class="form-group col-8"> 
-                                                    <label for="inputEmail4">Solicitado por</label>                              
-                                                    <select data-placeholder="Seleccione personal" name="personal" class="chosen-select" >
-                                                        <option value=""></option>
-                                                        <?php echo $almCont->chosen_personal(0,1) ?>
+                                                <div class="form-group col-10"> 
+                                                    <label for="inputEmail4">Tipo Documento</label>                                                         
+                                                    <select class="form-control" name="documento" id="documento">
+                                                        <option>Seleccione</option>
+                                                        <option value="1">Guia remision</option>
+                                                        <option value="2">Devolucion</option>
                                                     </select>
                                                 </div>
                                                 <div class="form-group col-10"> 
-                                                    <label for="inputEmail4">Turno</label>                              
-                                                    <select class="form-control" name="turno">
-                                                        <option>Seleccione</option><option value="dia">Dia</option><option value="noche">Noche</option>
-                                                    </select>
+                                                    <label for="inputEmail4">Ref. Documento</label>                              
+                                                    <input type="text" name="ref_documento" class="form-control"  placeholder="Referencia documento">
                                                 </div>
                                             </div>
                                             <footer class="blockquote-footer">Someone famous in <cite title="Source Title">Source Title</cite></footer>
                                         </blockquote>
                                     </div>
                                 </div>
-                                <div class="card">
+                                <div class="card" id="card_remitente" style="visibility:hidden">
                                     <div class="card-header">
-                                        Quote
+                                        Remitente
                                     </div>
                                     <div class="card-body">
-                                        <blockquote class="">
+                                        <blockquote >
                                             <div class="form-row">                                  
-                                                <div class="form-group col-10"> 
-                                                    <label for="inputEmail4">Tipo Documento</label>                              
-                                                    <input list="documento" name="documento">
-                                                    <datalist id="documento">
-                                                    <option value="Guia resmion">
-                                                    <option value="Devolucion">
-                                                    </datalist>
+                                                <div class="form-group col-8"> 
+                                                    <label for="inputEmail4">Remitente</label>                              
+                                                    <select data-placeholder="Seleccione personal" name="personal" id="personal" class="chosen-select" >
+                                                        <option value=""></option>
+                                                        <?php echo $almCont->combo_personal(0,1) ?>
+                                                    </select>
                                                 </div>
-                                                <div class="form-group col-10"> 
-                                                    <label for="inputEmail4">Ref. Documento</label>                              
-                                                    <input type="text" name="ref_documento" class="form-control"  placeholder="Referencia documento">
+                                                <div class="form-group col-10" style="display:none;" > 
+                                                    <label for="inputEmail4">Turno</label>                              
+                                                    <select class="form-control" name="turno">
+                                                        <option>Seleccione</option><option value="dia">Dia</option><option value="noche">Noche</option>
+                                                    </select>
                                                 </div>
                                             </div>
                                             <footer class="blockquote-footer">Someone famous in <cite title="Source Title">Source Title</cite></footer>

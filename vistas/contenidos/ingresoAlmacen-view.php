@@ -8,41 +8,39 @@
     }
 
 ?>
-
+<input type="hidden" id="session_idunidad" value="<?php echo $_SESSION['unidad'] ?>" /> 
 <div class="container-fluid">
 
     <?php  include "vistas/modulos/nav-almacen.php";?> 
     <ul class="nav nav-tabs">
-                <li class="nav-item">
-                    <a class="nav-link " href="<?php echo SERVERURL;?>insideAlmacen/">Almacen</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="<?php echo SERVERURL;?>RValeSalida/">Vale salida</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="<?php echo SERVERURL;?>RValeIngreso/">Vale de ingreso</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="<?php echo SERVERURL;?>newcomponente/">+Nuevo componente</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" href="<?php echo SERVERURL;?>ingresoAlmacen/" aria-disabled="true">Ingreso Almacen</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link " href="#" aria-disabled="true">Reportes</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link " href="#" aria-disabled="true">Import</a>
-                </li>
-        </ul><br>
+        <li class="nav-item">
+            <a class="nav-link " href="<?php echo SERVERURL;?>insideAlmacen/">Almacen</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="<?php echo SERVERURL;?>RValeSalida/">Vale salida</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="<?php echo SERVERURL;?>RValeIngreso/">Vale de ingreso</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link active" href="<?php echo SERVERURL;?>ingresoAlmacen/" aria-disabled="true">Ingreso Almacen</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link " href="<?php echo SERVERURL;?>reporteAlmacen" aria-disabled="true">Reportes</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link " href="#" aria-disabled="true">Import</a>
+        </li>
+    </ul><br>
+
     <div class="accordion" id="accordionExample">
         <div class="card">
             <div class="card-header" id="headingOne">
-            <h2 class="mb-0">
-                <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                Componentes en general
-                </button>
-            </h2>
+                <h2 class="mb-0">
+                    <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    Componentes en general
+                    </button>
+                </h2>
             </div>
 
             <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
@@ -80,22 +78,21 @@
                             </tbody>
                         </table>
                     </div>
-                </div>
-
-                
+                </div>   
             </div>
         </div>
     </div>
 
-    <form action="<?php echo SERVERURL;?>ajax/almacenAjax.php"  method="POST" data-form="save" class="FormularioAjax" autocomplete="off" enctype="multipart/form-data">
+    <form name="form_inalmacen" action="<?php echo SERVERURL;?>ajax/almacenAjax.php"  method="POST" data-form="save" class="FormularioAjax" autocomplete="off" enctype="multipart/form-data">
         <div id="productosCarrito">
             <!-- item de local storage para ingreso al almacen (Nuevo o ubicacion)-->
         </div>
-        <input type="hidden"  name="id_alm" value="<?php echo $id_alm ?>"/>
+        <h4><p style="text-align:center;" ><a  href="#" id="varciarCarrito">Vaciar carrito</a></p></h4>
+        <input type="hidden"  name="id_alm_frmIA" value="<?php echo $id_alm ?>"/>
         <input type="submit"  class="btn btn-primary btn-lg btn-block" value="Registrar"/>
         <div class="RespuestaAjax"></div>
     </form> 
-
+  
 </div>
 <!-- Button trigger modal -->
 <!-- <button type="button" id="btnModal" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">

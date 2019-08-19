@@ -73,7 +73,7 @@
 
 
 
-    document.querySelector('#datatable').addEventListener("click", async function(ev){
+    document.querySelector('#table_componente').addEventListener("click", async function(ev){
       
 
         if(ev.target.id == 'DeleteItem'){
@@ -90,16 +90,16 @@
                 body : datos
             });
             let data = await response.json();
-            //console.log(data[0].unidad_med);
+            console.log(data);
 
             const datos0 = new FormData();
-            datos0.append('combounidad',data[0].unidad_med);
+            datos0.append('combounidad',data[0].id_unidad_med);
             let response0 = await fetch('../ajax/unidadmedidaAjax.php',{
                 method: 'POST',
                 body : datos0
             });
             let data0 = await response0.text();
-            //console.log(data0);
+            console.log(data0);
 
 
             let template = `
@@ -130,20 +130,12 @@
                     <div class="form-group col-md-6">
                         <label for="inputPassword4">Unidad Medida</label>
                         <select name="unidad_med" class="form-control" >
-                            <option value="${data[0].unidad_med}">${data[0].unidad_med}</option>
+                            <option value="${data[0].id_unidad_med}">${data[0].abreviado}</option>
                             ${data0}
                         </select>
                         
                     </div>
-                </div>
-
-                <div class="form-group col-md-4">
-                    <label for="inputPassword4">Control Stock</label>
-                    <input type="text" value="${data[0].control_stock}" name="control_stock" id="control_stock"  class="form-control"  placeholder="Nparte 2" >
-                </div>    
-                
-              
-        
+                </div>                          
             `;
          document.querySelector('#modal-body').innerHTML=template;   
         }

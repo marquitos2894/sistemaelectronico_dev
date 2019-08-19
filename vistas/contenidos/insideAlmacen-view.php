@@ -8,7 +8,7 @@
       }
 
 ?>
-
+   <input type="hidden" id="session_idunidad" value="<?php echo $_SESSION['unidad'] ?>" /> 
 <div class="container-fluid">
 
   <?php  include "vistas/modulos/nav-almacen.php";?> 
@@ -23,14 +23,11 @@
             <a class="nav-link" href="<?php echo SERVERURL;?>RValeIngreso/">Vale de ingreso</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="<?php echo SERVERURL;?>newcomponente/">+Nuevo componente</a>
-        </li>
-        <li class="nav-item">
           <a class="nav-link " href="<?php echo SERVERURL;?>ingresoAlmacen/" aria-disabled="true">Ingreso Almacen</a>
         </li>
         <li class="nav-item">
-                <a class="nav-link " href="#" aria-disabled="true">Reportes</a>
-            </li>
+          <a class="nav-link " href="<?php echo SERVERURL;?>reporteAlmacen" aria-disabled="true">Reportes</a>
+        </li>
         <li class="nav-item">
             <a class="nav-link " href="#" aria-disabled="true">Import</a>
         </li>
@@ -56,7 +53,8 @@
                       <th>U.M</th>
                       <th>Equipo</th>
                       <th>Referencia</th>
-                      <th>Accion</th>
+                      <th>Config</th>
+                      <th>Delete</th>
                     </tr>
                   </thead>
                   <tfoot>
@@ -73,7 +71,8 @@
                       <th>U.M</th>
                       <th>Equipo</th>
                       <th>Referencia</th>
-                      <th>Accion</th>
+                      <th>Config</th>
+                      <th>Delete</th>
                     </tr>
                   </tfoot>
                   <tbody id="dtbody">
@@ -83,6 +82,7 @@
               </div>
             </div>
           </div>
+          
           <input type="hidden" id="id_alm_session" value="<?php echo $_SESSION["almacen"] ?>" />
           <div class="modal fade" id="config_comp" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
@@ -93,16 +93,21 @@
                     <span aria-hidden="true">&times;</span>
                   </button>
                 </div>
-                <div class="modal-body" id="modal-body">
-                </div>
+                <form name="almacen"  action="<?php echo SERVERURL;?>ajax/almacenAjax.php" id="formEdit"  method="POST" data-form="update" class="FormularioAjax" autocomplete="off" enctype="multipart/form-data">
+                  <div class="modal-body" id="modal-body">
+                  </div>
 
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                  <button type="button" id="btnAgregar" class="btn btn-primary" data-dismiss="modal">Agregar</button>
-                </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                    <input type="submit"  class="btn btn-primary " value="Actualizar"/>     
+                  </div>
+                  <div class="RespuestaAjax"></div>
+                </form>
               </div>
             </div>
-          </div>  
+          </div>
+
+          
 </div>
 
 

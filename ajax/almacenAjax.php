@@ -8,13 +8,23 @@
    $equiCont = new equipoControlador();
    //echo $almCont->obtener_consulta_json_controlador(1);
 
+
+   if(isset($_POST["id_comp_almacen"]) && isset($_POST["fk_idalm_almacen"])){
+      echo $almCont->update_comp_almacen_controlador();  
+   }  
+
+
+
+
    if(isset($_POST["id_alm"])){
       session_start(['name'=>'SBP']);
       echo $almCont->obtener_consulta_json_controlador("SELECT ac.id_ac,c.id_comp,c.descripcion,c.nparte1,
-      c.nparte2,c.nparte3,c.unidad_med,ac.stock,ac.fk_idalm,ac.u_nombre,ac.u_seccion,e.Nombre_Equipo,e.Id_Equipo
+      c.nparte2,c.nparte3,um.id_unidad_med,um.abreviado,ac.stock,ac.fk_idalm,ac.u_nombre,ac.u_seccion,eu.alias_equipounidad,e.Nombre_Equipo,e.Id_Equipo,ac.Referencia
       FROM componentes c
       INNER JOIN almacen_componente ac ON ac.fk_idcomp = c.id_comp 
-      INNER JOIN equipos e  ON e.Id_Equipo = ac.fk_idequipo 
+      INNER JOIN equipos e  ON e.Id_Equipo = ac.fk_Id_Equipo
+      INNER JOIN unidad_medida um ON um.id_unidad_med = c.fk_idunidad_med
+      INNER JOIN equipo_unidad eu ON eu.fk_idequipo = e.Id_Equipo
       WHERE ac.fk_idalm = {$_POST["id_alm"]}");
 
       if( isset($_POST["id_alm"]) && isset($_POST["nom_almacen"])){
@@ -44,13 +54,15 @@
    }
 
    if(isset($_POST["id_ac"])){
-      echo $almCont->obtener_consulta_json_controlador("SELECT ac.id_ac,c.id_comp,c.descripcion,c.nparte1,
-      c.nparte2,c.nparte3,c.unidad_med,ac.stock,ac.fk_idalm,ac.u_nombre,ac.u_seccion,e.Id_Equipo,e.Nombre_Equipo,ac.Referencia,ac.control_stock
-      FROM componentes c
-      INNER JOIN almacen_componente ac ON ac.fk_idcomp = c.id_comp 
-      INNER JOIN equipos e  ON e.Id_Equipo = ac.fk_idequipo 
+      echo $almCont->obtener_consulta_json_controlador("SELECT ac.id_ac,c.id_comp,c.descripcion,c.nparte1,c.nparte2,c.nparte3,
+      um.abreviado,ac.stock,ac.fk_idalm,ac.u_nombre,ac.u_seccion,e.Nombre_Equipo,e.Id_Equipo,
+      eu.alias_equipounidad,ac.Referencia,ac.control_stock
+        FROM componentes c
+        INNER JOIN almacen_componente ac ON ac.fk_idcomp = c.id_comp 
+        INNER JOIN equipos e  ON e.Id_Equipo = ac.fk_Id_Equipo
+        INNER JOIN unidad_medida um ON um.id_unidad_med = c.fk_idunidad_med
+        INNER JOIN equipo_unidad eu ON eu.fk_idequipo = e.Id_Equipo
       WHERE ac.est = 1 and ac.id_ac = {$_POST["id_ac"]}");
-
 
    }
 
@@ -61,12 +73,27 @@
       WHERE c.id_comp = {$_POST["id_comp_cs"]} and cs.fk_idalm = {$_POST["id_alm_cs"]}");
    }
 
-   if(isset($_POST["combo_eq"])){
-      echo $equiCont->select_combo("SELECT e.Id_Equipo,e.Nombre_Equipo
-      from equipos e WHERE e.Nombre_Equipo !='{$_POST["combo_eq"]}' and estado = 'si' 
+   if(isset($_POST["id_equipo_insideAlm"]) && isset($_POST["id_unidad_insideAlm"]) ){
+      echo $equiCont->select_combo("SELECT e.Id_Equipo,eu.alias_equipounidad
+      FROM equipos e
+      INNER JOIN equipo_unidad eu ON eu.fk_idequipo = e.Id_Equipo
+      WHERE (eu.fk_idunidad = 7 OR eu.fk_idunidad = {$_POST["id_unidad_insideAlm"]} ) 
+      AND eu.est_baja = 1 AND eu.est = 1 AND eu.fk_idequipo !={$_POST["id_equipo_insideAlm"]}
       ",0,1);
-  }
-  
+   }
+   
+
+   // VISTA INSIDE ALMACEN
+   if(isset($_POST["id_ac_del"])){
+     echo $almCont->delete_componente_almacen_controlador();
+   }
+
+   if(isset($_POST["dataReferencia"])){
+      $referencia = $_POST["dataReferencia"];
+      echo $almCont->select_combo("SELECT * FROM datos_referencia WHERE dato_referencia != '{$referencia}' ",1,1);
+    }
+ 
+ 
    
 
 ?>

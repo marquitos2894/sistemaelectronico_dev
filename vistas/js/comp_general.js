@@ -77,6 +77,11 @@
             }
             localStorage.setItem("carritoGen",JSON.stringify(this.carrito));
         }
+
+        this.varciarCarrito = function(){
+            this.carrito.splice(0);
+            localStorage.setItem('carritoGen','[]');
+        }  
     }
 
     function consultaBD(){
@@ -170,14 +175,26 @@
         ev.preventDefault();
         if(ev.target.id=="addItem"){
             let iditem = ev.target.dataset.producto;
+            let id_unidad = document.querySelector("#session_idunidad").value;
+
+            //equipos
             const datos = new FormData();
-            datos.append('combo_eq','true');
+            datos.append('idunidad_compgen','true');
             let response = await fetch('../ajax/componentesAjax.php',{
                 method : 'POST',
                 body : datos
             });
             let data = await response.text();
-            //console.log(data);
+               
+            //referencia
+            const datosDR = new FormData();
+            datosDR.append('dataReferencia','true');
+            let responseDR = await fetch('../ajax/componentesAjax.php',{
+                method : 'POST',
+                body : datosDR
+            });
+            let dataDR = await responseDR.text();
+            //console.log(dataDR);
 
             let template = await `<input type="hidden" id="iditem" value="${iditem}" />
             <div class="form-row">
@@ -197,24 +214,19 @@
             template += `
             <div class="form-row">
                 <div class="form-group col-sm-6">`;
-            template += await `
+            template +=`
                 <label for="inputEmail4">Equipo</label>
                     <select id='chosen-select' data-placeholder='Seleccione Equipo' name='equipo' class="chosen-select">
-                        <option value="137">Sin equipo</option>
+                        <option value="1">SIN EQUIPO</option>
                             ${data}
                     </select>
                 </div>
                 <div class="form-group col-sm-6">
                     <label for="inputEmail4">Referencia</label>
-                    <input list="Referencia" id="list_ref" placeholder='Sin referencia'>
-                    <datalist id="Referencia">
-                    <option select value="Jumbos DD311">
-                    <option value="Scoop R1300">
-                    <option value="Scoop R1600">
-                    <option value="Reparacion bomba cat">
-                    <option value="Jumbos DS311">
-                    <option value="Sin referencia">
-                    </datalist>
+                    <select id='chosen-select_DR' data-placeholder='Seleccione referencia' class="chosen-select">
+                    <option value="#Sin especificar">#Sin especificar</option>
+                        ${dataDR}
+                    </select>
                 </div>
             </div>`;    
            //$1('#modal-body').innerHTML = await template;
@@ -223,6 +235,7 @@
             (async function($) 
             {  
                await $('.chosen-select').chosen({width: "100%"});
+               await $('.chosen-select_DR').chosen({width: "100%"});
             })(jQuery);
         
             
@@ -237,7 +250,7 @@
         u_nom = $1('#u_nom').value;
         u_sec = $1('#u_sec').value;
         id_equi = $1('#chosen-select').value;
-        referencia = $1('#list_ref').value;
+        referencia = $1('#chosen-select_DR').value;
         nom_equipo = $1('#chosen-select').selectedOptions;
         nom_equipo = nom_equipo[0].label;
         bdcomp.agregarItem(iditem,u_nom,u_sec,id_equi,referencia,nom_equipo);
@@ -250,6 +263,13 @@
             bdcomp.eliminarItem(ev.target.dataset.producto);
             render.renderCarrito();
         }   
+    });
+
+
+    $1("#varciarCarrito").addEventListener("click",function(ev){
+        ev.preventDefault();
+        bdcomp.varciarCarrito();
+        render.renderCarrito();
     });
 
 })();

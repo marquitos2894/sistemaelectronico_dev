@@ -181,6 +181,12 @@
             }
             localStorage.setItem("carritoS", JSON.stringify(this.getCarritoS));
             return;
+        }
+
+        this.varciarCarrito = function(){
+            
+            this.getCarritoS.splice(0);
+            localStorage.setItem('carritoS','[]');
         }     
         
     }
@@ -198,6 +204,7 @@
                 <td>${i.descripcion}</td>
                 <td>${i.nparte1}</td>
                 <td>${i.Nombre_Equipo}</td>
+                <td>${i.Referencia}</td>
                 <td>${i.u_nombre}-${i.u_seccion}</td>
                 <td>${i.unidad_med}</td>
                 <td>${i.stock}</td>
@@ -225,10 +232,12 @@
                 <thead>
                     <tr>
                         <th scope="col">#</th>
-                        <th scope="col">Cod.Interno</th>
+                        <th scope="col">Cod</th>
                         <th scope="col">Descriocion</th>
                         <th scope="col">Nparte</th>
+                        <th scope="col">Referencia</th>
                         <th scope="col">Ubicacion</th>
+                        <th scope="col">U.M</th>
                         <th scope="col">Stock</th>
                         <th scope="col">Solicitado</th>
                         <th scope="col">Entregado</th>
@@ -243,7 +252,9 @@
                             <td>${i.id_comp}</td>
                             <td>${i.descripcion}</td>
                             <td>${i.nparte1}</td>
+                            <td>${i.Referencia}</td>
                             <td>${i.u_nombre}-${i.u_seccion}</td>
+                            <td>${i.abreviado}</td>
                             <td><strong>${i.stock}</strong></td>
                             <td>${i.solicitado}</td>
                             <td>${i.cantidad}</td>
@@ -251,7 +262,7 @@
                         </tr>
                         <div style="display:none;">
                         <tr>
-                        <input type="hidden" name="id_ac[]" value="${i.id_ac}">
+                        <input type="hidden" name="id_ac_vale_salida[]" value="${i.id_ac}">
                         <input type="hidden" name="dv_codigo[]" value="${i.codigo}">
                         <input type="hidden" name="dv_descripcion[]" value="${i.descripcion}">
                         <input type="hidden" name="dv_nparte1[]" value="${i.nparte1}">
@@ -278,7 +289,8 @@
 
     document.addEventListener("DOMContentLoaded",function(){
         carrito.constructor();
-        //view.renderCarritoS(); 
+        console.log("constructor");
+ 
     });
 
 
@@ -300,6 +312,12 @@
             view.renderCarritoS();
         }
 
+    });
+
+    $("#varciarCarrito").addEventListener("click",function(ev){
+        ev.preventDefault();
+        carrito.varciarCarrito();
+        view.renderCarritoS();
     });
 
 })();
