@@ -142,7 +142,10 @@
                                                     <label for="inputEmail4">Solicitado por</label>                              
                                                     <select data-placeholder="Seleccione personal" name="personal" class="chosen-select" >
                                                         <option value=""></option>
-                                                        <?php echo $almCont->combo_personal(0,1)?>
+                                                        <?php 
+                                                           echo $almCont->select_combo("select p.id_per, concat(p.Nom_per,' ',p.Ape_per)
+                                                           from personal p where idunidad = {$_SESSION['unidad']} AND est = 1",0,1);
+                                                        ?>
                                                     </select>
                                                 </div>
                                                 <div class="form-group col-10" style="display:none"> 

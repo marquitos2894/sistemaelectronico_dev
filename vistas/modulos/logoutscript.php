@@ -19,6 +19,7 @@ $(document).ready(function(){
                 success:function(data){
                    
                     if(data=="true"){
+                        localStorage.clear();
                         window.location.href="<?php echo SERVERURL; ?>login"; 
                     }else{
                         Swal.fire(

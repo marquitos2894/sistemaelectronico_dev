@@ -22,17 +22,17 @@
                   <div class="form-row">
                     <div class="form-group col-md-6">
                       <label for="inputEmail4">Nombres</label>
-                      <input type="text" name="nom_per_in" value="" class="form-control" id="inputEmail4" placeholder="Nombres">
+                      <input type="text" name="nom_per_in" value="" class="form-control" id="inputEmail4" placeholder="Nombres" required>
                     </div>
                     <div class="form-group col-md-6">
                       <label for="inputPassword4">Apellidos</label>
-                      <input type="text" name="ape_per_in" value="" class="form-control" id="inputPassword4" placeholder="Apellidos" >
+                      <input type="text" name="ape_per_in" value="" class="form-control" id="inputPassword4" placeholder="Apellidos" required>
                     </div>
                   </div>
                   <div class="form-row">
                       <div class="form-group col-md-4">
                         <label for="inputCity">DNI</label>
-                        <input type="text" name="dni_per_in" value="" class="form-control" id="inputCity">
+                        <input type="text" name="dni_per_in" value="" class="form-control" id="inputCity" required>
                       </div>
                       <div class="form-group col-md-4">
                         <label for="inputCity">Brevete</label>
@@ -65,20 +65,22 @@
                       <div class="form-group col-md-4">
                         <label for="inputCity">Cargo</label>
                         <div>
-                          <select data-placeholder="Seleccione cargo..." name="cargo_in" class="chosen-select" tabindex="">
+                          <select required data-placeholder="Seleccione cargo" name="cargo_in" class="chosen-select" tabindex="">
                             <option value=""></option>
                             <?php echo $perCont->chosen_cargo(0,1)?>
                           </select>
+                        </div>
                       </div>
-                      </div>
-                      <div class="form-group col-md-4">
+                      <input type="hidden" name="unidad_in" value="<?php echo $_SESSION['unidad'] ?>"/>
+                      <div class="form-group col-md-4" style="display:none">
                         <label for="inputCity">Unidad</label>
-                        <div>
-                          <select data-placeholder="Seleccione unidad..." name="unidad_in" class="chosen-select" tabindex="2">
-                            <option value=""></option>
-                            <?php echo $perCont->chosen_unidad(0,1)?>
-                          </select>
-                      </div>
+                         
+                          <div>
+                            <!--select data-placeholder="Seleccione unidad..." name="unidad_in" class="chosen-select" tabindex="2">
+                              <option value=""></option>
+                              <?php //echo $perCont->chosen_unidad(0,1)?>
+                            </select-->
+                        </div>
                       </div>
                   </div>
                   <div class="form-row">

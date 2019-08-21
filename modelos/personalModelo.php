@@ -38,6 +38,38 @@ protected function save_personal_modelo($datos){
 
 }
 
+    protected function update_personal_modelo($datos){
+
+        $sql = mainModel::conectar()->prepare("Call u_personal(:id_per,:Nom_per,:Ape_per,:Dni_per,:brevete,:Telefono_per,
+        :Direccion_per,:Region_per,:Ciudad_per,:Distrito_per,:urlimagen,:id_cargo,
+        :idunidad,:Correoe_per)");
+        
+        $sql->bindParam(":id_per",$datos["id_per"]);
+        $sql->bindParam(":Nom_per",$datos["nom_p"]);
+        $sql->bindParam(":Ape_per",$datos["ape_p"]);
+        $sql->bindParam(":Dni_per",$datos["dni_p"]);
+        $sql->bindParam(":brevete",$datos["brevete_p"]);
+        $sql->bindParam(":Telefono_per",$datos["telf_p"]);
+        $sql->bindParam(":Direccion_per",$datos["dir_p"]);
+        $sql->bindParam(":Region_per",$datos["reg_p"]);
+        $sql->bindParam(":Ciudad_per",$datos["ciu_p"]);
+        $sql->bindParam(":Distrito_per",$datos["dis_p"]);
+        $sql->bindParam(":urlimagen",$datos["urlimagen"]);
+        $sql->bindParam(":id_cargo",$datos["cargo"]);
+        $sql->bindParam(":idunidad",$datos["unidad"]);
+        $sql->bindParam(":Correoe_per",$datos["correo_p"]);
+
+        $sql->execute();
+        return $sql;
+    }
+
+    protected function delete_personal_modelo($id_per){
+        $conex = mainModel::conectar();
+        $sql = $conex->prepare("CALL d_personal(:id_per)");
+        $sql->bindParam(":id_per",$id_per);
+        $sql->execute();
+        return $sql;
+    }
 
 }
 ?>

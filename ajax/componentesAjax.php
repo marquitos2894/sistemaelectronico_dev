@@ -9,6 +9,8 @@ if(isset($_POST["descripcion"]) && isset($_POST["unidad_med_new"])){
   echo $compCont->save_componente_controlador();
 }
 
+
+
 if(isset($_POST["dataReferencia"])){
   echo $compCont->select_combo("SELECT * FROM datos_referencia WHERE id_dr != 1 ",1,1);
 }
@@ -64,6 +66,8 @@ if(isset($_POST["id_dr_delete"])){
 if(isset($_POST["idcomp_FrmDelComp"])){
   echo $compCont->delete_componente_controlador();
 }
+
+
 
 
 

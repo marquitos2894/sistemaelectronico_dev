@@ -173,7 +173,8 @@
             $cadena = str_ireplace("^","",$cadena);
             $cadena = str_ireplace("[","",$cadena);  
             $cadena = str_ireplace("]","",$cadena);  
-            $cadena = str_ireplace("==","",$cadena);  
+            $cadena = str_ireplace("==","",$cadena);
+   
 
             return $cadena;
         }
@@ -244,7 +245,33 @@
                   })
                 </script>
                 ";
+            }else if($datos["alerta"]=="question"){
+                $alerta ="
+                <script>
+                Swal.fire({
+                    title: '{$datos['Titulo']}',
+                    text: '{$datos['Texto']}',
+                    type: '{$datos['Tipo']}',
+                    showCancelButton: true,     
+                    confirmButtonText: 'Aceptar',
+                    cancelButtonText: 'Cancelar'
+                  }).then((result) => {
+
+                    if (result.value) {
+
+                        var input = $('<input>')
+                            .attr('type', 'hidden')
+                            .attr('name', 'mydata').val('{$datos['Variable']}');
+                        $('#FormularioAjax').append(input);
+                        $('#FormularioAjax').submit();
+                      
+                    }
+                  })
+                </script>
+                ";
             }
+
+            
 
             return $alerta;
         }

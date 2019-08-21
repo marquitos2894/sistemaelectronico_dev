@@ -262,8 +262,13 @@ Class componentesControlador extends componentesModelo {
         $nparte3 =  mainModel::limpiar_cadena($_POST["nparte3"]);
         $marca =  mainModel::limpiar_cadena($_POST["marca"]);
         $id_unidad_med=  mainModel::limpiar_cadena($_POST["unidad_med_new"]);
- 
 
+        $val_question = "false";
+        if(isset($_POST["mydata"])){
+            $val_question =  mainModel::limpiar_cadena($_POST["mydata"]);
+        }
+        
+ 
         $datos = [
             "descripcion"=>$descripcion,
             "nparte1"=>$nparte1,
@@ -273,37 +278,102 @@ Class componentesControlador extends componentesModelo {
             "id_unidad_med"=>$id_unidad_med,        
         ];
 
-        $validar= componentesModelo::save_componentenes_modelo($datos);
+        
 
-        if($validar->rowCount()>0){
-            $alerta=[
-                "alerta"=>"recargar",
-                "Titulo"=>"Datos guardados",
-                "Texto"=>"Los siguientes datos han sido guardados",
-                "Tipo"=>"success"
-            ];
+        if($val_question=="false"){
 
-            $localStorage = [
-                "BDcomp_gen",
-                "BDproductos",
-                "carritoGen",
-                "carritoIn",
-                "carritoS"
-            ];
+            if($nparte1 !='' or $nparte2 !='' or $nparte3 != '' ){
+                $validarNP1 = mainModel::ejecutar_consulta_validar("SELECT * FROM componentes WHERE (nparte1 = '{$nparte1}' OR nparte2 = '{$nparte1}' OR nparte3 = '{$nparte1}' ) AND est = 1");
+                $validarNP2 = mainModel::ejecutar_consulta_validar("SELECT * FROM componentes WHERE (nparte1 = '{$nparte2}' OR nparte2 = '{$nparte2}' OR nparte3 = '{$nparte2}' ) AND est = 1");
+                $validarNP3 = mainModel::ejecutar_consulta_validar("SELECT * FROM componentes WHERE (nparte1 = '{$nparte3}' OR nparte2 = '{$nparte3}' OR nparte3 = '{$nparte3}' ) AND est = 1");
+                
+                $validarNP1 = $validarNP1->rowCount();
+                $validarNP2 = $validarNP2->rowCount();
+                $validarNP3 = $validarNP3->rowCount();
+
+                $totNP_rep = $validarNP1 + $validarNP2 + $validarNP3;
+            }
+        
+
+            if($totNP_rep>0){
+
+                $validarNP1 = ($validarNP1>0)?$validarNP1=$nparte1:$validarNP1="";
+                $validarNP2 = ($validarNP2>0)?$validarNP2=$nparte2:$validarNP2="";
+                $validarNP3 = ($validarNP3>0)?$validarNP3=$nparte3:$validarNP3="";
+                    $alerta=[
+                        "alerta"=>"question",
+                        "Titulo"=>"Duplicidad de N° parte",
+                        "Texto"=>"El/Los N° parte {$validarNP1} | {$validarNP2} | {$validarNP3}  ya se encuentran registrados ¿Desea continuar de todas maneras?",
+                        "Tipo"=>"info",
+                        "Variable"=>"true"
+                    ];
+                    return mainModel::sweet_alert($alerta);   
+            }else{
+
+                $validar= componentesModelo::save_componentenes_modelo($datos);
+
+                if($validar->rowCount()>0){
+                    $alerta=[
+                        "alerta"=>"recargar",
+                        "Titulo"=>"Datos guardados",
+                        "Texto"=>"Los siguientes datos han sido guardados",
+                        "Tipo"=>"success"
+                    ];
+                    $localStorage = [
+                        "BDcomp_gen",
+                        "BDproductos",
+                        "carritoGen",
+                        "carritoIn",
+                        "carritoS"
+                    ];
+                }else{
+                    $alerta=[
+                        "alerta"=>"simple",
+                        "Titulo"=>"Ocurrio un error inesperado",
+                        "Texto"=>"No hemos podido registrar el componente",
+                        "Tipo"=>"error"
+                    ];
+                    $localStorage = [];
+                }
+                echo mainModel::localstorage_reiniciar($localStorage);
+                return mainModel::sweet_alert($alerta);
+            }
+
         }else{
-            $alerta=[
-                "alerta"=>"simple",
-                "Titulo"=>"Ocurrio un error inesperado",
-                "Texto"=>"No hemos podido registrar el componente",
-                "Tipo"=>"error"
-            ];
 
-            $localStorage = [];
+            $validar= componentesModelo::save_componentenes_modelo($datos);
+
+            if($validar->rowCount()>0){
+                $alerta=[
+                    "alerta"=>"recargar",
+                    "Titulo"=>"Datos guardados",
+                    "Texto"=>"Los siguientes datos han sido guardados",
+                    "Tipo"=>"success"
+                ];
+                $localStorage = [
+                    "BDcomp_gen",
+                    "BDproductos",
+                    "carritoGen",
+                    "carritoIn",
+                    "carritoS"
+                ];
+            }else{
+                $alerta=[
+                    "alerta"=>"simple",
+                    "Titulo"=>"Ocurrio un error inesperado",
+                    "Texto"=>"No hemos podido registrar el componente",
+                    "Tipo"=>"error"
+                ];
+                $localStorage = [];
+            }
+            echo mainModel::localstorage_reiniciar($localStorage);
+            return mainModel::sweet_alert($alerta);
+
+
         }
 
 
-        echo mainModel::localstorage_reiniciar($localStorage);
-        return mainModel::sweet_alert($alerta);
+ 
 
     }
 

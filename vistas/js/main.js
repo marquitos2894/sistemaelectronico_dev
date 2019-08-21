@@ -29,7 +29,6 @@
             cancelButtonText: "Cancelar"
         }).then((result) => {
             if (result.value) {
-                console.log("entro");
             $.ajax({
                 type: metodo,
                 url: accion,

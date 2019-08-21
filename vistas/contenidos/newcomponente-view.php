@@ -17,7 +17,7 @@ $compCont = new componentesControlador();
             <a class="nav-link" href="<?php echo SERVERURL;?>componentesBaja/">Componentes Baja</a>
         </li>
     </ul><br>
-    <form action="<?php echo SERVERURL;?>ajax/componentesAjax.php" method="POST" data-form="save" class="FormularioAjax" autocomplete="off" enctype="multipart/form-data" >
+    <form action="<?php echo SERVERURL;?>ajax/componentesAjax.php" method="POST" data-form="save" class="FormularioAjax" id="FormularioAjax" autocomplete="off" enctype="multipart/form-data" >
     <div class="card border-primary mb-3">
             <div class="card-body text-primary">
                 <h4 class="card-title">Datos del componente</h4>
