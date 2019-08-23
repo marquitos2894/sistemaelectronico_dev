@@ -15,27 +15,27 @@
 ?>
 
 <div class="container-fluid">
-<?php  include "vistas/modulos/nav-almacen.php";?> 
-<ul class="nav nav-tabs">
-        <li class="nav-item">
-            <a class="nav-link " href="<?php echo SERVERURL;?>insideAlmacen/">Almacen</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="<?php echo SERVERURL;?>RValeSalida/">Vale salida</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link active;alert alert-success" href="#">Vale de ingreso</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link " href="<?php echo SERVERURL;?>ingresoAlmacen/" aria-disabled="true">Ingreso Almacen</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link " href="<?php echo SERVERURL;?>reporteAlmacen" aria-disabled="true">Reportes</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link " href="#" aria-disabled="true">Import</a>
-        </li>
-</ul><br>
+    <?php  include "vistas/modulos/nav-almacen.php";?> 
+    <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link " href="<?php echo SERVERURL;?>insideAlmacen/">Almacen</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="<?php echo SERVERURL;?>RValeSalida/">Vale salida</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active;alert alert-success" href="#">Vale de ingreso</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link " href="<?php echo SERVERURL;?>ingresoAlmacen/" aria-disabled="true">Ingreso Almacen</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link " href="<?php echo SERVERURL;?>reporteAlmacen/" aria-disabled="true">Reportes</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link " href="#" aria-disabled="true">Import</a>
+            </li>
+    </ul><br>
 
         <div class="accordion" id="accordionExample">
             <div class="card">

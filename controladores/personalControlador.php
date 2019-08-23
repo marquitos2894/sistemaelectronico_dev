@@ -180,21 +180,38 @@ class personalControlador extends personalModelo {
             "unidad"=>$unidad
         ];
 
-        if(personalModelo::save_personal_modelo($datosIN)->rowCount()>=1){
-            $alerta=[
-                "alerta"=>"recargar",
-                "Titulo"=>"Datos guardados",
-                "Texto"=>"Los siguientes datos han sido guardados",
-                "Tipo"=>"success"
-            ];
-        }else{
+        $validar = ($dni_per=="")?$validar=0:$validar=mainModel::ejecutar_consulta_validar("SELECT * FROM personal WHERE Dni_per = '{$dni_per}' AND est = 1")->rowCount();
+
+        if($validar>0){
+
             $alerta=[
                 "alerta"=>"simple",
-                "Titulo"=>"Ocurrio un error inesperado",
-                "Texto"=>"No hemos podido actualizar los datos, contacte al admin",
-                "Tipo"=>"error"
+                "Titulo"=>"Dni registrado",
+                "Texto"=>"El dni ya ha sido registrado, por favor verifique !",
+                "Tipo"=>"info"
             ];
+
+
+        }else{
+
+            if(personalModelo::save_personal_modelo($datosIN)->rowCount()>=1){
+                $alerta=[
+                    "alerta"=>"recargar",
+                    "Titulo"=>"Datos guardados",
+                    "Texto"=>"Los siguientes datos han sido guardados",
+                    "Tipo"=>"success"
+                ];
+            }else{
+                $alerta=[
+                    "alerta"=>"simple",
+                    "Titulo"=>"Ocurrio un error inesperado",
+                    "Texto"=>"No hemos podido actualizar los datos, contacte al admin",
+                    "Tipo"=>"error"
+                ];
+            }
         }
+
+
 
         return mainModel::sweet_alert($alerta);
 

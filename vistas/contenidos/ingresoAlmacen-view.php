@@ -26,7 +26,7 @@
             <a class="nav-link active" href="<?php echo SERVERURL;?>ingresoAlmacen/" aria-disabled="true">Ingreso Almacen</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link " href="<?php echo SERVERURL;?>reporteAlmacen" aria-disabled="true">Reportes</a>
+            <a class="nav-link " href="<?php echo SERVERURL;?>reporteAlmacen/" aria-disabled="true">Reportes</a>
         </li>
         <li class="nav-item">
             <a class="nav-link " href="#" aria-disabled="true">Import</a>

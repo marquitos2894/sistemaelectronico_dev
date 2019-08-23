@@ -32,7 +32,7 @@
                   <div class="form-row">
                       <div class="form-group col-md-4">
                         <label for="inputCity">DNI</label>
-                        <input type="text" name="dni_per_in" value="" class="form-control" id="inputCity" required>
+                        <input type="text" name="dni_per_in" value="" class="form-control" id="inputCity">
                       </div>
                       <div class="form-group col-md-4">
                         <label for="inputCity">Brevete</label>

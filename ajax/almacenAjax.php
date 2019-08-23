@@ -35,7 +35,7 @@
 
    if(isset($_POST["logout_alm"])){
       session_start(['name'=>'SBP']);
-      $almCont->logout_almamcen();
+      $almCont->logout_almacen();
    }
 
    if(isset($_POST["usuario"]) && $_POST["vale"]=="valesalida" ){
@@ -92,7 +92,18 @@
       $referencia = $_POST["dataReferencia"];
       echo $almCont->select_combo("SELECT * FROM datos_referencia WHERE dato_referencia != '{$referencia}' ",1,1);
     }
- 
+    
+
+   //VISTA REPOTEALMACEN
+   
+   if(isset($_POST["id_vsalida_anular"])){
+      echo $almCont->anular_vsalida_controlador();
+    }
+
+    if(isset($_POST["id_vingreso_anular"])){
+      echo $almCont->anular_vingreso_controlador();
+    }
+
  
    
 

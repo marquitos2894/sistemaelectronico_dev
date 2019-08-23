@@ -67,6 +67,17 @@ if(isset($_POST["idcomp_FrmDelComp"])){
   echo $compCont->delete_componente_controlador();
 }
 
+if(isset($_POST["idcomp_DarBaja"])){
+  echo $compCont->darBaja_componente_controlador();
+}
+
+if(isset($_POST["idcomp_DarAlta"])){
+  echo $compCont->darAlta_componente_controlador();
+}
+
+
+
+
 
 
 

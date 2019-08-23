@@ -2,6 +2,7 @@
       require_once "./controladores/almacenControlador.php";
       $almCont = new almacenControlador();
       
+
       $id_alm = $_SESSION["almacen"];
       if($_SESSION["almacen"]==0 ){
         echo "<script> window.location.href = '../almacen/'; </script>";
@@ -25,7 +26,7 @@
             <a class="nav-link " href="<?php echo SERVERURL;?>ingresoAlmacen/" aria-disabled="true">Ingreso Almacen</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link active" href="<?php echo SERVERURL;?>reporteAlmacen" aria-disabled="true">Reportes</a>
+            <a class="nav-link active" href="<?php echo SERVERURL;?>reporteAlmacen/" aria-disabled="true">Reportes</a>
         </li>
         <li class="nav-item">
             <a class="nav-link " href="#" aria-disabled="true">Import</a>
@@ -55,6 +56,7 @@
                                     <th>Solicitado</th>
                                     <th>Atendido por</th>
                                     <th>Ver</th>
+                                    <th>Cancel</th>
                                 </tr>
                             </thead>
                             <tfoot>
@@ -68,6 +70,7 @@
                                     <th>Solicitado</th>
                                     <th>Atendido por</th>
                                     <th>Ver</th>
+                                    <th>Cancel</th>
                                 </tr>
                             </tfoot>
                             <tbody id="dtbody">

@@ -100,14 +100,14 @@ Class componentesControlador extends componentesModelo {
         $inicio=($paginador>0)?(($paginador*$registros)-$registros):0;
 
         $conexion = mainModel::conectar();
-        
+        $est_baja=($vista=="componentes")?$est_baja=1:$est_baja=0;
         if($buscador!=""){
             $datos=$conexion->query("SELECT SQL_CALC_FOUND_ROWS c.id_comp,c.descripcion,c.nparte1,
             c.nparte2,c.nparte3,c.marca,um.abreviado
             FROM componentes c 
             INNER JOIN unidad_medida um ON um.id_unidad_med = c.fk_idunidad_med
             WHERE ( c.id_comp  like '%$buscador%' or c.descripcion  like '%$buscador%' or c.nparte1 like '%$buscador%' or 
-            c.nparte2 like '%$buscador%' or c.nparte3 like '%$buscador%'  ) 
+            c.nparte2 like '%$buscador%' or c.nparte3 like '%$buscador%'  ) AND est_baja = {$est_baja}
             AND c.est=1 LIMIT {$inicio},{$registros} ");
             
         }else{
@@ -115,7 +115,7 @@ Class componentesControlador extends componentesModelo {
             c.nparte2,c.nparte3,c.marca,um.abreviado
             FROM componentes c 
             INNER JOIN unidad_medida um ON um.id_unidad_med = c.fk_idunidad_med 
-            WHERE c.est = 1  LIMIT {$inicio},{$registros}");           
+            WHERE est_baja = {$est_baja} AND c.est = 1  LIMIT {$inicio},{$registros}");           
         }
         //$datos->execute();
         $datos = $datos->fetchAll();
@@ -146,25 +146,53 @@ Class componentesControlador extends componentesModelo {
             foreach($datos as $row){
                 $tabla .="
             <tr>
-                            <td>{$row['id_comp']}</td>
-                            <td>{$row['descripcion']}</td>                      
-                            <td>{$row['nparte1']}</td>
-                            <td>{$row['nparte2']}</td>
-                            <td>{$row['nparte3']}</td>
-                            <td>{$row['marca']}</td>
-                            <td>{$row['abreviado']}</td>";                          
-                $tabla .="<td><a style='font-size: 1.5em;'  class='fas fa-edit' href='{$row['id_comp']}' id='EditItem' data-producto='{$row['id_comp']}' data-toggle='modal' data-target='#ModalEdit'></a> </td>";
-                            
+                <td>{$row['id_comp']}</td>
+                <td>{$row['descripcion']}</td>                      
+                <td>{$row['nparte1']}</td>
+                <td>{$row['nparte2']}</td>
+                <td>{$row['nparte3']}</td>
+                <td>{$row['marca']}</td>
+                <td>{$row['abreviado']}</td>";
+                if($est_baja==1){
                 $tabla .="
-                <td >
-                    <form name='FrmDelComp' action='".SERVERURL."ajax/componentesAjax.php' method='POST' class='FormularioAjax' 
-                        data-form='delete' entype='multipart/form-data' autocomplete='off'>
-                        <input type='hidden' name='idcomp_FrmDelComp' value='{$row['id_comp']}'/>
-                        <button type='submit' class='btn btn-danger'><i class='fas fa-arrow-circle-down'></i></button> 
+                <td><a style='font-size: 1.5em;'  class='fas fa-edit' href='{$row['id_comp']}' id='EditItem' data-producto='{$row['id_comp']}' data-toggle='modal' data-target='#ModalEdit'></a> </td>";
+                 }                                     
+                           
+                $tabla .="
+                <td>
+                    <form name='FrmDarBajaComp' action='".SERVERURL."ajax/componentesAjax.php' method='POST' class='FormularioAjax' 
+                        data-form='update' entype='multipart/form-data' autocomplete='off'>";
+                        if($est_baja==1){
+                            $tabla .="
+                            <input type='hidden' name='idcomp_DarBaja' value='{$row['id_comp']}'/>
+                            <button type='submit' class='btn btn-danger'><i class='fas fa-arrow-circle-down'></i></button>";
+                        }else{
+                            $tabla .="
+                            <input type='hidden' name='idcomp_DarAlta' value='{$row['id_comp']}'/>
+                            <button type='submit' class='btn btn-success'><i class='fas fa-arrow-circle-up'></i></button>";
+                        }
+
+                        $tabla .="
                         <div class='RespuestaAjax'></div>   
                     </form>
-                </td>
+                </td>";
+                    
+                if($est_baja==0){
+                $tabla .="
+                <td>
+                    <form name='FrmDelComp' action='".SERVERURL."ajax/componentesAjax.php' method='POST' class='FormularioAjax' 
+                            data-form='update' entype='multipart/form-data' autocomplete='off'>
+                            <input type='hidden' name='idcomp_FrmDelComp' value='{$row['id_comp']}'/>
+                        <button type='submit' class='btn btn-danger'><i class='far fa-trash-alt'></i></button>
+                        <div class='RespuestaAjax'></div>   
+                    </form>
+                </td>";
+                    }
+
+
+            $tabla.="
             </tr>";
+
             }
         }else{
             $tabla.='<tr><td colspan="7"> No existen registros</td></tr>';
@@ -287,9 +315,10 @@ Class componentesControlador extends componentesModelo {
                 $validarNP2 = mainModel::ejecutar_consulta_validar("SELECT * FROM componentes WHERE (nparte1 = '{$nparte2}' OR nparte2 = '{$nparte2}' OR nparte3 = '{$nparte2}' ) AND est = 1");
                 $validarNP3 = mainModel::ejecutar_consulta_validar("SELECT * FROM componentes WHERE (nparte1 = '{$nparte3}' OR nparte2 = '{$nparte3}' OR nparte3 = '{$nparte3}' ) AND est = 1");
                 
-                $validarNP1 = $validarNP1->rowCount();
-                $validarNP2 = $validarNP2->rowCount();
-                $validarNP3 = $validarNP3->rowCount();
+                //VALIDO SI ES VACIO, SI NO LO ES SE REALIZA UN COUNT DE LA CONSULTA
+                $validarNP1 = ($nparte1=="")?$nparte1=0:$validarNP1->rowCount();
+                $validarNP2 = ($nparte2=="")?$nparte2=0:$validarNP2->rowCount();
+                $validarNP3 = ($nparte3=="")?$nparte3=0:$validarNP3->rowCount();
 
                 $totNP_rep = $validarNP1 + $validarNP2 + $validarNP3;
             }
@@ -418,11 +447,38 @@ Class componentesControlador extends componentesModelo {
         return mainModel::sweet_alert($alerta);
     }
 
+
     public function delete_componente_controlador(){
 
         $id_comp = mainModel::limpiar_cadena($_POST["idcomp_FrmDelComp"]);
 
         $validar=componentesModelo::delete_componente_modelo($id_comp);
+        
+        if($validar->rowCount()>0){
+
+            $alerta=[
+                "alerta"=>"recargar",
+                "Titulo"=>"Eliminado",
+                "Texto"=>"El siguiente componente ha sido eliminado del sistema",
+                "Tipo"=>"success"
+            ];
+        }else{
+            $alerta=[
+                "alerta"=>"simple",
+                "Titulo"=>"Ocurrio un error inesperado",
+                "Texto"=>"No hemos podido actualizar el componente seleccionado",
+                "Tipo"=>"error"
+            ];
+        }
+
+        return mainModel::sweet_alert($alerta);
+    }
+
+    public function darBaja_componente_controlador(){
+
+        $id_comp = mainModel::limpiar_cadena($_POST["idcomp_DarBaja"]);
+
+        $validar=componentesModelo::darBaja_componente_modelo($id_comp);
         
         if($validar->rowCount()>0){
 
@@ -444,6 +500,34 @@ Class componentesControlador extends componentesModelo {
         return mainModel::sweet_alert($alerta);
     }
 
+    public function darAlta_componente_controlador(){
+
+        $id_comp = mainModel::limpiar_cadena($_POST["idcomp_DarAlta"]);
+
+        $validar=componentesModelo::darAlta_componente_modelo($id_comp);
+        
+        if($validar->rowCount()>0){
+
+            $alerta=[
+                "alerta"=>"recargar",
+                "Titulo"=>"Dado de Alta",
+                "Texto"=>"El siguiente componente ha sido dado de alta del sistema",
+                "Tipo"=>"success"
+            ];
+        }else{
+            $alerta=[
+                "alerta"=>"simple",
+                "Titulo"=>"Ocurrio un error inesperado",
+                "Texto"=>"No hemos podido actualizar el componente seleccionado",
+                "Tipo"=>"error"
+            ];
+        }
+
+        return mainModel::sweet_alert($alerta);
+    }
+
+
+    
     public function save_datoreferencia_controlador(){
         $datos_referencia = mainModel::limpiar_cadena($_POST["referencia_dr_nuevo"]);
         $descripcion_dr = mainModel::limpiar_cadena($_POST["descripcion_dr_nuevo"]);
@@ -458,8 +542,15 @@ Class componentesControlador extends componentesModelo {
         ];
 
         $validar=mainModel::ejecutar_consulta_validar("SELECT * FROM datos_referencia 
-        WHERE dato_referencia  = {$datos_referencia} ");
+        WHERE dato_referencia  = '{$datos_referencia}' ");
         if($validar->rowCount()>0){
+            $alerta=[
+                "alerta"=>"simple",
+                "Titulo"=>"{$datos_referencia}",
+                "Texto"=>"La referencia ya se encuentra registrada",
+                "Tipo"=>"info"
+            ];
+        }else{
             $validar = componentesModelo::save_datoreferencia_modelo($datos);
             if($validar->rowCount()>0){
                 $alerta=[
@@ -476,13 +567,6 @@ Class componentesControlador extends componentesModelo {
                     "Tipo"=>"error"
                 ];
             }
-        }else{
-            $alerta=[
-                "alerta"=>"simple",
-                "Titulo"=>"#jumbos DD311",
-                "Texto"=>"La referencia ya se encuentra registrada",
-                "Tipo"=>"info"
-            ];
 
         }
 

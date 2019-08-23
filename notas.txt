@@ -3,3 +3,17 @@ se añadieron dos campos a la tabla usuario
 1-privilegio tipo:tinyint
 2-tipo tipo:varchar(20)
 3-imagen tipo varchar(500)
+
+
+//21/08/2019 -- 02:29 am
+Se actualizo el servidor apache , mysql y php
+por problemas en el driver mysql_pdo.
+
+Se actualizo y se cargaron automaticamente los driver.
+
+#problemas con el hatccess.
+en httpd 
+
+se cambio " AllowOverride none" = " AllowOverride All"
+
+y se descomento el  mod_rewrite

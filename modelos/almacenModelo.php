@@ -179,6 +179,26 @@ class almacenModelo extends mainModel{
         return $sql;
     }
     //protected function 
+
+
+    //* VISTA REPORTES
+
+    protected function anular_vsalida_modelo($id_vsalida){
+        $conex = mainModel::conectar();
+        $sql=$conex->prepare("CALL anular_vale_salida(:id_vsalida)");
+        $sql->bindParam(":id_vsalida",$id_vsalida); 
+        $sql->execute();
+        return $sql;
+    }
+
+    protected function anular_vingreso_modelo($id_vingreso){
+        $conex = mainModel::conectar();
+        $sql=$conex->prepare("CALL anular_vale_ingreso(:id_vingreso)");
+        $sql->bindParam(":id_vingreso",$id_vingreso); 
+        $sql->execute();
+        return $sql;
+
+    }
 }
 
 

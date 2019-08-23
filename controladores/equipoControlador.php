@@ -195,6 +195,7 @@ Class equipoControlador extends equipoModelo {
                                 <div class='RespuestaAjax'></div>   
                             </form>
                         </td>";
+                        
                         if($est_baja==0){
                         $tabla .="   
                         <td>

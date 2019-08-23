@@ -16,7 +16,9 @@
         }else if(tipo==="delete"){
             textoAlerta="Los datos serán eliminados completamente del sistema";
         }else if(tipo==="update"){
-        	textoAlerta="Los datos del sistema serán actualizados";
+            textoAlerta="Los datos del sistema serán actualizados";
+        }else if(tipo==="anular"){
+        	textoAlerta="Los datos serán anulados";
         }else{
             textoAlerta="Quieres realizar la operación solicitada";
         }

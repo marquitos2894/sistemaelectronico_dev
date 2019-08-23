@@ -257,7 +257,7 @@ Class almacenControlador extends almacenModelo {
                             <td>{$row['abreviado']}</td>
                             <td>{$row['stock']}</td>
                             <td><input type='number' id='salida{$row['id_ac']}' /></td>
-                            <td> <a href='#productosCarritoIn' class='card-footer-item' id='addItem' data-producto='{$row['id_ac']}'>+</a></td>
+                            <td> <a href='#' class='card-footer-item' id='addItem' data-producto='{$row['id_ac']}'>+</a></td>
                         </tr>
                 ";
                 $contador++;
@@ -609,7 +609,7 @@ Class almacenControlador extends almacenModelo {
 
     }*/
 
-    /********** REPORTES *******/
+    /********** REPORTES  - VISTA REPOTEALMACEN *******/
 
     public function reporte_valesalida_simple_controlador($idvs,$idalm,$formato){
         $SERVERURL=SERVERURL;
@@ -707,7 +707,7 @@ Class almacenControlador extends almacenModelo {
             a.id_alm = vs.fk_idalm
             INNER JOIN usuario u ON
             u.id_usu = vs.fk_idusuario              
-            WHERE fk_idalm = {$idalm} ORDER BY vs.id_vsalida DESC ");
+            WHERE fk_idalm = {$idalm} AND est=1 ORDER BY vs.id_vsalida DESC ");
             $resp->execute();
             $resp=$resp->fetchAll();
             $contador=1;
@@ -723,7 +723,15 @@ Class almacenControlador extends almacenModelo {
                     <td>{$row['horometro']}</td>
                     <td>{$row['nombres']}</td>
                     <td>{$row['Nombre']}, {$row["Apellido"]}</td>
-                    <td><a href='PDFvalesalida/{$row["id_vsalida"]}/{$idalm}' target='_blank' >ticket</a></td>
+                    <td><a style='font-size: 2em;' href='PDFvalesalida/{$row["id_vsalida"]}/{$idalm}' target='_blank' ><i class='fas fa-ticket-alt'></i></a></td>
+                    <td>
+                        <form name='FrmAnularVS' action='".SERVERURL."ajax/almacenAjax.php' method='POST' class='FormularioAjax' data-form='anular' entype='multipart/form-data' autocomplete='off'>
+                            <input type='hidden' name='id_vsalida_anular' value='{$row['id_vsalida']}' />
+                            <button type='submit' class='btn btn-danger'><i class='fas fa-ban'></i></button>
+                            <div class='RespuestaAjax'></div>
+                        </form>
+                    
+                    </td>
                 </tr>
                 ";
                 $contador++;
@@ -833,7 +841,7 @@ Class almacenControlador extends almacenModelo {
             a.id_alm = vi.fk_idalm
             INNER JOIN usuario u ON
             u.id_usu = vi.fk_idusuario             
-            WHERE  fk_idalm = {$idalm} ORDER BY vi.id_vingreso DESC");
+            WHERE  fk_idalm = {$idalm} AND est=1 ORDER BY vi.id_vingreso DESC");
             $resp->execute();
             $resp=$resp->fetchAll();
             $contador=1;
@@ -848,7 +856,14 @@ Class almacenControlador extends almacenModelo {
                     <td>{$row['ref_nrodocumento']}</td>
                     <td>{$row['nombres']}</td>
                     <td>{$row['Nombre']}, {$row["Apellido"]}</td>
-                    <td><a href='PDFvaleingreso/{$row["id_vingreso"]}/{$idalm}' target='_blank' >ticket</a></td>
+                    <td><a style='font-size: 2em;' href='PDFvaleingreso/{$row["id_vingreso"]}/{$idalm}' target='_blank' ><i class='fas fa-ticket-alt'></i></a></td>
+                    <td>
+                        <form action='".SERVERURL."ajax/almacenAjax.php' method='POST' class='FormularioAjax' data-form='anular' entype='multipart/form-data' autocomplete='off'>
+                            <input type='hidden' name='id_vingreso_anular' value='{$row['id_vingreso']}' />
+                            <button type='submit' class='btn btn-danger'><i class='fas fa-ban'></i></button>
+                            <div class='RespuestaAjax'></div>
+                        </form>
+                    </td>
                 </tr>        
                 ";
                 $contador++;
@@ -859,6 +874,59 @@ Class almacenControlador extends almacenModelo {
 
     }
 
+    public function anular_vsalida_controlador(){
+        $id_vsalida = mainModel::limpiar_cadena($_POST["id_vsalida_anular"]);
+
+        $validar=almacenModelo::anular_vsalida_modelo($id_vsalida);
+
+        if($validar->rowCount()>0){
+            $alerta=[
+                "alerta"=>"recargar",
+                "Titulo"=>"Vale salida N°{$id_vsalida} anulado",
+                "Texto"=>"Los siguientes ha sido anulados ",
+                "Tipo"=>"success"
+            ];
+        }else{
+            $alerta=[
+                "alerta"=>"simple",
+                "Titulo"=>"Ocurrio un error inesperado",
+                "Texto"=>"No hemos podido actualizar el ticket seleccionado",
+                "Tipo"=>"error"
+            ];
+        }
+
+        return mainModel::sweet_alert($alerta);
+
+
+    }
+
+    public function anular_vingreso_controlador(){
+
+
+        $id_vingreso = mainModel::limpiar_cadena($_POST["id_vingreso_anular"]);
+
+        $validar=almacenModelo::anular_vingreso_modelo($id_vingreso);
+
+        if($validar->rowCount()>0){
+            $alerta=[
+                "alerta"=>"recargar",
+                "Titulo"=>"Vale de ingreso N°{$id_vingreso} anulado",
+                "Texto"=>"Los siguientes ha sido anulados ",
+                "Tipo"=>"success"
+            ];
+        }else{
+            $alerta=[
+                "alerta"=>"simple",
+                "Titulo"=>"Ocurrio un error inesperado",
+                "Texto"=>"No hemos podido actualizar el ticket seleccionado",
+                "Tipo"=>"error"
+            ];
+        }
+
+        return mainModel::sweet_alert($alerta);
+        
+    }
+
     /********FIN REPORTES  ****/
 
     public function sesion_almacen($id_alm,$nombre_almacen){
@@ -866,7 +934,7 @@ Class almacenControlador extends almacenModelo {
         $_SESSION["nom_almacen"]=$nombre_almacen;
     }
 
-    public function logout_almamcen(){
+    public function logout_almacen(){
         $_SESSION["almacen"]=0;
         $_SESSION["nom_almacen"]="";
     }

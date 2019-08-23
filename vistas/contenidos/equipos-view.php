@@ -28,7 +28,7 @@ if(isset($_POST["eliminar_busqueda"])){
         <a class="nav-link" href="<?php echo SERVERURL;?>newequipos/"><i class="fas fa-plus-circle"></i> Nuevo</a>
       </li>
       <li class="nav-item">
-          <a class="nav-link" href="<?php echo SERVERURL;?>componentesBaja/">Equipos dados de Baja</a>
+          <a class="nav-link" href="#">Equipos dados de Baja</a>
       </li>
   </ul><br>
   <form action="" method="POST">

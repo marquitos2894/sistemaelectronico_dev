@@ -38,6 +38,23 @@ Class componentesModelo extends mainModel {
         
     }
 
+
+    protected function darAlta_componente_modelo($id_comp){
+        $conex = mainModel::conectar();
+        $sql=$conex->prepare("call darAlta_global_componente(:id_comp)");
+        $sql->bindParam(":id_comp",$id_comp);
+        $sql->execute();
+        return $sql;
+    }
+    
+    protected function darBaja_componente_modelo($id_comp){
+        $conex = mainModel::conectar();
+        $sql=$conex->prepare("call darBaja_global_componente(:id_comp)");
+        $sql->bindParam(":id_comp",$id_comp);
+        $sql->execute();
+        return $sql;
+    }
+
     protected function delete_componente_modelo($id_comp){
         $conex = mainModel::conectar();
         $sql=$conex->prepare("call del_global_componente(:id_comp)");
