@@ -42,22 +42,29 @@ class unidadmedidaControlador extends unidadmedidaModelo {
             <tr>
                 <th scope='col'>#</th>
                 <th scope='col'>Unidad medida</th>               
-                <th scope='col'>Abreviacion</th>
+                <th scope='col'>Abreviacion</th>";
+                if($privilegio==0 or $privilegio==1){
+                $tabla.="
                 <th colspan='2' scope='col'>Acciones</th>";
+                }
                 //programar privilegios
-        $tabla.="</tr>
+        $tabla.="
+            </tr>
         </thead>
         <tbody id='table_unidadmed' >";
         if($total>=1 && $paginador<=$Npaginas)
-        {
-              $i=1;  
+        {   
+            
+            $i=1;  
             foreach($datos as $row){
                 $tabla .="
             <tr>
-                            <td>{$i}</td>
-                            <td>{$row['descripcion']}</td>                      
-                            <td>{$row['abreviado']}</td>";                          
-                $tabla .="<td><a style='font-size: 1.5em;'  class='fas fa-edit' href='{$row['id_unidad_med']}' id='EditItem' data-item='{$row['id_unidad_med']}' data-toggle='modal' data-target='#ModalEdit'></a> </td>";
+                <td>{$i}</td>
+                <td>{$row['descripcion']}</td>                      
+                <td>{$row['abreviado']}</td>";
+                if($privilegio==0 or $privilegio==1){                          
+                $tabla .="
+                <td><a style='font-size: 1.5em;'  class='fas fa-edit' href='{$row['id_unidad_med']}' id='EditItem' data-item='{$row['id_unidad_med']}' data-toggle='modal' data-target='#ModalEdit'></a> </td>";
                             
                 $tabla .="
                 <td >
@@ -67,7 +74,9 @@ class unidadmedidaControlador extends unidadmedidaModelo {
                         <button type='submit' class='btn btn-danger'><i class='far fa-trash-alt'></i></button> 
                         <div class='RespuestaAjax'></div>   
                     </form>
-                </td>
+                </td>";
+                }       
+            $tabla .="
             </tr>";
             $i++;
             }

@@ -3,7 +3,6 @@
       $almCont = new almacenControlador(); 
     
       if($_SESSION["almacen"]==0 ){
-        
         echo "<script> window.location.href = '../almacen/'; </script>";
       }
 
@@ -53,8 +52,10 @@
                       <th>U.M</th>
                       <th>Equipo</th>
                       <th>Referencia</th>
+                      <?php if($_SESSION['privilegio_sbp']==0 or $_SESSION['privilegio_sbp']==1): ?>
                       <th>Config</th>
                       <th>Delete</th>
+                      <?php endif; ?>
                     </tr>
                   </thead>
                   <tfoot>
@@ -71,12 +72,14 @@
                       <th>U.M</th>
                       <th>Equipo</th>
                       <th>Referencia</th>
+                      <?php if($_SESSION['privilegio_sbp']==0 or $_SESSION['privilegio_sbp']==1): ?>
                       <th>Config</th>
                       <th>Delete</th>
+                      <?php endif; ?>
                     </tr>
                   </tfoot>
                   <tbody id="dtbody">
-                      <?php echo $almCont->databale_componentes($_SESSION["almacen"],"simple"); ?>
+                      <?php echo $almCont->databale_componentes($_SESSION["almacen"],"simple",$_SESSION['privilegio_sbp']); ?>
                   </tbody>
                 </table>
               </div>

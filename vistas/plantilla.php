@@ -23,7 +23,9 @@
   <link href="<?php echo SERVERURL?>vistas/css/sb-admin-2.min.css" rel="stylesheet">
 
   <?php  include "vistas/modulos/Estilos.php"; ?>
+
   <?php  include "vistas/modulos/logoutscript.php"; ?>
+
 </head>
 
 <body id="page-top">
@@ -72,5 +74,5 @@
  <?php  include "vistas/modulos/Script.php"; ?>
 
 </body>
-
+<?php  include "vistas/modulos/chngeunidadscript.php"; ?>
 </html>

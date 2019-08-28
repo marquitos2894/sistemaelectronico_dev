@@ -17,3 +17,10 @@ en httpd
 se cambio " AllowOverride none" = " AllowOverride All"
 
 y se descomento el  mod_rewrite
+
+
+
+emptrans-inicio-emptranslist-usuariolist-usuario-perfil-personal-personallist-componentes-
+RValeSalida-RValeIngreso-newcomponente-ingresoAlmacen-almacen-insideAlmacen-unidadmedlist-
+newunidadmed-reporteAlmacen-datosReferencia-newdatosReferencia-equipos-newequipos-miFlota-
+miFlotaBaja-componentesBaja

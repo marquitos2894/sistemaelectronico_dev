@@ -4,7 +4,7 @@
         return document.querySelector(selector);
     }
 
-    $1('#card-almacen').addEventListener("click", async function(ev){
+    $1('#table_almacen').addEventListener("click", async function(ev){
         ev.preventDefault();
         if(ev.target.id=="almacen"){
             console.log(ev.target.dataset.almacen);

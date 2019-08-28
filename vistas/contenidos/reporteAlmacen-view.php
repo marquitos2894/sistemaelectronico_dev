@@ -56,7 +56,9 @@
                                     <th>Solicitado</th>
                                     <th>Atendido por</th>
                                     <th>Ver</th>
+                                    <?php if($_SESSION['privilegio_sbp']==0 or $_SESSION['privilegio_sbp']==1): ?>
                                     <th>Cancel</th>
+                                    <?php endif;?>
                                 </tr>
                             </thead>
                             <tfoot>
@@ -70,11 +72,13 @@
                                     <th>Solicitado</th>
                                     <th>Atendido por</th>
                                     <th>Ver</th>
+                                    <?php if($_SESSION['privilegio_sbp']==0 or $_SESSION['privilegio_sbp']==1): ?>
                                     <th>Cancel</th>
+                                    <?php endif;?>
                                 </tr>
                             </tfoot>
                             <tbody id="dtbody">
-                                <?php echo $almCont->reporte_valesalida_simple_controlador(0,$id_alm,"vista_simple"); ?>
+                                <?php echo $almCont->reporte_valesalida_simple_controlador(0,$id_alm,"vista_simple",$_SESSION['privilegio_sbp']); ?>
                             </tbody>
                         </table>
                     </div>
@@ -105,6 +109,9 @@
                                     <th>Remitente</th>
                                     <th>Registrado por</th>
                                     <th>Ver</th>
+                                    <?php if($_SESSION['privilegio_sbp']==0 or $_SESSION['privilegio_sbp']==1): ?>
+                                    <th>Cancel</th>
+                                    <?php endif;?>
                                 </tr>
                             </thead>
                             <tfoot>
@@ -118,10 +125,13 @@
                                     <th>Remitente</th>
                                     <th>Registrado por</th>
                                     <th>Ver</th>
+                                    <?php if($_SESSION['privilegio_sbp']==0 or $_SESSION['privilegio_sbp']==1): ?>
+                                    <th>Cancel</th>
+                                    <?php endif;?>
                                 </tr>
                             </tfoot>
                             <tbody id="dtbody">
-                                <?php echo $almCont->reporte_valeingreso_simple_controlador(0,$id_alm,"vista_simple"); ?>
+                                <?php echo $almCont->reporte_valeingreso_simple_controlador(0,$id_alm,"vista_simple",$_SESSION['privilegio_sbp']); ?>
                             </tbody>
                         </table>
                     </div>

@@ -99,7 +99,7 @@
                                                     </tr>
                                                 </tfoot>
                                                 <tbody>
-                                                <?php echo $almCont->databale_componentes($_SESSION["almacen"],"carrito"); ?>
+                                                <?php echo $almCont->databale_componentes($_SESSION["almacen"],"carrito",$_SESSION['privilegio_sbp']); ?>
                                                 </tbody>
                                             </table>
                                         </div>

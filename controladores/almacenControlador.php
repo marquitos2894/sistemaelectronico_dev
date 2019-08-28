@@ -138,7 +138,7 @@ Class almacenControlador extends almacenModelo {
         return mainModel::sweet_alert($alerta);
     }        
 
-    public function paginador_almacen($paginador,$registros,$vista){
+    /*public function paginador_almacen($paginador,$registros,$vista){
         $paginador=mainModel::limpiar_cadena($paginador);
         $registros=mainModel::limpiar_cadena($registros);
         $vista = mainModel::limpiar_cadena($vista);
@@ -154,7 +154,9 @@ Class almacenControlador extends almacenModelo {
         $total = (int)$total->fetchColumn();
         $Npaginas = ceil($total/$registros);
         $contenido .="";
-        $contenido.="<div id='card-almacen' class='card-group' style='width: 80%;' align='center' >";
+        $contenido.="
+        
+        <div id='card-almacen' class='card-group' style='width: 80%;' align='center' >";
         foreach(array_slice($datos,0,4) as $row) {
             $contenido .= "
             <div  class='card'>
@@ -185,9 +187,91 @@ Class almacenControlador extends almacenModelo {
         $contenido.= mainModel::paginador($total,$paginador,$Npaginas,$vista);
         return $contenido;
 
+    }*/
+
+    public function paginador_almacen_u($paginador,$registros,$privilegio,$buscador,$vista,$unidad){
+
+        $paginador=mainModel::limpiar_cadena($paginador);
+        $registros=mainModel::limpiar_cadena($registros);
+        $privilegio=mainModel::limpiar_cadena($privilegio);
+        $tabla='';
+        //echo $_SESSION['nombre_sbp'];
+        $paginador=(isset($paginador) && $paginador>0)?(int)$paginador:1; 
+        $inicio=($paginador>0)?(($paginador*$registros)-$registros):0;
+
+        $conexion = mainModel::conectar();
+        
+        if($buscador!=""){
+            $datos=$conexion->query("SELECT SQL_CALC_FOUND_ROWS a.id_alm,a.Alias,a.Ubicacion,a.Descripcion,d.idunidad
+            FROM almacen a
+            INNER JOIN direcciones d ON 
+            d.id_direcciones = a.fk_iddirecciones
+            WHERE ( a.Alias  like '%$buscador%' or a.Ubicacion like '%$buscador%' ) AND a.est=1 AND d.idunidad = {$unidad} LIMIT {$inicio},{$registros}");
+            
+        }else{
+            $datos=$conexion->query("SELECT SQL_CALC_FOUND_ROWS a.id_alm,a.Alias,a.Ubicacion,a.Descripcion,d.idunidad
+            FROM almacen a
+            INNER JOIN direcciones d ON 
+            d.id_direcciones = a.fk_iddirecciones 
+            WHERE a.est = 1 AND d.idunidad = {$unidad} LIMIT {$inicio},{$registros}");           
+        }
+        //$datos->execute();
+        $datos = $datos->fetchAll();
+        $total = $conexion->query("SELECT FOUND_ROWS()");
+        $total = (int)$total->fetchColumn();
+
+        
+        //devuel valor entero redondeado hacia arriba 4.2 = 5
+        $Npaginas = ceil($total/$registros);
+        $tabla.="<div><table class='table table-bordered'>
+        <thead>
+            <tr>
+                <th scope='col'>#</th>
+                <th scope='col'>Almacen</th>               
+                <th scope='col'>Ubicacion</th>
+                <th scope='col'>Descripcion</th>     
+                <th colspan='2' scope='col'>Acciones</th>";
+                
+                //programar privilegios
+        $tabla.="
+            </tr>
+        </thead>
+        <tbody id='table_almacen' >";
+        if($total>=1 && $paginador<=$Npaginas)
+        {   
+            
+            $i=1;  
+            foreach($datos as $row){
+                $tabla .="
+                <input type='hidden' id='nom_almacen$row[id_alm]' value='{$row["Alias"]}'/> 
+            <tr>
+                <td>{$i}</td>
+                <td>{$row['Alias']}</td>                      
+                <td>{$row['Ubicacion']}</td>
+                <td>{$row['Descripcion']}</td>
+                           
+                <td><a href='#' class='card-footer-item' id='almacen' data-almacen='$row[id_alm]'><i class='fas fa-sign-in-alt'></i> Ingresar</a></td>";
+                        
+            $tabla .="
+            </tr>";
+            $i++;
+            }
+
+        }else{
+            $tabla.='<tr><td colspan="7"> No existen registros</td></tr>';
+        }
+
+        $tabla.='</tbody></table></div>';
+   
+        $tabla.= mainModel::paginador($total,$paginador,$Npaginas,$vista);
+        return $tabla;
     }
 
-    public function databale_componentes($id_alm,$tipo){
+    public function validar_paginador_controlador($buscador,$vista,$eliminar_buscador){
+        return mainModel::validar_paginador($buscador,$vista,$eliminar_buscador);
+    }
+
+    public function databale_componentes($id_alm,$tipo,$privilegio){
         
       $conexion = mainModel::conectar();
       $datos = $conexion->prepare("SELECT ac.id_ac,c.id_comp,c.descripcion,c.nparte1,c.nparte2,c.nparte3,
@@ -217,14 +301,19 @@ Class almacenControlador extends almacenModelo {
                         <td>{$row['u_nombre']}-{$row['u_seccion']}</td>
                         <td>{$row['stock']}</td>";
                         if($row['control_stock']==1){
-                            $dtable .="<td><span style='font-size: 1.2rem; color: Tomato;'><i class='fas fa-check'></i></span></td>";
+                            $dtable .="
+                            <td><span style='font-size: 1.2rem; color: Tomato;'><i class='fas fa-check'></i></span></td>";
                         }else{
-                            $dtable .="<td><span style='font-size: 1.2rem;'><i class='fas fa-times'></i></span></td>";
+                            $dtable .="
+                            <td><span style='font-size: 1.2rem;'><i class='fas fa-times'></i></span></td>";
                         }
         
-            $dtable .="<td>{$row['abreviado']}</td>
+                        $dtable .=" 
+                        <td>{$row['abreviado']}</td>
                         <td>{$row['alias_equipounidad']}</td>
-                        <td>{$row['Referencia']}</td>
+                        <td>{$row['Referencia']}</td>";
+                        if($privilegio==0 or $privilegio==1){   
+                        $dtable .=" 
                         <td><a href='#'  data-toggle='modal' data-target='#config_comp' ><span style='font-size: 1.5rem;' ><i id='controlstock' data-producto='{$row['id_ac']}' class='fas fa-cog'></i></span></a></td>";
                         
                         $dtable .="
@@ -237,8 +326,9 @@ Class almacenControlador extends almacenModelo {
                                 <button type='submit' class='btn btn-danger'><i class='far fa-trash-alt' ></i></button>
                                 <div class='RespuestaAjax'></div>   
                             </form>
-                        </td>
-
+                        </td>";
+                        }    
+                    $dtable .="
                     </tr>";    
             
             $contador++;
@@ -611,7 +701,7 @@ Class almacenControlador extends almacenModelo {
 
     /********** REPORTES  - VISTA REPOTEALMACEN *******/
 
-    public function reporte_valesalida_simple_controlador($idvs,$idalm,$formato){
+    public function reporte_valesalida_simple_controlador($idvs,$idalm,$formato,$privilegio){
         $SERVERURL=SERVERURL;
         $template = "";
         $conexion = mainModel::conectar();
@@ -707,13 +797,13 @@ Class almacenControlador extends almacenModelo {
             a.id_alm = vs.fk_idalm
             INNER JOIN usuario u ON
             u.id_usu = vs.fk_idusuario              
-            WHERE fk_idalm = {$idalm} AND est=1 ORDER BY vs.id_vsalida DESC ");
+            WHERE fk_idalm = {$idalm} AND vs.est=1 ORDER BY vs.id_vsalida DESC ");
             $resp->execute();
             $resp=$resp->fetchAll();
             $contador=1;
             foreach($resp as $row){
 
-                $template .= "
+                $template .="
                 <tr>
                     <td>{$contador}</td>
                     <td>{$row['id_vsalida']}</td>
@@ -723,15 +813,18 @@ Class almacenControlador extends almacenModelo {
                     <td>{$row['horometro']}</td>
                     <td>{$row['nombres']}</td>
                     <td>{$row['Nombre']}, {$row["Apellido"]}</td>
-                    <td><a style='font-size: 2em;' href='PDFvalesalida/{$row["id_vsalida"]}/{$idalm}' target='_blank' ><i class='fas fa-ticket-alt'></i></a></td>
+                    <td><a style='font-size: 2em;' href='../PDFvalesalida/{$row["id_vsalida"]}/{$idalm}' target='_blank' ><i class='fas fa-ticket-alt'></i></a></td>";
+                    if($privilegio==0 or $privilegio==1){
+                    $template .="     
                     <td>
                         <form name='FrmAnularVS' action='".SERVERURL."ajax/almacenAjax.php' method='POST' class='FormularioAjax' data-form='anular' entype='multipart/form-data' autocomplete='off'>
                             <input type='hidden' name='id_vsalida_anular' value='{$row['id_vsalida']}' />
                             <button type='submit' class='btn btn-danger'><i class='fas fa-ban'></i></button>
                             <div class='RespuestaAjax'></div>
                         </form>
-                    
-                    </td>
+                    </td>";
+                    }
+                $template .="
                 </tr>
                 ";
                 $contador++;
@@ -742,7 +835,7 @@ Class almacenControlador extends almacenModelo {
 
     }
 
-    public function reporte_valeingreso_simple_controlador($idvi,$idalm,$formato){
+    public function reporte_valeingreso_simple_controlador($idvi,$idalm,$formato,$privilegio){
         $SERVERURL=SERVERURL;
         $template = "";
         $conexion = mainModel::conectar();
@@ -841,7 +934,7 @@ Class almacenControlador extends almacenModelo {
             a.id_alm = vi.fk_idalm
             INNER JOIN usuario u ON
             u.id_usu = vi.fk_idusuario             
-            WHERE  fk_idalm = {$idalm} AND est=1 ORDER BY vi.id_vingreso DESC");
+            WHERE  fk_idalm = {$idalm} AND vi.est=1 ORDER BY vi.id_vingreso DESC");
             $resp->execute();
             $resp=$resp->fetchAll();
             $contador=1;
@@ -856,14 +949,18 @@ Class almacenControlador extends almacenModelo {
                     <td>{$row['ref_nrodocumento']}</td>
                     <td>{$row['nombres']}</td>
                     <td>{$row['Nombre']}, {$row["Apellido"]}</td>
-                    <td><a style='font-size: 2em;' href='PDFvaleingreso/{$row["id_vingreso"]}/{$idalm}' target='_blank' ><i class='fas fa-ticket-alt'></i></a></td>
+                    <td><a style='font-size: 2em;' href='../PDFvaleingreso/{$row["id_vingreso"]}/{$idalm}' target='_blank' ><i class='fas fa-ticket-alt'></i></a></td>";
+                    if($privilegio==0 or $privilegio==1){
+                    $template .=" 
                     <td>
                         <form action='".SERVERURL."ajax/almacenAjax.php' method='POST' class='FormularioAjax' data-form='anular' entype='multipart/form-data' autocomplete='off'>
                             <input type='hidden' name='id_vingreso_anular' value='{$row['id_vingreso']}' />
                             <button type='submit' class='btn btn-danger'><i class='fas fa-ban'></i></button>
                             <div class='RespuestaAjax'></div>
                         </form>
-                    </td>
+                    </td>";
+                    }
+                $template .=" 
                 </tr>        
                 ";
                 $contador++;

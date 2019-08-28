@@ -10,6 +10,7 @@ if(isset($_GET['views'])){
     $url = explode("/",$_GET['views']);
     $PDF=substr($url[0],0,3); 
     $PDF=($PDF=="PDF")?$PDF=true:$PDF=false; 
+
 }
 
 if($PDF==true){   

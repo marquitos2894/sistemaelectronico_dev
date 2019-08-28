@@ -104,9 +104,12 @@ class personalControlador extends personalModelo {
                 <th scope='col'>#</th>
                 <th scope='col'>Nombres</th>               
                 <th scope='col'>Apellidos</th>
-                <th scope='col'>Cargo</th>
+                <th scope='col'>Cargo</th>";
+                if($privilegio==0 or $privilegio==1){
+            $tabla.="
                 <th colspan='2' scope='col'>Acciones</th>";
                 //programar privilegios
+                }
         $tabla.="</tr>
         </thead>
         <tbody id='table_personal' >";
@@ -119,18 +122,24 @@ class personalControlador extends personalModelo {
                             <td>{$i}</td>
                             <td>{$row['Nom_per']}</td>                      
                             <td>{$row['Ape_per']}</td>
-                            <td>{$row['cargo']}</td>";                          
-                $tabla .="<td><a style='font-size: 1.5em;'  class='fas fa-edit' href='{$row['id_per']}' id='EditItem' data-item='{$row['id_per']}' data-toggle='modal' data-target='#ModalEdit'></a> </td>";
+                            <td>{$row['cargo']}</td>";    
+
+                if($privilegio==0 or $privilegio==1){
+                    $tabla .="<td><a style='font-size: 1.5em;'  class='fas fa-edit' href='{$row['id_per']}' id='EditItem' data-item='{$row['id_per']}' data-toggle='modal' data-target='#ModalEdit'></a> </td>";
                             
-                $tabla .="
-                <td >
-                    <form name='FrmDel_UM' action='".SERVERURL."ajax/personalAjax.php' method='POST' class='FormularioAjax' 
-                        data-form='delete' entype='multipart/form-data' autocomplete='off'>
-                        <input type='hidden' name='id_per_del' value='{$row['id_per']}'/>
-                        <button type='submit' class='btn btn-danger'><i class='far fa-trash-alt'></i></button> 
-                        <div class='RespuestaAjax'></div>   
-                    </form>
-                </td>
+                    $tabla .="
+                    <td >
+                        <form name='FrmDel_UM' action='".SERVERURL."ajax/personalAjax.php' method='POST' class='FormularioAjax' 
+                            data-form='delete' entype='multipart/form-data' autocomplete='off'>
+                            <input type='hidden' name='id_per_del' value='{$row['id_per']}'/>
+                            <button type='submit' class='btn btn-danger'><i class='far fa-trash-alt'></i></button> 
+                            <div class='RespuestaAjax'></div>   
+                        </form>
+                    </td>";
+                }            
+  
+
+            $tabla .="
             </tr>";
             $i++;
             }

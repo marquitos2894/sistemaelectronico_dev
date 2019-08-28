@@ -42,53 +42,61 @@ Class equipoControlador extends equipoModelo {
         
         //devuel valor entero redondeado hacia arriba 4.2 = 5
         $Npaginas = ceil($total/$registros);
-        $tabla.="<div><table class='table table-bordered'>
-        <thead>
-            <tr>
-                <th scope='col'>#</th>
-                <th scope='col'>Modelo</th>               
-                <th scope='col'>Tipo-Aplicacion</th>
-                <th scope='col'>Marca</th>
-                <th scope='col'>N°Serie</th>
-                <th scope='col'>Cap.</th>
-                <th scope='col'>AñoFab</th>
-                <th scope='col'>Motor</th>
-                <th scope='col'>MarcaMotor</th>
-                <th scope='col'>N°Ser.Motor</th>
-                <th colspan='2' scope='col'>Acciones</th>";
-                //programar privilegios
-        $tabla.="</tr>
-        </thead>
-        <tbody id='table_equipos' >";
+        $tabla.="
+        <div><table class='table table-bordered'>
+            <thead>
+                <tr>
+                    <th scope='col'>#</th>
+                    <th scope='col'>Modelo</th>               
+                    <th scope='col'>Tipo-Aplicacion</th>
+                    <th scope='col'>Marca</th>
+                    <th scope='col'>N°Serie</th>
+                    <th scope='col'>Cap.</th>
+                    <th scope='col'>AñoFab</th>
+                    <th scope='col'>Motor</th>
+                    <th scope='col'>MarcaMotor</th>
+                    <th scope='col'>N°Ser.Motor</th>";
+                    if($privilegio==0 or $privilegio==1){
+                    $tabla.="
+                    <th colspan='2' scope='col'>Acciones</th>";
+                    }
+                    //programar privilegios
+            $tabla.="</tr>
+            </thead>
+            <tbody id='table_equipos' >";
         $contador=$inicio+1;
         if($total>=1 && $paginador<=$Npaginas)
         {
         
             foreach($datos as $row){
                 $tabla .="
-            <tr>            <td>{$contador}</td>
-                            <td>{$row['Modelo_Equipo']}</td>                      
-                            <td>{$row['Tipo_Equipo']}-{$row['Aplicacion_Equipo']}</td>
-                            <td>{$row['Marca_Equipo']}</td>
-                            <td>{$row['NSerie_Equipo']}</td>
-                            <td>{$row['Capacidad_Equipo']}</td>
-                            <td>{$row['AnoFab_Equipo']}</td>
-                            <td>{$row['ModeloMotor_Equipo']}</td>
-                            <td>{$row['MarcaMotor_Equipo']}</td>
-                            <td>{$row['SerieMotor_Equipo']}</td>";
-                                                      
-                $tabla .="<td><a style='font-size: 1.5em;'  class='fas fa-edit' href='{$row['Id_Equipo']}' id='EditItem' data-equipo='{$row['Id_Equipo']}' data-toggle='modal' data-target='#ModalEdit'></a> </td>";
-                            
+                <tr>
+
+                    <td>{$contador}</td>
+                    <td>{$row['Modelo_Equipo']}</td>                      
+                    <td>{$row['Tipo_Equipo']}-{$row['Aplicacion_Equipo']}</td>
+                    <td>{$row['Marca_Equipo']}</td>
+                    <td>{$row['NSerie_Equipo']}</td>
+                    <td>{$row['Capacidad_Equipo']}</td>
+                    <td>{$row['AnoFab_Equipo']}</td>
+                    <td>{$row['ModeloMotor_Equipo']}</td>
+                    <td>{$row['MarcaMotor_Equipo']}</td>
+                    <td>{$row['SerieMotor_Equipo']}</td>";
+                    if($privilegio==0 or $privilegio==1){                                 
+                    $tabla .="
+                    <td><a style='font-size: 1.5em;'  class='fas fa-edit' href='{$row['Id_Equipo']}' id='EditItem' data-equipo='{$row['Id_Equipo']}' data-toggle='modal' data-target='#ModalEdit'></a> </td>";
+                    $tabla .="
+                    <td >
+                        <form name='FrmDelEquipo' action='".SERVERURL."ajax/EquiposAjax.php' method='POST' class='FormularioAjax' 
+                            data-form='delete' entype='multipart/form-data' autocomplete='off'>
+                            <input type='hidden' name='Id_Equipo_darBaja' value='{$row['Id_Equipo']}'/>
+                            <button type='submit' class='btn btn-danger'><i class='fas fa-arrow-circle-down'></i></button> 
+                            <div class='RespuestaAjax'></div>   
+                        </form>
+                    </td>";
+                    }        
                 $tabla .="
-                <td >
-                    <form name='FrmDelEquipo' action='".SERVERURL."ajax/EquiposAjax.php' method='POST' class='FormularioAjax' 
-                        data-form='delete' entype='multipart/form-data' autocomplete='off'>
-                        <input type='hidden' name='Id_Equipo_darBaja' value='{$row['Id_Equipo']}'/>
-                        <button type='submit' class='btn btn-danger'><i class='fas fa-arrow-circle-down'></i></button> 
-                        <div class='RespuestaAjax'></div>   
-                    </form>
-                </td>
-            </tr>";
+                </tr>";
             $contador++;
             }
         }else{
@@ -152,8 +160,11 @@ Class equipoControlador extends equipoModelo {
                         <th scope='col'>Motor</th>
                         <th scope='col'>MarcaMotor</th>
                         <th scope='col'>N°Ser.Motor</th>
-                        <th scope='col'>Estado</th>
+                        <th scope='col'>Estado</th>";
+                        if($privilegio==0 or $privilegio==1){
+                        $tabla.="
                         <th colspan='2' scope='col'>Acciones</th>";
+                        }
                         //programar privilegios
                 $tabla.="</tr>
                 </thead>
@@ -163,54 +174,62 @@ Class equipoControlador extends equipoModelo {
                 {
                 
                     foreach($datos as $row){
-                        $tabla .="
-                    <tr>            <td>{$contador}</td>
-                                    <td>{$row['alias_equipounidad']}</td>  
-                                    <td>{$row['Modelo_Equipo']}</td>                      
-                                    <td>{$row['Tipo_Equipo']}-{$row['Aplicacion_Equipo']}</td>
-                                    <td>{$row['Marca_Equipo']}</td>
-                                    <td>{$row['NSerie_Equipo']}</td>
-                                    <td>{$row['ModeloMotor_Equipo']}</td>
-                                    <td>{$row['MarcaMotor_Equipo']}</td>
-                                    <td>{$row['SerieMotor_Equipo']}</td>
-                                    <td>{$row['estado_equipounidad']}</td>";
-                                    
-                        if($est_baja==1){
-                            $tabla .="<td><a style='font-size: 1.5em;'  class='fas fa-edit' href='{$row['id_equipounidad']}' id='EditItem' data-equipo='{$row['id_equipounidad']}' data-toggle='modal' data-target='#ModalEdit'></a> </td>";
-                        }                                  
-                       
-                                    
-                        $tabla .="
-                        <td >
-                            <form name='FrmDelEquipo' action='".SERVERURL."ajax/EquiposAjax.php' method='POST' class='FormularioAjax' 
-                                data-form='update' entype='multipart/form-data' autocomplete='off'>";
-                        if($est_baja==1){
-                        $tabla .="<input type='hidden' name='idequipounidad_darBaja' value='{$row['id_equipounidad']}'/>
-                                <button type='submit' class='btn btn-danger'><i class='fas fa-arrow-circle-down'></i></button>";
-                        }else{
-                        $tabla .="<input type='hidden' name='idequipounidad_darAlta' value='{$row['id_equipounidad']}'/>
-                                    <button type='submit' class='btn btn-success'><i class='fas fa-arrow-circle-up'></i></button>";
-                        }
-                        $tabla .="
-                                <div class='RespuestaAjax'></div>   
-                            </form>
-                        </td>";
+                            $tabla .="
+                        <tr>            
+                            <td>{$contador}</td>
+                                <td>{$row['alias_equipounidad']}</td>  
+                                <td>{$row['Modelo_Equipo']}</td>                      
+                                <td>{$row['Tipo_Equipo']}-{$row['Aplicacion_Equipo']}</td>
+                                <td>{$row['Marca_Equipo']}</td>
+                                <td>{$row['NSerie_Equipo']}</td>
+                                <td>{$row['ModeloMotor_Equipo']}</td>
+                                <td>{$row['MarcaMotor_Equipo']}</td>
+                                <td>{$row['SerieMotor_Equipo']}</td>
+                                <td>{$row['estado_equipounidad']}</td>";
+                        if($privilegio==0 or $privilegio==1){
+                                           
+                            if($est_baja==1){
+                                $tabla .="
+                                <td><a style='font-size: 1.5em;'  class='fas fa-edit' href='{$row['id_equipounidad']}' id='EditItem' data-equipo='{$row['id_equipounidad']}' data-toggle='modal' data-target='#ModalEdit'></a> </td>";
+                            }                                  
                         
-                        if($est_baja==0){
-                        $tabla .="   
-                        <td>
-                            <form name='Frm_ue' action='".SERVERURL."ajax/EquiposAjax.php' method='POST' class='FormularioAjax' 
-                                 data-form='update' entype='multipart/form-data' autocomplete='off'>
-                                 <input type='hidden' name='idequipounidad_delete' value='{$row['id_equipounidad']}'/>
-                                <button type='submit' class='btn btn-danger'><i class='far fa-trash-alt'></i></button>
-                                <div class='RespuestaAjax'></div>   
-                            </form>
-                        </td>";
+                                        
+                                $tabla .="
+                                <td>
+                                    <form name='FrmDelEquipo' action='".SERVERURL."ajax/EquiposAjax.php' method='POST' class='FormularioAjax' 
+                                        data-form='update' entype='multipart/form-data' autocomplete='off'>";
+                            if($est_baja==1){
+                                    $tabla .="
+                                        <input type='hidden' name='idequipounidad_darBaja' value='{$row['id_equipounidad']}'/>
+                                        <button type='submit' class='btn btn-danger'><i class='fas fa-arrow-circle-down'></i></button>";
+                            }else{
+                                    $tabla .="
+                                        <input type='hidden' name='idequipounidad_darAlta' value='{$row['id_equipounidad']}'/>
+                                        <button type='submit' class='btn btn-success'><i class='fas fa-arrow-circle-up'></i></button>";
+                            }
+                                    $tabla .="
+                                        <div class='RespuestaAjax'></div>   
+                                    </form>
+                                </td>";
+                            
+                            if($est_baja==0){
+                                $tabla .="   
+                                <td>
+                                    <form name='Frm_ue' action='".SERVERURL."ajax/EquiposAjax.php' method='POST' class='FormularioAjax' 
+                                        data-form='update' entype='multipart/form-data' autocomplete='off'>
+                                        <input type='hidden' name='idequipounidad_delete' value='{$row['id_equipounidad']}'/>
+                                        <button type='submit' class='btn btn-danger'><i class='far fa-trash-alt'></i></button>
+                                        <div class='RespuestaAjax'></div>   
+                                    </form>
+                                </td>";
+                            }
                         }
+                        $tabla .="
+                        </tr>";
 
-           $tabla .="</tr>";
                     $contador++;
                     }
+                    
                 }else{
                     $tabla.='<tr><td colspan="7"> No existen registros</td></tr>';
                 }

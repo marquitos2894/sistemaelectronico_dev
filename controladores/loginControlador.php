@@ -32,6 +32,7 @@ class loginControlador extends loginModelo{
             $_SESSION['image_sbp']=$row['imagen'];
             $_SESSION['unidad']=$row['idunidad'];
             $_SESSION['almacen']=0;
+            $_SESSION['RvistasUsuario']=$row['vistas'];
             $_SESSION['token_sbp']=md5(uniqid(mt_rand(),true));
             $url = SERVERURL.'inicio';   
             /*if($row['tipo']=="super" ){

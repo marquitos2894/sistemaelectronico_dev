@@ -134,10 +134,14 @@ Class componentesControlador extends componentesModelo {
                 <th scope='col'>NParte2</th>
                 <th scope='col'>NParte3</th>
                 <th scope='col'>Marca</th>
-                <th scope='col'>U.M</th>
+                <th scope='col'>U.M</th>";
+                if($privilegio==0 or $privilegio==1){
+                $tabla.="
                 <th colspan='2' scope='col'>Acciones</th>";
+                }
                 //programar privilegios
-        $tabla.="</tr>
+            $tabla.="
+            </tr>
         </thead>
         <tbody id='table_componente' >";
         if($total>=1 && $paginador<=$Npaginas)
@@ -153,10 +157,13 @@ Class componentesControlador extends componentesModelo {
                 <td>{$row['nparte3']}</td>
                 <td>{$row['marca']}</td>
                 <td>{$row['abreviado']}</td>";
-                if($est_baja==1){
+                
+                if($privilegio==0 or $privilegio==1){
+
+                    if($est_baja==1){
                 $tabla .="
                 <td><a style='font-size: 1.5em;'  class='fas fa-edit' href='{$row['id_comp']}' id='EditItem' data-producto='{$row['id_comp']}' data-toggle='modal' data-target='#ModalEdit'></a> </td>";
-                 }                                     
+                    }                                     
                            
                 $tabla .="
                 <td>
@@ -189,10 +196,10 @@ Class componentesControlador extends componentesModelo {
                 </td>";
                     }
 
-
+                }    
             $tabla.="
             </tr>";
-
+                 
             }
         }else{
             $tabla.='<tr><td colspan="7"> No existen registros</td></tr>';
@@ -277,6 +284,7 @@ Class componentesControlador extends componentesModelo {
         $tabla.= mainModel::paginador($total,$paginador,$Npaginas,$vista);
         return $tabla;
     }
+
     //VALIDARA al buscador por variables del paginador,y problemas en la consulta entre limit
     public function validar_paginador_controlador($buscador,$vista,$eliminar_buscador){
         return mainModel::validar_paginador($buscador,$vista,$eliminar_buscador);
@@ -526,8 +534,6 @@ Class componentesControlador extends componentesModelo {
         return mainModel::sweet_alert($alerta);
     }
 
-
-    
     public function save_datoreferencia_controlador(){
         $datos_referencia = mainModel::limpiar_cadena($_POST["referencia_dr_nuevo"]);
         $descripcion_dr = mainModel::limpiar_cadena($_POST["descripcion_dr_nuevo"]);

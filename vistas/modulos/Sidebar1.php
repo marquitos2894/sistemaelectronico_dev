@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 
 <head>
@@ -29,11 +29,11 @@
     <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
       <!-- Sidebar - Brand -->
-      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="<?php echo SERVERURL;?>">
         <div class="sidebar-brand-icon rotate-n-15">
           <i class="fas fa-laugh-wink"></i>
         </div>
-        <div class="sidebar-brand-text mx-3">Conmciv<sup>1.0</sup></div>
+        <div class="sidebar-brand-text mx-3">Conmciv<sup>1.1</sup></div>
       </a>
 
       <!-- Divider -->
@@ -41,7 +41,7 @@
 
       <!-- Nav Item - Dashboard -->
       <li class="nav-item active">
-        <a class="nav-link" href="index.html">
+        <a class="nav-link" href="<?php echo SERVERURL;?>">
           <i class="fas fa-fw fa-tachometer-alt"></i>
           <span>Conmiciv</span></a>
       </li>
@@ -77,7 +77,7 @@
         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">Configuracion General</h6>
-            <a class="collapse-item" href="<?php echo SERVERURL;?>micuenta/">Mi cuenta</a>
+            <!--a class="collapse-item" href="<?php //echo SERVERURL;?>micuenta/">Mi cuenta</a-->
             <a class="collapse-item" href="">Aplicacion</a>
           </div>
         </div>
@@ -118,7 +118,7 @@
           <div class="bg-white py-2 collapse-inner rounded">
            
             <div class="collapse-divider"></div>
-            <a class="collapse-item" href="<?php echo SERVERURL;?>usuariolist/">Usuarios</a>
+            <!--a class="collapse-item" href="<?php //echo SERVERURL;?>usuariolist/">Usuarios</a-->
             <a class="collapse-item" href="<?php echo SERVERURL;?>personallist/">Personal</a>
             
           </div>
@@ -134,7 +134,6 @@
             <div class="collapse-divider"></div>
             <a class="collapse-item" href="<?php echo SERVERURL;?>equipos/">Equipos</a>
             <a class="collapse-item" href="<?php echo SERVERURL;?>miFlota/">miFlota</a>
-            <a class="collapse-item" href="<?php echo SERVERURL;?>FlotaDeBaja/">FlotaDeBaja</a>  
           </div>
         </div>
       </li>
@@ -160,10 +159,10 @@
         <div id="collapseAlmacen" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
             
-            <a class="collapse-item" href="<?php echo SERVERURL;?>NuevoAlmacen/">Nuevo Almacen</a>
+            <!--a class="collapse-item" href="<?php //echo SERVERURL;?>NuevoAlmacen/">Nuevo Almacen</a -->
             <a class="collapse-item" href="<?php echo SERVERURL;?>almacen/">Almacen</a>
             <h6 class="collapse-header">Reportes</h6>
-            <a class="collapse-item" href="<?php echo SERVERURL;?>almacen/">Reportes</a>
+            <!--a class="collapse-item" href="<?php echo SERVERURL;?>almacen/">Reportes</a-->
           </div>
         </div>
       </li>
@@ -237,8 +236,14 @@
           </form-->
 
           <!-- Topbar Navbar -->
+          <?php if($_SESSION['unidad']==1):?>
+          <h3 style="aling:center"><span class="badge badge-warning">CIA Minera horizonte</span></h3>
+          <?php elseif($_SESSION['unidad']==2):?>
+          <h3 style="aling:center"><span class="badge badge-primary">CIA Minera Kolpa</span></h3>
+          <?php elseif($_SESSION['unidad']==6):?>
+          <h3 style="aling:center"><span class="badge badge-success">Taller/Chorrillos</span></h3>
+          <?php endif;?>
           <ul class="navbar-nav ml-auto">
-
             <!-- Nav Item - Search Dropdown (Visible Only XS) -->
             <li class="nav-item dropdown no-arrow d-sm-none">
               <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -258,15 +263,64 @@
                 </form>
               </div>
             </li>
-
+            <?php if($_SESSION["privilegio_sbp"]==0 or $_SESSION["privilegio_sbp"]==3 ):?>
             <!-- Nav Item - Alerts -->
-            <li class="nav-item dropdown no-arrow mx-1">
+            <li class="nav-item dropdown no-arrow mx-1" id="dropdown_cuenta">
               <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="fas fa-bell fa-fw"></i>
+                <i class="fas fa-exchange-alt"></i>
                 <!-- Counter - Alerts -->
-                <span class="badge badge-danger badge-counter">3+</span>
+                
               </a>
               <!-- Dropdown - Alerts -->
+              <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="alertsDropdown">
+                <h6 class="dropdown-header">
+                 Cambiar cuenta
+                </h6>
+                <a class="dropdown-item d-flex align-items-center" href="#" id="" data-cuenta="1">
+                  <div class="mr-3">
+                    <div class="icon-circle bg-warning" data-cuenta="1">
+                      <i class="fab fa-cuttlefish text-white" data-cuenta="1"></i>
+                    </div>
+                  </div>
+                  <div >
+                    <div class="small text-gray-500" data-cuenta="1" >Trujillo - La libertad</div>
+                    <span class="font-weight" data-cuenta="1">Consorcio minero horizonte</span>
+                  </div>
+                </a>
+                <a class="dropdown-item d-flex align-items-center" href="#" data-cuenta="2">
+                  <div class="mr-3">
+                    <div class="icon-circle bg-primary" data-cuenta="2">
+                      <i class="fab fa-kickstarter-k text-white" data-cuenta="2"></i>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="small text-gray-500" data-cuenta="2">Huancavelica</div>
+                    <span class="font-weight" data-cuenta="2">Cia Minera Kolpa</span>
+                  </div>
+                </a>
+                <a class="dropdown-item d-flex align-items-center" href="#" data-cuenta="6">
+                  <div class="mr-3">
+                    <div class="icon-circle bg-success" data-cuenta="6">
+                    
+                      <i class="fab fa-tumblr text-white" data-cuenta="6"></i>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="small text-gray-500" data-cuenta="6">Lima - Chorrillos</div>
+                    <span class="font-weight" data-cuenta="6">Taller chorrillos</span>s
+                  </div>
+                </a>
+                <a class="dropdown-item text-center small text-gray-500" href="#">Todas las cuentas</a>
+              </div>
+            </li>
+            <!-- Nav Item - Alerts -->
+            <!-- li class="nav-item dropdown no-arrow mx-1">
+              <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-bell fa-fw"></i>
+       
+                <span class="badge badge-danger badge-counter">3+</span>
+              </a>
+        
               <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="alertsDropdown">
                 <h6 class="dropdown-header">
                   Alerts Center
@@ -306,16 +360,16 @@
                 </a>
                 <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
               </div>
-            </li>
-
+            </li -->
+            <?php endif;?>
             <!-- Nav Item - Messages -->
-            <li class="nav-item dropdown no-arrow mx-1">
+            <!-- li class="nav-item dropdown no-arrow mx-1">
               <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="fas fa-envelope fa-fw"></i>
-                <!-- Counter - Messages -->
+           
                 <span class="badge badge-danger badge-counter">7</span>
               </a>
-              <!-- Dropdown - Messages -->
+        
               <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="messagesDropdown">
                 <h6 class="dropdown-header">
                   Message Center
@@ -362,7 +416,7 @@
                 </a>
                 <a class="dropdown-item text-center small text-gray-500" href="#">Read More Messages</a>
               </div>
-            </li>
+            </li-->
            
             <div class="topbar-divider d-none d-sm-block"></div>
 
@@ -370,7 +424,7 @@
             <li class="nav-item dropdown no-arrow">
               <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $_SESSION["nombre_sbp"]; ?></span>
-                <img class="img-profile rounded-circle" src="">
+                <img class="img-profile rounded-circle" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTtmPb__cjl6z-clzs0u7MXDNiYVFd_C3AmuhDBVpmki7KFY-9GEg">
               </a>
               <!-- Dropdown - User Information -->
               <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">

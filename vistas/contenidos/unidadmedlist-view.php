@@ -20,6 +20,7 @@ if(isset($_POST["eliminar_busqueda_".$vista])){
 ?>
 
 <div class="container-fluid">
+
     <ul class="nav nav-tabs">
         <li class="nav-item">
             <a class="nav-link active" href=""><i class="fas fa-dolly-flatbed"></i>Unidades medida</a>
