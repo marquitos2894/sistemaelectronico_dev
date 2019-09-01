@@ -1,13 +1,23 @@
 <?php 
       require_once "./controladores/almacenControlador.php";
       $almCont = new almacenControlador(); 
-    
+
+      $url = explode("/",$_GET["views"]);
+      $paginador = $url[1];
+      $vista=$url[0];
+
+      $id_alm = $_SESSION["almacen"];
       if($_SESSION["almacen"]==0 ){
         echo "<script> window.location.href = '../almacen/'; </script>";
       }
 
 ?>
-   <input type="hidden" id="session_idunidad" value="<?php echo $_SESSION['unidad'] ?>" /> 
+  <input type="hidden" id="session_idunidad" value="<?php echo $_SESSION['unidad'] ?>" />
+  <input type="hidden" value="<?php echo $paginador ?>" id="paginador"/>
+  <input type="hidden" value="<?php echo $vista ?>" id="vista"/>
+  <input type="hidden" value="<?php echo $_SESSION['privilegio_sbp'] ?>" id="privilegio"/>
+  <input type="hidden" value="<?php echo $_SESSION['almacen'] ?>" id="id_alm"/>
+
 <div class="container-fluid">
 
   <?php  include "vistas/modulos/nav-almacen.php";?> 
@@ -36,7 +46,7 @@
               <h6 class="m-0 font-weight-bold text-primary">Componentes</h6>
             </div>
             <div class="card-body">
-              <div class="table-responsive">
+              <!--div class="table-responsive">
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                   <thead>
                     <tr>
@@ -52,10 +62,10 @@
                       <th>U.M</th>
                       <th>Equipo</th>
                       <th>Referencia</th>
-                      <?php if($_SESSION['privilegio_sbp']==0 or $_SESSION['privilegio_sbp']==1): ?>
+                      <?php //if($_SESSION['privilegio_sbp']==0 or $_SESSION['privilegio_sbp']==1): ?>
                       <th>Config</th>
                       <th>Delete</th>
-                      <?php endif; ?>
+                      <?php //endif; ?>
                     </tr>
                   </thead>
                   <tfoot>
@@ -72,17 +82,24 @@
                       <th>U.M</th>
                       <th>Equipo</th>
                       <th>Referencia</th>
-                      <?php if($_SESSION['privilegio_sbp']==0 or $_SESSION['privilegio_sbp']==1): ?>
+                      <?php //if($_SESSION['privilegio_sbp']==0 or $_SESSION['privilegio_sbp']==1): ?>
                       <th>Config</th>
                       <th>Delete</th>
-                      <?php endif; ?>
+                      <?php //endif; ?>
                     </tr>
                   </tfoot>
                   <tbody id="dtbody">
-                      <?php echo $almCont->databale_componentes($_SESSION["almacen"],"simple",$_SESSION['privilegio_sbp']); ?>
+                      <?php //echo $almCont->databale_componentes($_SESSION["almacen"],"simple",$_SESSION['privilegio_sbp']); ?>
                   </tbody>
                 </table>
+              </div-->
+              <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                      <span class="input-group-text" id="basic-addon1">Buscar</span>
+                  </div>
+                  <input type="search" class="form-control"  id="buscador_comp_text" placeholder="Buscar componente" aria-label="Username" aria-describedby="basic-addon1">                       
               </div>
+              <div id='catalogo'></div>      
             </div>
           </div>
           

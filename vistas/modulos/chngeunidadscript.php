@@ -32,6 +32,8 @@ document.querySelector('#dropdown_cuenta').addEventListener("click", async funct
         });
         <?php 
         } ?>
+        
+    localStorage.clear();
 
     location.reload();
     }

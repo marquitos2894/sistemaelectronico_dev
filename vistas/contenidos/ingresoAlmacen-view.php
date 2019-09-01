@@ -2,13 +2,23 @@
     require_once './controladores/componentesControlador.php';
     $compCont = new componentesControlador();
 
-    $id_alm = $_SESSION["almacen"];
+    $url = explode("/",$_GET["views"]);
+    $paginador = $url[1];
+    $vista=$url[0];
+
+    
     if($_SESSION["almacen"]==0 ){
       echo "<script> window.location.href = '../almacen/'; </script>";
     }
 
 ?>
-<input type="hidden" id="session_idunidad" value="<?php echo $_SESSION['unidad'] ?>" /> 
+    <input type="hidden" id="session_idunidad" value="<?php echo $_SESSION['unidad'] ?>" />
+    <input type="hidden" value="<?php echo $paginador ?>" id="paginador"/>
+    <input type="hidden" value="<?php echo $vista ?>" id="vista"/>
+    <input type="hidden" value="<?php echo $_SESSION['privilegio_sbp'] ?>" id="privilegio"/>
+    <input type="hidden" value="<?php echo $_SESSION['almacen'] ?>" id="id_alm"/>
+    <input type="hidden" id="session_idunidad" value="<?php echo $_SESSION['unidad'] ?>" />
+
 <div class="container-fluid">
 
     <?php  include "vistas/modulos/nav-almacen.php";?> 
@@ -46,7 +56,7 @@
             <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
                 <div class="card-body">
                 Componentes registrados en todas las unidades de la empresa
-                    <div class="table-responsive" id="componentesin">
+                    <!--div class="table-responsive" id="componentesin">
                         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                             <thead>
                                 <tr>
@@ -73,11 +83,18 @@
                                 </tr>
                             </tfoot>
                             <tbody>
-                                <?php echo $compCont->componentes_general(); ?>
+                                <?php //echo $compCont->componentes_general(); ?>
                                 
                             </tbody>
                         </table>
+                    </div-->
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">Buscar</span>
+                        </div>
+                        <input type="search" class="form-control"  id="buscador_comp_text" placeholder="Buscar componente" aria-label="Username" aria-describedby="basic-addon1">                       
                     </div>
+                    <div id='componentesin'></div> 
                 </div>   
             </div>
         </div>
@@ -88,7 +105,7 @@
             <!-- item de local storage para ingreso al almacen (Nuevo o ubicacion)-->
         </div>
         <h4><p style="text-align:center;" ><a  href="#" id="varciarCarrito">Vaciar carrito</a></p></h4>
-        <input type="hidden"  name="id_alm_frmIA" value="<?php echo $id_alm ?>"/>
+        <input type="hidden"  name="id_alm_frmIA" value="<?php echo $_SESSION["almacen"] ?>"/>
         <input type="submit"  class="btn btn-primary btn-lg btn-block" value="Registrar"/>
         <div class="RespuestaAjax"></div>
     </form> 

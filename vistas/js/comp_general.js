@@ -15,29 +15,21 @@
             if(!localStorage.getItem("BDcomp_gen")){
                 localStorage.setItem("BDcomp_gen","[]");
             }
-    
-            if(localStorage.getItem("BDcomp_gen")=="[]" ){
-                const datos = new FormData();
-                datos.append('comp_gen','true');
-                let response = await fetch('../ajax/componentesAjax.php',{
-                    method: 'POST',
-                    body : datos
-                });
+      
+            const datos = new FormData();
+            datos.append('comp_gen','true');
+            let response = await fetch('../ajax/componentesAjax.php',{
+                method: 'POST',
+                body : datos
+            });
 
-                let data = await response.json();
-                console.log(data);
-                await localStorage.setItem("BDcomp_gen", JSON.stringify(data))
-                this.getBDcomp_gen = await JSON.parse(localStorage.getItem("BDcomp_gen"));
-                await console.log(this.getBDcomp_gen);
-                this.carrito = JSON.parse(localStorage.getItem("carritoGen"));
-            }else{
-                this.carrito = JSON.parse(localStorage.getItem("carritoGen"));
-                this.getBDcomp_gen = await JSON.parse(localStorage.getItem("BDcomp_gen"));
-                console.log(this.getBDcomp_gen);
-                console.log(this.carrito);
-            }
+            let data = await response.json();
+      
+            await localStorage.setItem("BDcomp_gen", JSON.stringify(data))
+            this.getBDcomp_gen = await JSON.parse(localStorage.getItem("BDcomp_gen"));
 
-            
+            this.carrito = JSON.parse(localStorage.getItem("carritoGen"));
+  
 
         }
 
@@ -57,11 +49,7 @@
                 }
             }
             
-            /*for(i of this.carrito){
-                if(i.id_comp == item){
-
-                }
-            }*/
+    
            
             this.carrito.push(datos);
             localStorage.setItem("carritoGen",JSON.stringify(this.carrito))
@@ -159,6 +147,28 @@
             }
 
         }
+
+        this.RenderTableComp = async function(page){
+            let buscar = document.querySelector('#buscador_comp_text').value;
+            let vista = document.querySelector('#vista').value
+            let privilegio = document.querySelector('#privilegio').value
+    
+            const datos = new FormData();
+            datos.append('buscarcompajax',buscar);
+            datos.append('paginadorajax',page);
+            datos.append('vistaajax',vista);
+            datos.append('privilegioajax',privilegio);
+
+            let response = await fetch('../ajax/componentesAjax.php',{
+                method : 'POST',
+                body : datos
+            })
+            let data = await response.text();
+            //console.log(data);
+    
+
+            document.querySelector('#componentesin').innerHTML = data;
+        }
     }
 
      var bdcomp = new BDcomponentes();
@@ -168,13 +178,27 @@
     document.addEventListener("DOMContentLoaded", async function(){
         await bdcomp.constructor();
         await render.renderCarrito();
+        await render.RenderTableComp();
             
     });
 
+    document.querySelector('#buscador_comp_text').addEventListener("keyup", async function(ev){
+        render.RenderTableComp();
+    });
+
+
     $1('#componentesin').addEventListener("click", async function(ev){
         ev.preventDefault();
+
+        if(ev.target.id=='page'){
+            render.RenderTableComp(ev.target.dataset.page);
+        }
         if(ev.target.id=="addItem"){
             let iditem = ev.target.dataset.producto;
+            let descripcion = $1('#descripcion'+iditem).value;
+            let nparte= $1('#nparte'+iditem).value;
+
+            console.log();
             let id_unidad = document.querySelector("#session_idunidad").value;
 
             //equipos
@@ -196,7 +220,10 @@
             let dataDR = await responseDR.text();
             //console.log(dataDR);
 
-            let template = await `<input type="hidden" id="iditem" value="${iditem}" />
+            let template = `<input type="hidden" id="iditem" value="${iditem}" />
+            <div class="form-group col-md-8">
+            <h5>${descripcion} <span class="badge badge-primary">${nparte}</span></h5>  
+            </div> 
             <div class="form-row">
                 <div class="form-group col-sm-6">
                 <label for="inputEmail4">Ubicacion</label>

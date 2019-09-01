@@ -7,7 +7,7 @@
    $almCont =  new almacenControlador();
    $equiCont = new equipoControlador();
    //echo $almCont->obtener_consulta_json_controlador(1);
-
+   
 
    if(isset($_POST["id_comp_almacen"]) && isset($_POST["fk_idalm_almacen"])){
       echo $almCont->update_comp_almacen_controlador();  
@@ -73,13 +73,10 @@
       WHERE c.id_comp = {$_POST["id_comp_cs"]} and cs.fk_idalm = {$_POST["id_alm_cs"]}");
    }
 
-   if(isset($_POST["id_equipo_insideAlm"]) && isset($_POST["id_unidad_insideAlm"]) ){
-      echo $equiCont->select_combo("SELECT e.Id_Equipo,eu.alias_equipounidad
-      FROM equipos e
-      INNER JOIN equipo_unidad eu ON eu.fk_idequipo = e.Id_Equipo
-      WHERE (eu.fk_idunidad = 7 OR eu.fk_idunidad = {$_POST["id_unidad_insideAlm"]} ) 
-      AND eu.est_baja = 1 AND eu.est = 1 AND eu.fk_idequipo !={$_POST["id_equipo_insideAlm"]}
-      ",0,1);
+   //VISTA RVALESALIDA;RVALE INGRESO; INSIDE ALMACEN
+
+   if(isset($_POST["buscarcompajax"]) && isset($_POST["almacenajax"]) ){
+      echo $almCont->paginador_componentes_almacen($_POST["paginadorajax"],10,$_POST["privilegioajax"],$_POST["buscarcompajax"],$_POST["vistaajax"],$_POST["almacenajax"],$_POST["tipoajax"]);
    }
    
 
@@ -92,6 +89,15 @@
       $referencia = $_POST["dataReferencia"];
       echo $almCont->select_combo("SELECT * FROM datos_referencia WHERE dato_referencia != '{$referencia}' ",1,1);
     }
+
+    if(isset($_POST["id_equipo_insideAlm"]) && isset($_POST["id_unidad_insideAlm"]) ){
+      echo $equiCont->select_combo("SELECT e.Id_Equipo,eu.alias_equipounidad
+      FROM equipos e
+      INNER JOIN equipo_unidad eu ON eu.fk_idequipo = e.Id_Equipo
+      WHERE (eu.fk_idunidad = 7 OR eu.fk_idunidad = {$_POST["id_unidad_insideAlm"]} ) 
+      AND eu.est_baja = 1 AND eu.est = 1 AND eu.fk_idequipo !={$_POST["id_equipo_insideAlm"]}
+      ",0,1);
+   }
     
 
    //VISTA REPOTEALMACEN

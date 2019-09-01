@@ -4,37 +4,13 @@
         return document.querySelector(selector);
     }
 
-
-
-
-/*    async function ver(){
-
-        //const datos = new FormData();
-        //datos.append('id_alm', '1');
-        /*let response1 =  await fetch('../ajax/almacenAjax.php?id_alm=1');
-        let user = await response1.json();
-        return user;
-
-        const datos = new FormData();
-        datos.append('id_alm', '1');
-        let response = await fetch('../ajax/almacenAjax.php',{
-            method : 'POST',
-            body :  datos
-        });
-        let data = await response.json();
-       
-}*/
-
     function Carrito1(){
 
         this.constructor = async function(){
-
                 if(!localStorage.getItem("carritoS")){
                     localStorage.setItem('carritoS','[]');
                 }
 
-                //if(!localStorage.getItem("carritoS") || localStorage.getItem("carritoS")=="[]"){
-                if(!localStorage.getItem("BDproductos") || localStorage.getItem("BDproductos")=="[]"){
                     let id_almacen = $('#id_alm_vs').value;
                     const datos = new FormData();
                     datos.append('id_alm', id_almacen);
@@ -43,77 +19,19 @@
                         body :  datos
                     });
                     let data = await response.json();
-                    console.log(data);   
-                    console.log("json")
-                    
+                                        
                     await localStorage.setItem('BDproductos',JSON.stringify(data)); 
                     this.getBDproductos = await JSON.parse(localStorage.getItem('BDproductos')); 
-                    console.log("localStorage")
-
-                    //await render.Renderbd(this.getBDproductos);
-                    //console.log("render")
-
-                    this.getBDproductos = JSON.parse(localStorage.getItem('BDproductos'));
+              
                     this.getCarritoS = JSON.parse(localStorage.getItem("carritoS"));
-                    
-                   await view.renderCarritoS(); 
-                    
-                   await  console.log(this.getBDproductos);
-                   await console.log(this.getCarritoS);
-            
-
-                }else{
-
-                    this.getBDproductos = await JSON.parse(localStorage.getItem('BDproductos'));
-                    //render.Renderbd(this.getBDproductos);
-
-                    this.getBDproductos = JSON.parse(localStorage.getItem('BDproductos'));
-                    this.getCarritoS = JSON.parse(localStorage.getItem("carritoS"));
-                    
-                    view.renderCarritoS(); 
-                    console.log("carrito");
-                    console.log(this.getBDproductos);
-                    console.log(this.getCarritoS);
-                }
-                
-                
-                /*if(!localStorage.getItem("BDproductos") || localStorage.getItem("BDproductos")=="[]"){
-                    /* Promisse */
-                    /*const datos = new FormData();
-                    datos.append('id_alm', '1');
-                    let response = await fetch('../ajax/almacenAjax.php',{
-                        method : 'POST',
-                        body :  datos
-                    }) 
-                    .then(res =>  res.json())
-                    .then(data =>{                      
-                        localStorage.setItem('BDproductos',JSON.stringify(data));
-                    });*/
-                    
-                    /* Async await */
-                    /*const datos = new FormData();
-                    datos.append('id_alm', '1');
-                    let response = await fetch('../ajax/almacenAjax.php',{
-                        method : 'POST',
-                        body :  datos
-                    });
-                    let data = await response.json();
-                    localStorage.setItem('BDproductos',JSON.stringify(data));           
-            } */
+                    await view.renderCarritoS();                 
         }
-
-  
-
-
-
 
         this.agregarItemCarritoS = function(item,valor){
             
             if(!this.getBDproductos || this.getCarritoS==null ){
                 location.reload();
             }
-
-    
 
             for(i of this.getBDproductos){
                 if(i.id_ac == item){
@@ -171,7 +89,6 @@
             return;
         }
 
-        
         this.eliminarItemCS = function(item){
             for(i in this.getCarritoS){
                 if(this.getCarritoS[i].id_ac == item){
@@ -184,38 +101,38 @@
         }
 
         this.varciarCarrito = function(){
-            
             this.getCarritoS.splice(0);
             localStorage.setItem('carritoS','[]');
         }     
         
     }
+
     function render(){
         
-        this.Renderbd = function (lista){
-            let template = ``;
-            let j = 1;
-            for(i of lista){
-
-            template += `
-              <tr>
-                <td>${j}</td>
-                <td>${i.codigo}</td>
-                <td>${i.descripcion}</td>
-                <td>${i.nparte1}</td>
-                <td>${i.Nombre_Equipo}</td>
-                <td>${i.Referencia}</td>
-                <td>${i.u_nombre}-${i.u_seccion}</td>
-                <td>${i.unidad_med}</td>
-                <td>${i.stock}</td>
-                <td><input type='number' id='salida${i.id_ac}' /></td>
-                <td> <a href='#' class='card-footer-item' id='addItem' data-producto='${i.id_ac}'>+</a></td>
-              </tr>
-                `;
-                j++;
-            }
-            $("#bdcomponentes").innerHTML = template;       
+        this.RenderTableComp = async function(page){
+            let buscar = document.querySelector('#buscador_comp_text').value;
+            //let paginador = document.querySelector('#paginador').value
+            let vista = document.querySelector('#vista').value
+            let id_alm = document.querySelector('#id_alm').value
+            let privilegio = document.querySelector('#privilegio').value
+    
+            const datos = new FormData();
+            datos.append('buscarcompajax',buscar);
+            datos.append('paginadorajax',page);
+            datos.append('vistaajax',vista);
+            datos.append('almacenajax',id_alm);
+            datos.append('privilegioajax',privilegio);
+            datos.append('tipoajax',"vale");
+            let response = await fetch('../ajax/almacenAjax.php',{
+                method : 'POST',
+                body : datos
+            })
+            let data = await response.text();
+            //console.log(data);
+    
+            document.querySelector('#catalogo').innerHTML = data;
         }
+        
     }
 
     function CarritoView(){
@@ -225,9 +142,9 @@
                 var template = `<div class="alert alert-danger" role="alert">
                 El carrito esta vacio !!
                 </div><br>`;
-                $("#productosCarritoS").innerHTML = template;
+                $("#productosCarrito").innerHTML = template;
             }else{
-                $("#productosCarritoS").innerHTML = "";   
+                $("#productosCarrito").innerHTML = "";   
                 let template = `<div class="table-responsive"><table class="table table-bordered">
                 <thead>
                     <tr>
@@ -275,37 +192,46 @@
                     j++;
                 }
                 template  += `</tbody></table></div>`;    
-                $('#productosCarritoS').innerHTML=template;
+                $('#productosCarrito').innerHTML=template;
             }
      
         }
 
     }
 
-
     var carrito = new Carrito1();
     var view = new CarritoView();
     var render = new render();
 
-    document.addEventListener("DOMContentLoaded",function(){
+    document.addEventListener("DOMContentLoaded", async function(){
         carrito.constructor();
         console.log("constructor");
+        render.RenderTableComp();
  
     });
 
 
+    document.querySelector('#buscador_comp_text').addEventListener("keyup", async function(ev){
+        render.RenderTableComp();
+    });
+    
+
     $("#catalogo").addEventListener("click",function(ev){
+
+        if(ev.target.id=='page'){
+            render.RenderTableComp(ev.target.dataset.page);
+        }
+
         if(ev.target.id=="addItem"){
         console.log(ev.target);                    
         cant=document.getElementById("salida"+ev.target.dataset.producto).value;
         carrito.agregarItemCarritoS(ev.target.dataset.producto,cant);
         view.renderCarritoS();
-        //carrito_view.TotalProductos();
-        //console.log(ev.target.value) 
+
         }   
     }); 
 
-    $('#productosCarritoS').addEventListener("click",function(ev){
+    $('#productosCarrito').addEventListener("click",function(ev){
         ev.preventDefault();
         if(ev.target.id == "deleteProducto"){
             carrito.eliminarItemCS(ev.target.dataset.producto);

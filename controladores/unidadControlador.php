@@ -14,14 +14,8 @@ class unidadControlador extends unidadModelo {
         $_SESSION["almacen"]=0;
         //$_SESSION["nom_almacen"]="";
 
-       /* $localStorage = [
-            "BDcomp_gen",
-            "BDproductos",
-            "carritoGen",
-            "carritoIn",
-            "carritoS"
-        ];
-        echo mainModel::localstorage_reiniciar($localStorage);*/
+
+        echo mainModel::localstorage_reiniciar($localStorage);
     }
     
 

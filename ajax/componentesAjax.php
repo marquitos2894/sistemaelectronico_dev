@@ -38,6 +38,13 @@ if(isset($_POST["descripcion_formEdit"]) && isset($_POST["nparte1"])){
   echo $compCont->update_componente_controlador();
 }
 
+//VISTA INGRESO ALMACEN
+
+if(isset($_POST["buscarcompajax"])){
+  echo $compCont->paginador_componentes($_POST["paginadorajax"],10,$_POST["privilegioajax"],$_POST["buscarcompajax"],$_POST["vistaajax"]);
+}
+
+
 
 //VISTA DATOSREFERENCIA-VIEW
 

@@ -1,6 +1,6 @@
 (function(){
 
-    function render(){
+    function Render(){
 
         this.renderEdit= async function(id_ac,id_alm,id_unidad){
 
@@ -126,70 +126,108 @@
 
         }
 
-    }
+        this.RenderTableComp = async function(page){
+            let buscar = document.querySelector('#buscador_comp_text').value;
+            //let paginador = document.querySelector('#paginador').value
+            let vista = document.querySelector('#vista').value
+            let id_alm = document.querySelector('#id_alm').value
+            let privilegio = document.querySelector('#privilegio').value
+    
+            const datos = new FormData();
+            datos.append('buscarcompajax',buscar);
+            datos.append('paginadorajax',page);
+            datos.append('vistaajax',vista);
+            datos.append('almacenajax',id_alm);
+            datos.append('privilegioajax',privilegio);
+            datos.append('tipoajax',"vistaconfig");
 
-    render = new render();
-
- document.querySelector('#dtbody').addEventListener("click",function(ev){
-        
-    if(ev.target.id=='controlstock'){
-        console.log(ev.target.dataset.producto);
-        let id_ac = ev.target.dataset.producto;
-        let id_alm = document.querySelector('#id_alm_session').value;
-        let id_unidad = document.querySelector('#session_idunidad').value;
-        console.log(id_ac);
-        console.log(id_alm);
-        console.log(id_unidad);
-        render.renderEdit(id_ac,id_alm,id_unidad);
-    }
-
- });
-
- document.querySelector('#modal-body').addEventListener("click",function(ev){
-
-    //console.log(document.querySelector('#cs_inicial').value);
-    if(document.querySelector('#cs_inicial').value==0){
-        if(ev.target.id=="control_stock"){
-            document.querySelector('#control_stock').addEventListener("change",function(ev){      
-                //console.log(document.querySelector('#control_stock').value);
-                let cs = document.querySelector('#control_stock').value;
-                let template= ``;
-                if(cs==1){
-                    template +=  ` 
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label for="inputEmail4">Stock Min.</label>
-                            <input type="text" value="" name="smin" id="nparte1"  class="form-control"  placeholder="Stock Min" required>
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label for="inputPassword4">Stock Max.</label>
-                            <input type="text" value="" name="smax" id="nparte2"  class="form-control" placeholder="Stock Max" required >
-                        </div>
-                    </div> `;
-                }
-
-                document.querySelector('#div_cs_est0').innerHTML=template;
-            });
+            let response = await fetch('../ajax/almacenAjax.php',{
+                method : 'POST',
+                body : datos
+            })
+            let data = await response.text();
+            //console.log(data);
+    
+            document.querySelector('#catalogo').innerHTML = data;
         }
-    }else{
-        if(ev.target.id=="control_stock"){
-            document.querySelector('#control_stock').addEventListener("change",function(ev){
-                ev.preventDefault();
-                let cs = document.querySelector('#control_stock').value;
-                if(cs==0){
-                    document.querySelector('#div_cs_est1').setAttribute("style","display:none");
-                }else{
-                    document.querySelector('#div_cs_est1').setAttribute("style","display:true");
-                }
-            });
-        }    
+    }   
 
-    }
+    render = new Render();
+
+
+    document.addEventListener("DOMContentLoaded", async function(){
+        render.RenderTableComp();
+    });
+
+    document.querySelector('#buscador_comp_text').addEventListener("keyup", async function(ev){
+        render.RenderTableComp();
+    });
+
+
+    document.querySelector('#catalogo').addEventListener("click",function(ev){
+            
+        if(ev.target.id=='page'){
+            render.RenderTableComp(ev.target.dataset.page);
+        }
         
- });
+        if(ev.target.id=='controlstock'){
+            console.log(ev.target.dataset.producto);
+            let id_ac = ev.target.dataset.producto;
+            let id_alm = document.querySelector('#id_alm_session').value;
+            let id_unidad = document.querySelector('#session_idunidad').value;
+            console.log(id_ac);
+            console.log(id_alm);
+            console.log(id_unidad);
+            render.renderEdit(id_ac,id_alm,id_unidad);
+        }
+
+    });
+
+    document.querySelector('#modal-body').addEventListener("click",function(ev){
+
+        //console.log(document.querySelector('#cs_inicial').value);
+        if(document.querySelector('#cs_inicial').value==0){
+            if(ev.target.id=="control_stock"){
+                document.querySelector('#control_stock').addEventListener("change",function(ev){      
+                    //console.log(document.querySelector('#control_stock').value);
+                    let cs = document.querySelector('#control_stock').value;
+                    let template= ``;
+                    if(cs==1){
+                        template +=  ` 
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="inputEmail4">Stock Min.</label>
+                                <input type="text" value="" name="smin" id="nparte1"  class="form-control"  placeholder="Stock Min" required>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="inputPassword4">Stock Max.</label>
+                                <input type="text" value="" name="smax" id="nparte2"  class="form-control" placeholder="Stock Max" required >
+                            </div>
+                        </div> `;
+                    }
+
+                    document.querySelector('#div_cs_est0').innerHTML=template;
+                });
+            }
+        }else{
+            if(ev.target.id=="control_stock"){
+                document.querySelector('#control_stock').addEventListener("change",function(ev){
+                    ev.preventDefault();
+                    let cs = document.querySelector('#control_stock').value;
+                    if(cs==0){
+                        document.querySelector('#div_cs_est1').setAttribute("style","display:none");
+                    }else{
+                        document.querySelector('#div_cs_est1').setAttribute("style","display:true");
+                    }
+                });
+            }    
+
+        }
+            
+    });
 
 
     
 
 
-})();
+    })();

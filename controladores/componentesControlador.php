@@ -100,7 +100,9 @@ Class componentesControlador extends componentesModelo {
         $inicio=($paginador>0)?(($paginador*$registros)-$registros):0;
 
         $conexion = mainModel::conectar();
-        $est_baja=($vista=="componentes")?$est_baja=1:$est_baja=0;
+        $est_baja=($vista=="componentes" or $vista=="ingresoAlmacen" )?$est_baja=1:$est_baja=0;
+
+
         if($buscador!=""){
             $datos=$conexion->query("SELECT SQL_CALC_FOUND_ROWS c.id_comp,c.descripcion,c.nparte1,
             c.nparte2,c.nparte3,c.marca,um.abreviado
@@ -125,89 +127,136 @@ Class componentesControlador extends componentesModelo {
         
         //devuel valor entero redondeado hacia arriba 4.2 = 5
         $Npaginas = ceil($total/$registros);
-        $tabla.="<div><table class='table table-bordered'>
-        <thead>
-            <tr>
-                <th scope='col'>Cod.Interno</th>
-                <th scope='col'>Descripcion</th>               
-                <th scope='col'>NParte</th>
-                <th scope='col'>NParte2</th>
-                <th scope='col'>NParte3</th>
-                <th scope='col'>Marca</th>
-                <th scope='col'>U.M</th>";
-                if($privilegio==0 or $privilegio==1){
-                $tabla.="
-                <th colspan='2' scope='col'>Acciones</th>";
-                }
-                //programar privilegios
+        if($vista=="ingresoAlmacen"){
             $tabla.="
-            </tr>
-        </thead>
-        <tbody id='table_componente' >";
-        if($total>=1 && $paginador<=$Npaginas)
-        {
-        
-            foreach($datos as $row){
-                $tabla .="
-            <tr>
-                <td>{$row['id_comp']}</td>
-                <td>{$row['descripcion']}</td>                      
-                <td>{$row['nparte1']}</td>
-                <td>{$row['nparte2']}</td>
-                <td>{$row['nparte3']}</td>
-                <td>{$row['marca']}</td>
-                <td>{$row['abreviado']}</td>";
-                
-                if($privilegio==0 or $privilegio==1){
+            <div><table class='table table-bordered'>
+            <thead>
+                <tr>
+                    <th scope='col'>#</th>
+                    <th scope='col'>Cod.Interno</th>
+                    <th scope='col'>Descripcion</th>               
+                    <th scope='col'>NParte1</th>
+                    <th scope='col'>NParte2</th>
+                    <th scope='col'>NParte3</th>
+                    <th scope='col'>Marca</th>
+                    <th scope='col'>Add</th>
+            </thead>
+            <tbody id='componentesin'>";
+            if($total>=1 && $paginador<=$Npaginas)
+            {   
+                $contador=$inicio+1;
+                foreach($datos as $row){
+                    $tabla .="
+                        <tr>
+                            <input type='hidden' id='descripcion{$row['id_comp']}' value='{$row['descripcion']}'/>
+                            <input type='hidden' id='nparte{$row['id_comp']}' value='{$row['nparte1']}'/>
+                            <td>{$contador}</td>
+                            <td>{$row['id_comp']}</td>
+                            <td>{$row['descripcion']}</td> 
+                            <td>{$row['nparte1']}</td>
+                            <td>{$row['nparte2']}</td>
+                            <td>{$row['nparte3']}</td>
+                            <td>{$row['marca']}</td>
+                            <td><a href='#' class='card-footer-item' id='addItem'  data-producto='{$row['id_comp']}' data-toggle='modal' data-target='#exampleModalCenter'>+</a></td>
+                        </tr>
+                    ";
+                    $contador++;
+                }
+            }else{
+                $tabla.='<tr><td colspan="8"> No existen registros</td></tr>';
+            }
 
-                    if($est_baja==1){
-                $tabla .="
-                <td><a style='font-size: 1.5em;'  class='fas fa-edit' href='{$row['id_comp']}' id='EditItem' data-producto='{$row['id_comp']}' data-toggle='modal' data-target='#ModalEdit'></a> </td>";
-                    }                                     
-                           
-                $tabla .="
-                <td>
-                    <form name='FrmDarBajaComp' action='".SERVERURL."ajax/componentesAjax.php' method='POST' class='FormularioAjax' 
-                        data-form='update' entype='multipart/form-data' autocomplete='off'>";
+            $tabla.='
+            </tbody></table></div>';
+            $tabla.= mainModel::paginador_ajax($total,$paginador,$Npaginas,$vista);
+        }else{
+            $tabla.="
+            <div><table class='table table-bordered'>
+            <thead>
+                <tr>
+                    <th scope='col'>Cod.Interno</th>
+                    <th scope='col'>Descripcion</th>               
+                    <th scope='col'>NParte</th>
+                    <th scope='col'>NParte2</th>
+                    <th scope='col'>NParte3</th>
+                    <th scope='col'>Marca</th>
+                    <th scope='col'>U.M</th>";
+                    if($privilegio==0 or $privilegio==1){
+                    $tabla.="
+                    <th colspan='2' scope='col'>Acciones</th>";
+                    }
+                    //programar privilegios
+                $tabla.="
+                </tr>
+            </thead>
+            <tbody id='table_componente' >";
+            if($total>=1 && $paginador<=$Npaginas)
+            {
+            
+                foreach($datos as $row){
+                    $tabla .="
+                <tr>
+                    <td>{$row['id_comp']}</td>
+                    <td>{$row['descripcion']}</td>                      
+                    <td>{$row['nparte1']}</td>
+                    <td>{$row['nparte2']}</td>
+                    <td>{$row['nparte3']}</td>
+                    <td>{$row['marca']}</td>
+                    <td>{$row['abreviado']}</td>";
+                    
+                    if($privilegio==0 or $privilegio==1){
+
                         if($est_baja==1){
+                    $tabla .="
+                    <td><a style='font-size: 1.5em;'  class='fas fa-edit' href='{$row['id_comp']}' id='EditItem' data-producto='{$row['id_comp']}' data-toggle='modal' data-target='#ModalEdit'></a> </td>";
+                        }                                     
+                            
+                    $tabla .="
+                    <td>
+                        <form name='FrmDarBajaComp' action='".SERVERURL."ajax/componentesAjax.php' method='POST' class='FormularioAjax' 
+                            data-form='update' entype='multipart/form-data' autocomplete='off'>";
+                            if($est_baja==1){
+                                $tabla .="
+                                <input type='hidden' name='idcomp_DarBaja' value='{$row['id_comp']}'/>
+                                <button type='submit' class='btn btn-danger'><i class='fas fa-arrow-circle-down'></i></button>";
+                            }else{
+                                $tabla .="
+                                <input type='hidden' name='idcomp_DarAlta' value='{$row['id_comp']}'/>
+                                <button type='submit' class='btn btn-success'><i class='fas fa-arrow-circle-up'></i></button>";
+                            }
+
                             $tabla .="
-                            <input type='hidden' name='idcomp_DarBaja' value='{$row['id_comp']}'/>
-                            <button type='submit' class='btn btn-danger'><i class='fas fa-arrow-circle-down'></i></button>";
-                        }else{
-                            $tabla .="
-                            <input type='hidden' name='idcomp_DarAlta' value='{$row['id_comp']}'/>
-                            <button type='submit' class='btn btn-success'><i class='fas fa-arrow-circle-up'></i></button>";
+                            <div class='RespuestaAjax'></div>   
+                        </form>
+                    </td>";
+                        
+                    if($est_baja==0){
+                    $tabla .="
+                    <td>
+                        <form name='FrmDelComp' action='".SERVERURL."ajax/componentesAjax.php' method='POST' class='FormularioAjax' 
+                                data-form='update' entype='multipart/form-data' autocomplete='off'>
+                                <input type='hidden' name='idcomp_FrmDelComp' value='{$row['id_comp']}'/>
+                            <button type='submit' class='btn btn-danger'><i class='far fa-trash-alt'></i></button>
+                            <div class='RespuestaAjax'></div>   
+                        </form>
+                    </td>";
                         }
 
-                        $tabla .="
-                        <div class='RespuestaAjax'></div>   
-                    </form>
-                </td>";
+                    }    
+                $tabla.="
+                </tr>";
                     
-                if($est_baja==0){
-                $tabla .="
-                <td>
-                    <form name='FrmDelComp' action='".SERVERURL."ajax/componentesAjax.php' method='POST' class='FormularioAjax' 
-                            data-form='update' entype='multipart/form-data' autocomplete='off'>
-                            <input type='hidden' name='idcomp_FrmDelComp' value='{$row['id_comp']}'/>
-                        <button type='submit' class='btn btn-danger'><i class='far fa-trash-alt'></i></button>
-                        <div class='RespuestaAjax'></div>   
-                    </form>
-                </td>";
-                    }
-
-                }    
-            $tabla.="
-            </tr>";
-                 
+                }
+            }else{
+                $tabla.='<tr><td colspan="7"> No existen registros</td></tr>';
             }
-        }else{
-            $tabla.='<tr><td colspan="7"> No existen registros</td></tr>';
+
+            $tabla.='
+            </tbody></table></div>';
+            $tabla.= mainModel::paginador($total,$paginador,$Npaginas,$vista);
         }
 
-        $tabla.='</tbody></table></div>';
-   
-        $tabla.= mainModel::paginador($total,$paginador,$Npaginas,$vista);
+        
         return $tabla;
     }
 
@@ -640,12 +689,14 @@ Class componentesControlador extends componentesModelo {
     }
 
     public function componentes_general(){
+
         $conexion = mainModel::conectar();
         $datos = $conexion->prepare("call v_comp_general");
         $datos->execute();
         $datos=$datos->fetchAll();
         $contador = 1;
         $dtable = "";
+
         foreach($datos as $row){
             $dtable .="
                 <tr>
@@ -664,6 +715,9 @@ Class componentesControlador extends componentesModelo {
 
         return $dtable;
     }
+
+
+
 
     public function componentes_gen_json(){
         $consulta = "SELECT * FROM componentes WHERE est = 1";

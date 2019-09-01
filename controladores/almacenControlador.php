@@ -189,6 +189,7 @@ Class almacenControlador extends almacenModelo {
 
     }*/
 
+    //paginador para la vistas de las unidades
     public function paginador_almacen_u($paginador,$registros,$privilegio,$buscador,$vista,$unidad){
 
         $paginador=mainModel::limpiar_cadena($paginador);
@@ -258,7 +259,7 @@ Class almacenControlador extends almacenModelo {
             }
 
         }else{
-            $tabla.='<tr><td colspan="7"> No existen registros</td></tr>';
+            $tabla.='<tr><td colspan="10"> No existen registros</td></tr>';
         }
 
         $tabla.='</tbody></table></div>';
@@ -270,26 +271,27 @@ Class almacenControlador extends almacenModelo {
     public function validar_paginador_controlador($buscador,$vista,$eliminar_buscador){
         return mainModel::validar_paginador($buscador,$vista,$eliminar_buscador);
     }
-
+    /* SE REEMPLARON LOS DATATABLES, LA CARGA ES MUY LENTA
     public function databale_componentes($id_alm,$tipo,$privilegio){
         
-      $conexion = mainModel::conectar();
-      $datos = $conexion->prepare("SELECT ac.id_ac,c.id_comp,c.descripcion,c.nparte1,c.nparte2,c.nparte3,
-      um.abreviado,ac.stock,ac.fk_idalm,ac.u_nombre,ac.u_seccion,e.Nombre_Equipo,e.Id_Equipo,
-      eu.alias_equipounidad,ac.Referencia,ac.control_stock
-        FROM componentes c
-        INNER JOIN almacen_componente ac ON ac.fk_idcomp = c.id_comp 
-        INNER JOIN equipos e  ON e.Id_Equipo = ac.fk_Id_Equipo
-        INNER JOIN unidad_medida um ON um.id_unidad_med = c.fk_idunidad_med
-        INNER JOIN equipo_unidad eu ON eu.fk_idequipo = e.Id_Equipo
-        WHERE ac.est = 1 and ac.fk_idalm = {$id_alm}  "); 
-      $datos->execute();
-      $datos=$datos->fetchAll(); 
+        $conexion = mainModel::conectar();
+        $datos = $conexion->prepare("SELECT ac.id_ac,c.id_comp,c.descripcion,c.nparte1,c.nparte2,c.nparte3,
+        um.abreviado,ac.stock,ac.fk_idalm,ac.u_nombre,ac.u_seccion,e.Nombre_Equipo,e.Id_Equipo,
+        eu.alias_equipounidad,ac.Referencia,ac.control_stock
+            FROM componentes c
+            INNER JOIN almacen_componente ac ON ac.fk_idcomp = c.id_comp 
+            INNER JOIN equipos e  ON e.Id_Equipo = ac.fk_Id_Equipo
+            INNER JOIN unidad_medida um ON um.id_unidad_med = c.fk_idunidad_med
+            INNER JOIN equipo_unidad eu ON eu.fk_idequipo = e.Id_Equipo
+            WHERE ac.est = 1 and ac.fk_idalm = {$id_alm}  "); 
+        $datos->execute();
+        $datos=$datos->fetchAll(); 
        
-      $dtable = '';
-      $contador = 1;
-      if($tipo == "simple"){
-        foreach($datos as $row){
+        $dtable = '';
+        $contador = 1;
+        if($tipo == "simple"){
+
+            foreach($datos as $row){
             $dtable .="
                     <tr>
                         <td>{$contador}</td>
@@ -331,8 +333,9 @@ Class almacenControlador extends almacenModelo {
                     $dtable .="
                     </tr>";    
             
-            $contador++;
-          }
+                $contador++;
+            }
+            
         }else{
             foreach($datos as $row){
                 $dtable .="
@@ -358,10 +361,186 @@ Class almacenControlador extends almacenModelo {
 
       return $dtable;
 
+    }*/
+
+
+    public function paginador_componentes_almacen($paginador,$registros,$privilegio,$buscador,$vista,$id_alm,$tipo){
+
+        $paginador=mainModel::limpiar_cadena($paginador);
+        $registros=mainModel::limpiar_cadena($registros);
+        $privilegio=mainModel::limpiar_cadena($privilegio);
+        $buscador=mainModel::limpiar_cadena($buscador);
+
+        $tabla='';
+        //echo $_SESSION['nombre_sbp'];
+        $paginador=(isset($paginador) && $paginador>0)?(int)$paginador:1; 
+        $inicio=($paginador>0)?(($paginador*$registros)-$registros):0;
+
+        $conexion = mainModel::conectar();
+        $est_baja=($vista=="componentes")?$est_baja=1:$est_baja=0;
+        if($buscador!=""){
+            $datos=$conexion->query("SELECT SQL_CALC_FOUND_ROWS ac.id_ac,c.id_comp,c.descripcion,c.nparte1,c.nparte2,c.nparte3,
+            um.abreviado,ac.stock,ac.fk_idalm,ac.u_nombre,ac.u_seccion,e.Nombre_Equipo,e.Id_Equipo,
+            eu.alias_equipounidad,ac.Referencia,ac.control_stock
+              FROM componentes c
+              INNER JOIN almacen_componente ac ON ac.fk_idcomp = c.id_comp 
+              INNER JOIN equipos e  ON e.Id_Equipo = ac.fk_Id_Equipo
+              INNER JOIN unidad_medida um ON um.id_unidad_med = c.fk_idunidad_med
+              INNER JOIN equipo_unidad eu ON eu.fk_idequipo = e.Id_Equipo
+            WHERE ( c.id_comp like '%$buscador%' or c.descripcion  like '%$buscador%' or c.nparte1 like '%$buscador%' or 
+            c.nparte2 like '%$buscador%' or c.nparte3 like '%$buscador%' or e.Nombre_Equipo like '%$buscador%' or ac.Referencia like '%$buscador%'  ) AND ac.est=1
+            AND ac.fk_idalm={$id_alm} LIMIT {$inicio},{$registros} ");
+            
+        }else{
+            $datos=$conexion->query("SELECT SQL_CALC_FOUND_ROWS ac.id_ac,c.id_comp,c.descripcion,c.nparte1,c.nparte2,c.nparte3,
+        um.abreviado,ac.stock,ac.fk_idalm,ac.u_nombre,ac.u_seccion,e.Nombre_Equipo,e.Id_Equipo,
+        eu.alias_equipounidad,ac.Referencia,ac.control_stock
+        FROM componentes c
+        INNER JOIN almacen_componente ac ON ac.fk_idcomp = c.id_comp 
+        INNER JOIN equipos e  ON e.Id_Equipo = ac.fk_Id_Equipo
+        INNER JOIN unidad_medida um ON um.id_unidad_med = c.fk_idunidad_med
+        INNER JOIN equipo_unidad eu ON eu.fk_idequipo = e.Id_Equipo
+        WHERE ac.est = 1 and ac.fk_idalm = {$id_alm}  LIMIT {$inicio},{$registros}");           
+        }
+        //$datos->execute();
+        $datos = $datos->fetchAll();
+        $total = $conexion->query("SELECT FOUND_ROWS()");
+        $total = (int)$total->fetchColumn();
+        $Npaginas = ceil($total/$registros);
+        if($tipo=="vale"){
+            //devuel valor entero redondeado hacia arriba 4.2 = 5
+            
+            $tabla.="<div><table class='table table-bordered'>
+            <thead>
+                <tr>
+                    <th scope='col'>Cod.Interno</th>
+                    <th scope='col'>Descripcion</th>               
+                    <th scope='col'>NParte</th>
+                    <th scope='col'>Equipo</th>
+                    <th scope='col'>Referencia</th>
+                    <th scope='col'>Ubicacion</th>
+            
+                    <th scope='col'>Stock</th>
+                    <th scope='col'>cantidad</th>
+                    <th scope='col'>Add</th>";
+                    //programar privilegios
+                $tabla.="
+                </tr>
+            </thead>
+            <tbody id='table_componente' >";
+            if($total>=1 && $paginador<=$Npaginas)
+            {
+            
+                foreach($datos as $row){
+                    $tabla .="
+                <tr>
+                    <td>{$row['id_comp']}</td>
+                    <td>{$row['descripcion']}</td>                      
+                    <td>{$row['nparte1']}</td>
+                    <td>{$row['alias_equipounidad']}</td>
+                    <td>{$row['Referencia']}</td>
+                    <td>{$row['u_nombre']}-{$row['u_seccion']}</td>
+                    <td>{$row['stock']} {$row['abreviado']}</td>
+                    <td><input type='number' class='form-control' id='salida{$row['id_ac']}' /></td>
+                    <td> <a href='#productosCarrito' class='card-footer-item' id='addItem' data-producto='{$row['id_ac']}'>+</a></td>
+                </tr>";
+                    
+                }
+            }else{
+                $tabla.='<tr><td colspan="10"> No existen registros</td></tr>';
+            }
+
+            $tabla.='</tbody></table></div>';
+        }
+        else{
+            $contador=$inicio+1;
+            if($total>=1 && $paginador<=$Npaginas){
+                $tabla .="
+                <div><table class='table table-bordered'>
+                    <thead>
+                        <tr>
+                            <th scope='col'>#</th>
+                            <th scope='col'>Cod.Interno</th>
+                            <th scope='col'>Descripcion</th>               
+                            <th scope='col'>NParte1</th>
+                            <th scope='col'>NParte2</th>
+                            <th scope='col'>NParte3</th>
+                            <th scope='col'>Ubicacion</th>
+                            <th scope='col'>Stock</th>
+                            <th scope='col'>Control Stock</th>
+                            <th scope='col'>Equipo</th>
+                            <th scope='col'>Referencia</th>";
+                            if($privilegio==0 or $privilegio==1):
+                            $tabla.="
+                            <th scope='col'>Config</th>
+                            <th scope='col'>Delete</th>
+                        </tr>
+                        </thead>
+                        <body id='dtbody'>"; 
+                            endif;  
+                foreach($datos as $row){
+                  
+                        $tabla.="
+                        <tr>
+                            <td>{$contador}</td>
+                            <td>{$row['id_comp']}</td>
+                            <td>{$row['descripcion']}</td>
+                            <td>{$row['nparte1']}</td>
+                            <td>{$row['nparte2']}</td>
+                            <td>{$row['nparte3']}</td>
+                            <td>{$row['u_nombre']}-{$row['u_seccion']}</td>
+                            <td>{$row['stock']} {$row['abreviado']}</td>";
+                            if($row['control_stock']==1){
+                                $tabla .="
+                                <td><span style='font-size: 1.2rem; color: Tomato;'><i class='fas fa-check'></i></span></td>";
+                            }else{
+                                $tabla .="
+                                <td><span style='font-size: 1.2rem;'><i class='fas fa-times'></i></span></td>";
+                            }
+            
+                            $tabla .=" 
+                            
+                            <td>{$row['alias_equipounidad']}</td>
+                            <td>{$row['Referencia']}</td>";
+                            if($privilegio==0 or $privilegio==1){   
+                            $tabla .=" 
+                            <td><a href='#'  data-toggle='modal' data-target='#config_comp' ><span style='font-size: 1.5rem;' ><i id='controlstock' data-producto='{$row['id_ac']}' class='fas fa-cog'></i></span></a></td>";
+                            
+                            $tabla .="
+                            <td>
+                                <form name='Frm_del_id_ac' action='".SERVERURL."ajax/almacenAjax.php' method='POST' class='FormularioAjax' 
+                                    data-form='delete' entype='multipart/form-data' autocomplete='off'>
+                                    <input type='hidden' name='id_comp_del' value='{$row['id_comp']}'/>
+                                    <input type='hidden' name='id_alm_del' value='{$id_alm}'/>
+                                    <input type='hidden' name='id_ac_del' value='".mainModel::encryption($row['id_ac'])."'/>
+                                    <button type='submit' class='btn btn-danger'><i class='far fa-trash-alt' ></i></button>
+                                    <div class='RespuestaAjax'></div>   
+                                </form>
+                            </td>";
+                            }    
+                        $tabla .="
+                        </tr>";  
+
+                   
+                    $contador++;
+                }
+            }else{
+                $tabla.='<tr><td colspan="10"> No existen registros</td></tr>';
+            }
+            
+            $tabla.='
+            </tbody></table></div>';   
+            
+        }
+        $tabla.= mainModel::paginador_ajax($total,$paginador,$Npaginas,$vista);
+
+        return $tabla;
     }
+
     public function save_vsalida_controlador(){
         $SERVERURL=SERVERURL;
 
+        
         $fk_idusuario = mainModel::limpiar_cadena($_POST["usuario"]);
         $fk_idpersonal = mainModel::limpiar_cadena($_POST["personal"]);
         $turno = mainModel::limpiar_cadena($_POST["turno"]);
@@ -376,7 +555,7 @@ Class almacenControlador extends almacenModelo {
         $nombre_per = $datospersonal['nombres'];
         $dni_per = $datospersonal['dni_per'];
         $datos_referencia = mainModel::limpiar_cadena($_POST["datos_referencia_vale_salida"]);
-
+        $privilegio =  mainModel::limpiar_cadena($_POST["privilegio_sbp_vs"]);
 
         //Detalle
         $id_ac[]=$_POST["id_ac_vale_salida"];
@@ -405,65 +584,78 @@ Class almacenControlador extends almacenModelo {
             "dr_referencia"=>$datos_referencia
         ];
 
-        $id_vsalida=almacenModelo::save_vsalida_modelo($datos);
-        $id_vsalida=$id_vsalida[0][0];
+        $validarPrivilegios=mainModel::privilegios_transact($privilegio);
 
-        $validar[0]=mainModel::ejecutar_consulta_simple("SELECT MAX(vs.id_vsalida)FROM vale_salida vs WHERE fk_idalm = {$id_alm};");  
-        $validar=$validar[0][0];
+        if($validarPrivilegios){
 
-        if($validar==$id_vsalida){
-            $info_dvsalida=almacenModelo::save_dvsalida_modelo($id_vsalida,$id_ac,$dv_descripcion,$dv_nparte1,$dv_stock,$dv_solicitado,$dv_entregado,$dv_unombre,$dv_useccion,$id_alm);
-            if($id_vsalida!=0){
-                if($info_dvsalida[0]==""){
-                mainModel::ejecutar_consulta_simple("UPDATE vale_salida SET est = 0 WHERE id_vsalida = {$id_vsalida}");                       
-                    $alerta=[
-                        "alerta"=>"simple",
-                        "Titulo"=>"Vale salida N°{$id_vsalida} ha sido anulado",
-                        "Texto"=>"Por no tener registros asociados, verificar su stock, si persiste contacte con el admin",
-                        "Tipo"=>"error"
-                    ];
-
-                    $datos = [
-                        "tipo"=>"danger",
-                        "mensaje"=>"<h5><strong>Vale de salida N°{$id_vsalida}</strong> ha sido anulado, verificar su stock </h5>"
-                    ];
-                    echo mainModel::bootstrap_alert($datos);
+            $id_vsalida=almacenModelo::save_vsalida_modelo($datos);
+            $id_vsalida=$id_vsalida[0][0];
+    
+            $validar[0]=mainModel::ejecutar_consulta_simple("SELECT MAX(vs.id_vsalida)FROM vale_salida vs WHERE fk_idalm = {$id_alm};");  
+            $validar=$validar[0][0];
+    
+            if($validar==$id_vsalida){
+                $info_dvsalida=almacenModelo::save_dvsalida_modelo($id_vsalida,$id_ac,$dv_descripcion,$dv_nparte1,$dv_stock,$dv_solicitado,$dv_entregado,$dv_unombre,$dv_useccion,$id_alm);
+                if($id_vsalida!=0){
+                    if($info_dvsalida[0]==""){
+                    mainModel::ejecutar_consulta_simple("UPDATE vale_salida SET est = 0 WHERE id_vsalida = {$id_vsalida}");                       
+                        $alerta=[
+                            "alerta"=>"simple",
+                            "Titulo"=>"Vale salida N°{$id_vsalida} ha sido anulado",
+                            "Texto"=>"Por no tener registros asociados, verificar su stock, si persiste contacte con el admin",
+                            "Tipo"=>"error"
+                        ];
+    
+                        $datos = [
+                            "tipo"=>"danger",
+                            "mensaje"=>"<h5><strong>Vale de salida N°{$id_vsalida}</strong> ha sido anulado, verificar su stock </h5>"
+                        ];
+                        echo mainModel::bootstrap_alert($datos);
+            
+                    }else{
+                        $alerta=[
+                            "alerta"=>"recargar_tiempo",
+                            "Titulo"=>"Vale salida N°{$id_vsalida} generado! ",
+                            "Texto"=>"Los siguientes datos han sido guardados",
+                            "Tipo"=>"success",
+                            "tiempo"=>5000
+                        ];
+                        /*$id_vsalida=mainModel::encryption($id_vsalida);
+                        $id_alm=mainModel::encryption($id_alm);*/
+                        $datos = ["tipo"=>"success","mensaje"=>"<h5><strong>Vale de salida N°{$id_vsalida}</strong> generado con exito !! haga <a href='../PDFvalesalida/{$id_vsalida}/{$id_alm}' target='_blank' >CLICK AQUI </a> para ver su registro, o la pagina se actualizara en 5s</h5> "];
+                        
+                        $localStorage = [
+                            "BDcomp_gen",
+                            "BDproductos",
+                            "carritoGen",
+                            "carritoIn",
+                            "carritoS"
+                        ];
+    
+                        echo mainModel::localstorage_reiniciar($localStorage);
+                        echo mainModel::bootstrap_alert($datos);
+                        //echo "<script>setTimeout('document.location.reload()',10000)</script>";
+                    }
         
+                    foreach($info_dvsalida[1] as $i){
+                        $mensaje ="El item: | {$i['id_comp']} | {$i['descripcion']} | {$i['nparte1']} | {$i['ubicacion']} | No se registro por desbalance de stock, verificar ";
+                        $datos = [
+                            "tipo"=>"danger",
+                            "mensaje"=>"$mensaje"
+                        ];
+                        echo mainModel::bootstrap_alert($datos);
+                    }
+    
+                    
                 }else{
                     $alerta=[
-                        "alerta"=>"recargar_tiempo",
-                        "Titulo"=>"Vale salida N°{$id_vsalida} generado! ",
-                        "Texto"=>"Los siguientes datos han sido guardados",
-                        "Tipo"=>"success",
-                        "tiempo"=>5000
+                        "alerta"=>"recargar",
+                        "Titulo"=>"Ocurrio un error inesperado",
+                        "Texto"=>"No hemos podido registrar el vale de salida, contacte al admin",
+                        "Tipo"=>"error"
                     ];
-                    /*$id_vsalida=mainModel::encryption($id_vsalida);
-                    $id_alm=mainModel::encryption($id_alm);*/
-                    $datos = ["tipo"=>"success","mensaje"=>"<h5><strong>Vale de salida N°{$id_vsalida}</strong> generado con exito !! haga <a href='../PDFvalesalida/{$id_vsalida}/{$id_alm}' target='_blank' >CLICK AQUI </a> para ver su registro, o la pagina se actualizara en 5s</h5> "];
-                    
-                    $localStorage = [
-                        "BDcomp_gen",
-                        "BDproductos",
-                        "carritoGen",
-                        "carritoIn",
-                        "carritoS"
-                    ];
-
-                    echo mainModel::localstorage_reiniciar($localStorage);
-                    echo mainModel::bootstrap_alert($datos);
-                    //echo "<script>setTimeout('document.location.reload()',10000)</script>";
                 }
-    
-                foreach($info_dvsalida[1] as $i){
-                    $mensaje ="El item: | {$i['id_comp']} | {$i['descripcion']} | {$i['nparte1']} | {$i['ubicacion']} | No se registro por desbalance de stock, verificar ";
-                    $datos = [
-                        "tipo"=>"danger",
-                        "mensaje"=>"$mensaje"
-                    ];
-                    echo mainModel::bootstrap_alert($datos);
-                }
-
-                
+            
             }else{
                 $alerta=[
                     "alerta"=>"recargar",
@@ -472,17 +664,19 @@ Class almacenControlador extends almacenModelo {
                     "Tipo"=>"error"
                 ];
             }
-        
+
         }else{
+
             $alerta=[
                 "alerta"=>"recargar",
-                "Titulo"=>"Ocurrio un error inesperado",
-                "Texto"=>"No hemos podido registrar el vale de salida, contacte al admin",
-                "Tipo"=>"error"
+                "Titulo"=>"Privilegios insuficientes",
+                "Texto"=>"Sus privilegios, son solo para vistas",
+                "Tipo"=>"info"
             ];
+            
         }
 
-        
+
         return mainModel::sweet_alert($alerta);
 
     }

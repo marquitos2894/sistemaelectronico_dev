@@ -1,15 +1,19 @@
 
 <?php 
-      require_once "./controladores/almacenControlador.php";
-      $almCont = new almacenControlador(); 
+    require_once "./controladores/almacenControlador.php";
+    $almCont = new almacenControlador(); 
       
-      $pagina = explode("/",$_GET['views']);
+    $pagina = explode("/",$_GET['views']);
+      
+    $url = explode("/",$_GET["views"]);
+    $paginador = $url[1];
+    $vista=$url[0];
 
-      $id_alm = $_SESSION["almacen"];
+    $id_alm = $_SESSION["almacen"];
 
-      if($_SESSION["almacen"]==0 ){
-        echo "<script> window.location.href = '../almacen/'; </script>";
-      }
+    if($_SESSION["almacen"]==0 ){
+    echo "<script> window.location.href = '../almacen/'; </script>";
+    }
 
       
       
@@ -17,6 +21,10 @@
 
 
 ?>
+<input type="hidden" value="<?php echo $paginador ?>" id="paginador"/>
+<input type="hidden" value="<?php echo $vista ?>" id="vista"/>
+<input type="hidden" value="<?php echo $_SESSION['privilegio_sbp'] ?>" id="privilegio"/>
+<input type="hidden" value="<?php echo $_SESSION['almacen'] ?>" id="id_alm"/>
 
 <div class="container-fluid">
 <?php  include "vistas/modulos/nav-almacen.php";?> 
@@ -51,70 +59,21 @@
                     </h2>
                 </div>
                 <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
-                    <div class="card-body">
-                            <div class="columns is-multiline" id="catalogo">
-                                <!--form action="" method="POST">
-                                        <div class="input-group mb-3">                        
-                                                <div class="input-group-prepend">                            
-                                                    <button class="btn btn-primary" type="submit" id="button-addon1">Buscar</button>
-                                                </div>
-                                                <input type="text" name="buscador" class="form-control" placeholder="Buscar componentes"  aria-describedby="button-addon1">
-                                        </div>
-                                </form-->
 
-                                <?php //echo $text; ?>   
-                                <?php  //echo $almCont->paginador_componentes($pagina[1],5,"",$buscador,$pagina[0],"Salida");?>   
-                                <div class="card shadow mb-4">
-                                    <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold text-primary">Componentes</h6>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="table-responsive">
-                                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>#</th>
-                                                            <th>Cod.Interno</th>
-                                                            <th>Descripcion</th>
-                                                            <th>Nparte1</th>
-                                                            <th>Equipo</th>
-                                                            <th>Referencia</th>
-                                                            <th>Ubicacion</th>
-                                                            <th>U.M</th>
-                                                            <th>Stock</th>
-                                                            <th>Salida</th>
-                                                            <th>Add</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tfoot>
-                                                        <tr>
-                                                            <th>#</th>
-                                                            <th>Cod.Interno</th>
-                                                            <th>Descripcion</th>
-                                                            <th>Nparte1</th>
-                                                            <th>Equipo</th>
-                                                            <th>Referencia</th>
-                                                            <th>Ubicacion</th>
-                                                            <th>U.M</th>
-                                                            <th>Stock</th>
-                                                            <th>Salida</th>
-                                                            <th>Add</th>
-                                                        </tr>
-                                                    </tfoot>
-                                                    <tbody>
-                                                        
-                                                    <?php echo $almCont->databale_componentes($_SESSION["almacen"],"carrito",$_SESSION['privilegio_sbp']); ?>
-                                                    </tbody>
-                                                </table>
-                                        </div>
-                                    </div>
-                                </div>  
-                            </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">Buscar</span>
+                        </div>
+                        <input type="search" class="form-control"  id="buscador_comp_text" placeholder="Buscar componente" aria-label="Username" aria-describedby="basic-addon1">
+                         
                     </div>
+                    <div id="catalogo"></div> 
+                     
+                    
                 </div>
             </div>
             <form action="<?php echo SERVERURL;?>ajax/almacenAjax.php"  method="POST" data-form="save" class="FormularioAjax" autocomplete="off" enctype="multipart/form-data" >
-                <div id="productosCarritoS">
+                <div id="productosCarrito">
                                 <!-- item de local storage para salida del almacen-->
                 </div>
                 <h4><p style="text-align:center;" ><a  href="#" id="varciarCarrito">Vaciar carrito</a></p></h4> 
@@ -200,6 +159,7 @@
                                     <label for="exampleFormControlTextarea1">Comentario de salida de los repuestos</label>
                                     <textarea  name="comentario" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
                             </div>
+                            <input type="hidden"  name="privilegio_sbp_vs" value="<?php echo $_SESSION['privilegio_sbp']?>"/>
                             <input type="hidden"  name="vale" value="valesalida"/>
                             <input type="hidden"  name="id_alm_vs" id="id_alm_vs" value="<?php echo $id_alm ?>"/>
                             <button type="submit" class="btn btn-danger btn-lg btn-block">Emitir Vale de salida</button>
