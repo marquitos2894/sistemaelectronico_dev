@@ -98,7 +98,7 @@ class personalControlador extends personalModelo {
         }
         $contenido.="</div>";*/
 
-        $tabla.="<div><table class='table table-bordered'>
+        $tabla.="<div class='table-responsive-sm'><table class='table table-bordered'>
         <thead>
             <tr>
                 <th scope='col'>#</th>
@@ -115,7 +115,7 @@ class personalControlador extends personalModelo {
         <tbody id='table_personal' >";
         if($total>=1 && $paginador<=$Npaginas)
         {
-              $i=1;  
+              $i=$inicio+1;  
             foreach($datos as $row){
                 $tabla .="
             <tr>
@@ -172,6 +172,7 @@ class personalControlador extends personalModelo {
         $distrito = mainModel::limpiar_cadena($_POST["distrito_in"]);
         $cargo = mainModel::limpiar_cadena($_POST["cargo_in"]);
         $unidad = mainModel::limpiar_cadena($_POST["unidad_in"]);
+        $privilegio =  mainModel::limpiar_cadena($_POST["privilegio_sbp_personal"]);
 
         $datosIN = [
             "correo_p"=>$correo_per,
@@ -189,37 +190,47 @@ class personalControlador extends personalModelo {
             "unidad"=>$unidad
         ];
 
-        $validar = ($dni_per=="")?$validar=0:$validar=mainModel::ejecutar_consulta_validar("SELECT * FROM personal WHERE Dni_per = '{$dni_per}' AND est = 1")->rowCount();
+        $validarPrivilegios=mainModel::privilegios_transact($privilegio);
 
-        if($validar>0){
+        if($validarPrivilegios){
+            $validar = ($dni_per=="")?$validar=0:$validar=mainModel::ejecutar_consulta_validar("SELECT * FROM personal WHERE Dni_per = '{$dni_per}' AND est = 1")->rowCount();
+            if($validar>0){
 
-            $alerta=[
-                "alerta"=>"simple",
-                "Titulo"=>"Dni registrado",
-                "Texto"=>"El dni ya ha sido registrado, por favor verifique !",
-                "Tipo"=>"info"
-            ];
-
-
-        }else{
-
-            if(personalModelo::save_personal_modelo($datosIN)->rowCount()>=1){
-                $alerta=[
-                    "alerta"=>"recargar",
-                    "Titulo"=>"Datos guardados",
-                    "Texto"=>"Los siguientes datos han sido guardados",
-                    "Tipo"=>"success"
-                ];
-            }else{
                 $alerta=[
                     "alerta"=>"simple",
-                    "Titulo"=>"Ocurrio un error inesperado",
-                    "Texto"=>"No hemos podido actualizar los datos, contacte al admin",
-                    "Tipo"=>"error"
+                    "Titulo"=>"Dni registrado",
+                    "Texto"=>"El dni ya ha sido registrado, por favor verifique !",
+                    "Tipo"=>"info"
                 ];
-            }
-        }
 
+
+            }else{
+
+                if(personalModelo::save_personal_modelo($datosIN)->rowCount()>=1){
+                    $alerta=[
+                        "alerta"=>"recargar",
+                        "Titulo"=>"Datos guardados",
+                        "Texto"=>"Los siguientes datos han sido guardados",
+                        "Tipo"=>"success"
+                    ];
+                }else{
+                    $alerta=[
+                        "alerta"=>"simple",
+                        "Titulo"=>"Ocurrio un error inesperado",
+                        "Texto"=>"No hemos podido actualizar los datos, contacte al admin",
+                        "Tipo"=>"error"
+                    ];
+                }
+            }
+        }else{
+            $alerta=[
+                "alerta"=>"recargar",
+                "Titulo"=>"Privilegios insuficientes",
+                "Texto"=>"Sus privilegios, son solo para vistas",
+                "Tipo"=>"info"
+            ];
+            
+        }    
 
 
         return mainModel::sweet_alert($alerta);

@@ -129,7 +129,7 @@ Class componentesControlador extends componentesModelo {
         $Npaginas = ceil($total/$registros);
         if($vista=="ingresoAlmacen"){
             $tabla.="
-            <div><table class='table table-bordered'>
+            <div class='table-responsive-sm'><table class='table table-bordered'>
             <thead>
                 <tr>
                     <th scope='col'>#</th>
@@ -171,7 +171,7 @@ Class componentesControlador extends componentesModelo {
             $tabla.= mainModel::paginador_ajax($total,$paginador,$Npaginas,$vista);
         }else{
             $tabla.="
-            <div><table class='table table-bordered'>
+            <div class='table-responsive-sm'><table class='table table-bordered'>
             <thead>
                 <tr>
                     <th scope='col'>Cod.Interno</th>
@@ -290,7 +290,7 @@ Class componentesControlador extends componentesModelo {
         
         //devuel valor entero redondeado hacia arriba 4.2 = 5
         $Npaginas = ceil($total/$registros);
-        $tabla.="<div><table class='table table-bordered'>
+        $tabla.="<div class='table-responsive-sm'><table class='table table-bordered'>
         <thead>
             <tr>
                 <th scope='col'>#</th>
@@ -347,7 +347,8 @@ Class componentesControlador extends componentesModelo {
         $nparte3 =  mainModel::limpiar_cadena($_POST["nparte3"]);
         $marca =  mainModel::limpiar_cadena($_POST["marca"]);
         $id_unidad_med=  mainModel::limpiar_cadena($_POST["unidad_med_new"]);
-
+        $privilegio =  mainModel::limpiar_cadena($_POST["privilegio_comp"]);
+        
         $val_question = "false";
         if(isset($_POST["mydata"])){
             $val_question =  mainModel::limpiar_cadena($_POST["mydata"]);
@@ -363,37 +364,70 @@ Class componentesControlador extends componentesModelo {
             "id_unidad_med"=>$id_unidad_med,        
         ];
 
-        
+        $validarPrivilegios=mainModel::privilegios_transact($privilegio);
 
-        if($val_question=="false"){
+        if($validarPrivilegios){
 
-            if($nparte1 !='' or $nparte2 !='' or $nparte3 != '' ){
-                $validarNP1 = mainModel::ejecutar_consulta_validar("SELECT * FROM componentes WHERE (nparte1 = '{$nparte1}' OR nparte2 = '{$nparte1}' OR nparte3 = '{$nparte1}' ) AND est = 1");
-                $validarNP2 = mainModel::ejecutar_consulta_validar("SELECT * FROM componentes WHERE (nparte1 = '{$nparte2}' OR nparte2 = '{$nparte2}' OR nparte3 = '{$nparte2}' ) AND est = 1");
-                $validarNP3 = mainModel::ejecutar_consulta_validar("SELECT * FROM componentes WHERE (nparte1 = '{$nparte3}' OR nparte2 = '{$nparte3}' OR nparte3 = '{$nparte3}' ) AND est = 1");
-                
-                //VALIDO SI ES VACIO, SI NO LO ES SE REALIZA UN COUNT DE LA CONSULTA
-                $validarNP1 = ($nparte1=="")?$nparte1=0:$validarNP1->rowCount();
-                $validarNP2 = ($nparte2=="")?$nparte2=0:$validarNP2->rowCount();
-                $validarNP3 = ($nparte3=="")?$nparte3=0:$validarNP3->rowCount();
+            if($val_question=="false"){
 
-                $totNP_rep = $validarNP1 + $validarNP2 + $validarNP3;
-            }
-        
+                if($nparte1 !='' or $nparte2 !='' or $nparte3 != '' ){
+                    $validarNP1 = mainModel::ejecutar_consulta_validar("SELECT * FROM componentes WHERE (nparte1 = '{$nparte1}' OR nparte2 = '{$nparte1}' OR nparte3 = '{$nparte1}' ) AND est = 1");
+                    $validarNP2 = mainModel::ejecutar_consulta_validar("SELECT * FROM componentes WHERE (nparte1 = '{$nparte2}' OR nparte2 = '{$nparte2}' OR nparte3 = '{$nparte2}' ) AND est = 1");
+                    $validarNP3 = mainModel::ejecutar_consulta_validar("SELECT * FROM componentes WHERE (nparte1 = '{$nparte3}' OR nparte2 = '{$nparte3}' OR nparte3 = '{$nparte3}' ) AND est = 1");
+                    
+                    //VALIDO SI ES VACIO, SI NO LO ES SE REALIZA UN COUNT DE LA CONSULTA
+                    $validarNP1 = ($nparte1=="")?$nparte1=0:$validarNP1->rowCount();
+                    $validarNP2 = ($nparte2=="")?$nparte2=0:$validarNP2->rowCount();
+                    $validarNP3 = ($nparte3=="")?$nparte3=0:$validarNP3->rowCount();
 
-            if($totNP_rep>0){
+                    $totNP_rep = $validarNP1 + $validarNP2 + $validarNP3;
+                }
+            
+                //PREGUNTA Y REALIZA UN SUBMIT DE NUEVO
+                if($totNP_rep>0){
 
-                $validarNP1 = ($validarNP1>0)?$validarNP1=$nparte1:$validarNP1="";
-                $validarNP2 = ($validarNP2>0)?$validarNP2=$nparte2:$validarNP2="";
-                $validarNP3 = ($validarNP3>0)?$validarNP3=$nparte3:$validarNP3="";
-                    $alerta=[
-                        "alerta"=>"question",
-                        "Titulo"=>"Duplicidad de N° parte",
-                        "Texto"=>"El/Los N° parte {$validarNP1} | {$validarNP2} | {$validarNP3}  ya se encuentran registrados ¿Desea continuar de todas maneras?",
-                        "Tipo"=>"info",
-                        "Variable"=>"true"
-                    ];
-                    return mainModel::sweet_alert($alerta);   
+                    $validarNP1 = ($validarNP1>0)?$validarNP1=$nparte1:$validarNP1="";
+                    $validarNP2 = ($validarNP2>0)?$validarNP2=$nparte2:$validarNP2="";
+                    $validarNP3 = ($validarNP3>0)?$validarNP3=$nparte3:$validarNP3="";
+                        $alerta=[
+                            "alerta"=>"question",
+                            "Titulo"=>"Duplicidad de N° parte",
+                            "Texto"=>"El/Los N° parte {$validarNP1} | {$validarNP2} | {$validarNP3}  ya se encuentran registrados ¿Desea continuar de todas maneras?",
+                            "Tipo"=>"info",
+                            "Variable"=>"true"
+                        ];
+                        return mainModel::sweet_alert($alerta);   
+                }else{
+
+                    $validar= componentesModelo::save_componentenes_modelo($datos);
+
+                    if($validar->rowCount()>0){
+                        $alerta=[
+                            "alerta"=>"recargar",
+                            "Titulo"=>"Datos guardados",
+                            "Texto"=>"Los siguientes datos han sido guardados",
+                            "Tipo"=>"success"
+                        ];
+                        $localStorage = [
+                            "BDcomp_gen",
+                            "BDproductos",
+                            "carritoGen",
+                            "carritoIn",
+                            "carritoS"
+                        ];
+                    }else{
+                        $alerta=[
+                            "alerta"=>"simple",
+                            "Titulo"=>"Ocurrio un error inesperado",
+                            "Texto"=>"No hemos podido registrar el componente",
+                            "Tipo"=>"error"
+                        ];
+                        $localStorage = [];
+                    }
+                    echo mainModel::localstorage_reiniciar($localStorage);
+                    
+                }
+
             }else{
 
                 $validar= componentesModelo::save_componentenes_modelo($datos);
@@ -421,44 +455,20 @@ Class componentesControlador extends componentesModelo {
                     ];
                     $localStorage = [];
                 }
+
                 echo mainModel::localstorage_reiniciar($localStorage);
-                return mainModel::sweet_alert($alerta);
+                
             }
-
         }else{
-
-            $validar= componentesModelo::save_componentenes_modelo($datos);
-
-            if($validar->rowCount()>0){
-                $alerta=[
-                    "alerta"=>"recargar",
-                    "Titulo"=>"Datos guardados",
-                    "Texto"=>"Los siguientes datos han sido guardados",
-                    "Tipo"=>"success"
-                ];
-                $localStorage = [
-                    "BDcomp_gen",
-                    "BDproductos",
-                    "carritoGen",
-                    "carritoIn",
-                    "carritoS"
-                ];
-            }else{
-                $alerta=[
-                    "alerta"=>"simple",
-                    "Titulo"=>"Ocurrio un error inesperado",
-                    "Texto"=>"No hemos podido registrar el componente",
-                    "Tipo"=>"error"
-                ];
-                $localStorage = [];
-            }
-            echo mainModel::localstorage_reiniciar($localStorage);
-            return mainModel::sweet_alert($alerta);
-
-
+            $alerta=[
+                "alerta"=>"recargar",
+                "Titulo"=>"Privilegios insuficientes",
+                "Texto"=>"Sus privilegios, son solo para vistas",
+                "Tipo"=>"info"
+            ];
         }
 
-
+        return mainModel::sweet_alert($alerta);
  
 
     }

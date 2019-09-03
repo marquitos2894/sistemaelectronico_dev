@@ -143,6 +143,7 @@
                                     <textarea  name="comentario" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
                             </div>
                             <input type="hidden" value="valeingreso" name="vale"/>
+                            <input type="hidden"  name="privilegio_sbp_vi" value="<?php echo $_SESSION['privilegio_sbp']?>"/>
                             <input type="hidden"  name="id_alm_vi" id="id_alm_vi" value="<?php echo $id_alm ?>"/>
                             <button type="submit" class="btn btn-success btn-lg btn-block">Emitir Vale de Ingreso</button>
                         </div>

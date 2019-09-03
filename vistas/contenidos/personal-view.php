@@ -71,6 +71,7 @@
                           </select>
                         </div>
                       </div>
+
                       <input type="hidden" name="unidad_in" value="<?php echo $_SESSION['unidad'] ?>"/>
                       <div class="form-group col-md-4" style="display:none">
                         <label for="inputCity">Unidad</label>
@@ -90,6 +91,7 @@
                     </div>
                   </div>
           </div>
+          <input type="hidden"  name="privilegio_sbp_personal" value="<?php echo $_SESSION['privilegio_sbp']?>"/>  
           <button type="submit" class="btn btn-success btn-lg btn-block">Guardar</button>
           <div class="RespuestaAjax"></div>
         </form>

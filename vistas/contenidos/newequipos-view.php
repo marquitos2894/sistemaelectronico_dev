@@ -76,7 +76,7 @@
                 <input type="text" name="SerieMotor_Equipo_save" value="" class="form-control" placeholder="N° serie del motor">
             </div>
         </div>
-
+        <input type="hidden"  name="privilegio_sbp_equipo" value="<?php echo $_SESSION['privilegio_sbp']?>"/>
         <button type="submit" class="btn btn-primary">Guardar</button>
         <div class="RespuestaAjax"></div>
     </form>         

@@ -10,6 +10,11 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
+  <meta http-equiv="Expires" content="0">
+  <meta http-equiv="Last-Modified" content="0">
+  <meta http-equiv="Cache-Control" content="no-cache, mustrevalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  
   <title>SB Admin 2 - Dashboard</title>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
   <script src="<?php echo SERVERURL?>vistas/vendor/jquery/jquery.min.js"></script>

@@ -106,6 +106,7 @@
         </div>
         <h4><p style="text-align:center;" ><a  href="#" id="varciarCarrito">Vaciar carrito</a></p></h4>
         <input type="hidden"  name="id_alm_frmIA" value="<?php echo $_SESSION["almacen"] ?>"/>
+        <input type="hidden"  name="privilegio_ingresoalmacen" value="<?php echo $_SESSION['privilegio_sbp']?>"/>
         <input type="submit"  class="btn btn-primary btn-lg btn-block" value="Registrar"/>
         <div class="RespuestaAjax"></div>
     </form> 

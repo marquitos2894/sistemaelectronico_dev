@@ -43,7 +43,7 @@ Class equipoControlador extends equipoModelo {
         //devuel valor entero redondeado hacia arriba 4.2 = 5
         $Npaginas = ceil($total/$registros);
         $tabla.="
-        <div><table class='table table-bordered'>
+        <div class='table-responsive-sm'><table class='table table-bordered'>
             <thead>
                 <tr>
                     <th scope='col'>#</th>
@@ -148,7 +148,7 @@ Class equipoControlador extends equipoModelo {
         //devuel valor entero redondeado hacia arriba 4.2 = 5
         $Npaginas = ceil($total/$registros);
 
-                $tabla.="<div><table class='table table-bordered'>
+                $tabla.="<div class='table-responsive-sm'><table class='table table-bordered'>
                 <thead>
                     <tr>
                         <th scope='col'>#</th>
@@ -259,7 +259,7 @@ Class equipoControlador extends equipoModelo {
         $ModeloMotor_Equipo = mainModel::limpiar_cadena($_POST["ModeloMotor_Equipo_save"]);
         $MarcaMotor_Equipo = mainModel::limpiar_cadena($_POST["MarcaMotor_Equipo_save"]);
         $SerieMotor_Equipo = mainModel::limpiar_cadena($_POST["SerieMotor_Equipo_save"]);
-        
+        $privilegio =  mainModel::limpiar_cadena($_POST["privilegio_sbp_equipo"]);
 
         $datos = [
             "Modelo_Equipo"=>$Modelo_Equipo,
@@ -275,24 +275,34 @@ Class equipoControlador extends equipoModelo {
             "SerieMotor_Equipo"=>$SerieMotor_Equipo
         ];
 
-        $validar = equipoModelo::save_equipos_modelo($datos);
+        $validarPrivilegios=mainModel::privilegios_transact($privilegio);
 
-        if($validar->rowCount()>0){
-            $alerta=[
-                "alerta"=>"recargar",
-                "Titulo"=>"Datos Guardados",
-                "Texto"=>"Los siguientes datos han sido guardados",
-                "Tipo"=>"success"
-            ];
+        if($validarPrivilegios){
+            $validar = equipoModelo::save_equipos_modelo($datos);
+
+            if($validar->rowCount()>0){
+                $alerta=[
+                    "alerta"=>"recargar",
+                    "Titulo"=>"Datos Guardados",
+                    "Texto"=>"Los siguientes datos han sido guardados",
+                    "Tipo"=>"success"
+                ];
+            }else{
+                $alerta=[
+                    "alerta"=>"simple",
+                    "Titulo"=>"Ocurrio un error inesperado",
+                    "Texto"=>"No hemos podido actualizar el equipo seleccionado",
+                    "Tipo"=>"error"
+                ];
+            }
         }else{
             $alerta=[
-                "alerta"=>"simple",
-                "Titulo"=>"Ocurrio un error inesperado",
-                "Texto"=>"No hemos podido actualizar el equipo seleccionado",
-                "Tipo"=>"error"
+                "alerta"=>"recargar",
+                "Titulo"=>"Privilegios insuficientes",
+                "Texto"=>"Sus privilegios, son solo para vistas",
+                "Tipo"=>"info"
             ];
         }
-
         return mainModel::sweet_alert($alerta);
     }
 
