@@ -162,7 +162,7 @@
                             <input type="hidden"  name="privilegio_sbp_vs" value="<?php echo $_SESSION['privilegio_sbp']?>"/>
                             <input type="hidden"  name="vale" value="valesalida"/>
                             <input type="hidden"  name="id_alm_vs" id="id_alm_vs" value="<?php echo $id_alm ?>"/>
-                            <button type="submit" class="btn btn-danger btn-lg btn-block">Emitir Vale de salida</button>
+                            <button type="submit" id="btnvale" class="btn btn-danger btn-lg btn-block" disabled='true' >Emitir Vale de salida</button>
                         </div>
                     </div>
                 </div>

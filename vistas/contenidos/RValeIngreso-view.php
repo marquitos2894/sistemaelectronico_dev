@@ -144,7 +144,7 @@
                             </div>
                             <input type="hidden" value="valeingreso" name="vale"/>
                             <input type="hidden"  name="id_alm_vi" id="id_alm_vi" value="<?php echo $id_alm ?>"/>
-                            <button type="submit" class="btn btn-success btn-lg btn-block">Emitir Vale de Ingreso</button>
+                            <button type="submit" id="btnvale" class="btn btn-success btn-lg btn-block" disabled='true'>Emitir Vale de Ingreso</button>
                         </div>
                     </div>
                 </div>

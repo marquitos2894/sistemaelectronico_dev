@@ -27,7 +27,7 @@ $compCont = new componentesControlador();
                 <div class="form-row">
                     <div class="form-group col-sm-6 text-primary">
                         <label for="inputAddress">Descripcion</label>
-                        <input type="text" name="descripcion" class="form-control " id="inputAddress" placeholder="Nombre del componente">
+                        <input type="text" name="descripcion" class="form-control " id="inputAddress" placeholder="Nombre del componente" required>
                     </div>
                 </div>
                 <div class="progress" style="height:1px;">
@@ -42,11 +42,21 @@ $compCont = new componentesControlador();
                     <label for="inputPassword4">Nparte 2</label>
                     <input type="text" name="nparte2" class="form-control" id="inputPassword4" placeholder="Nparte 2">
                     </div>
-                    <div class="form-group col-sm-4">
+                    <div  style="display:none" class="form-group col-sm-4">
                     <label for="inputPassword4">Nparte 3</label>
-                    <input type="text" name="nparte3" class="form-control" id="inputPassword4" placeholder="Nparte 3">
+                    <input type="hidden" name="nparte3" class="form-control" id="inputPassword4" placeholder="Nparte 3">
                     </div>
                 </div>
+                <div class="progress" style="height:1px;">
+                    <div class="progress-bar" role="progressbar" style="width: 100%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-sm-4">
+                        <label for="inputEmail4">N° Serie</label>
+                        <input type="text" name="nserie" class="form-control" id="inputEmail4" placeholder="N° de serie">
+                    </div>
+                </div>
+
                 <div class="progress" style="height:1px;">
                     <div class="progress-bar" role="progressbar" style="width: 100%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
@@ -58,8 +68,8 @@ $compCont = new componentesControlador();
                     </div>
                     <div class="form-group col-sm-4">
                         <label for="inputEmail4">Unidad de medida</label>
-                        <select name="unidad_med_new" class="form-control" placeholder="Seleccione unidad">
-                            <option>Seleccione unidad de medida</option>
+                        <select name="unidad_med_new" class="form-control" placeholder="Seleccione unidad" required>
+                            <option value="">Seleccione unidad de medida</option>
                             <?php echo $compCont->select_combo("SELECT * FROM unidad_medida WHERE est = 1",0,1); ?>
                         </select>
                     </div>

@@ -129,7 +129,8 @@ if(isset($_POST["eliminar_busqueda"])){
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
-          <form  action="<?php echo SERVERURL;?>ajax/componentesAjax.php" id="formEdit"  method="POST" data-form="update" class="FormularioAjax" autocomplete="off" enctype="multipart/form-data">
+          <form  action="<?php echo SERVERURL;?>ajax/componentesAjax.php" method="POST" data-form="update" class="FormularioAjax" id="FormularioAjax" autocomplete="off" enctype="multipart/form-data">
+              
             <div class="modal-body" id="modal-body">
 
             </div>

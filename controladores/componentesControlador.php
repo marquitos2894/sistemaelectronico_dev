@@ -105,16 +105,16 @@ Class componentesControlador extends componentesModelo {
 
         if($buscador!=""){
             $datos=$conexion->query("SELECT SQL_CALC_FOUND_ROWS c.id_comp,c.descripcion,c.nparte1,
-            c.nparte2,c.nparte3,c.marca,um.abreviado
+            c.nparte2,c.nparte3,c.marca,um.abreviado,c.nserie
             FROM componentes c 
             INNER JOIN unidad_medida um ON um.id_unidad_med = c.fk_idunidad_med
             WHERE ( c.id_comp  like '%$buscador%' or c.descripcion  like '%$buscador%' or c.nparte1 like '%$buscador%' or 
-            c.nparte2 like '%$buscador%' or c.nparte3 like '%$buscador%'  ) AND est_baja = {$est_baja}
+            c.nparte2 like '%$buscador%' or c.nparte3 like '%$buscador%' or c.nserie like '%$buscador%'  ) AND est_baja = {$est_baja}
             AND c.est=1 LIMIT {$inicio},{$registros} ");
             
         }else{
             $datos=$conexion->query("SELECT SQL_CALC_FOUND_ROWS  c.id_comp,c.descripcion,c.nparte1,
-            c.nparte2,c.nparte3,c.marca,um.abreviado
+            c.nparte2,c.nparte3,c.marca,um.abreviado,c.nserie
             FROM componentes c 
             INNER JOIN unidad_medida um ON um.id_unidad_med = c.fk_idunidad_med 
             WHERE est_baja = {$est_baja} AND c.est = 1  LIMIT {$inicio},{$registros}");           
@@ -137,7 +137,7 @@ Class componentesControlador extends componentesModelo {
                     <th scope='col'>Descripcion</th>               
                     <th scope='col'>NParte1</th>
                     <th scope='col'>NParte2</th>
-                    <th scope='col'>NParte3</th>
+                    <th scope='col'>NSerie</th>
                     <th scope='col'>Marca</th>
                     <th scope='col'>Add</th>
             </thead>
@@ -150,12 +150,13 @@ Class componentesControlador extends componentesModelo {
                         <tr>
                             <input type='hidden' id='descripcion{$row['id_comp']}' value='{$row['descripcion']}'/>
                             <input type='hidden' id='nparte{$row['id_comp']}' value='{$row['nparte1']}'/>
+                            <input type='hidden' id='nserie{$row['id_comp']}' value='{$row['nserie']}'/>
                             <td>{$contador}</td>
                             <td>{$row['id_comp']}</td>
                             <td>{$row['descripcion']}</td> 
                             <td>{$row['nparte1']}</td>
                             <td>{$row['nparte2']}</td>
-                            <td>{$row['nparte3']}</td>
+                            <td>{$row['nserie']}</td>
                             <td>{$row['marca']}</td>
                             <td><a href='#' class='card-footer-item' id='addItem'  data-producto='{$row['id_comp']}' data-toggle='modal' data-target='#exampleModalCenter'>+</a></td>
                         </tr>
@@ -178,7 +179,7 @@ Class componentesControlador extends componentesModelo {
                     <th scope='col'>Descripcion</th>               
                     <th scope='col'>NParte</th>
                     <th scope='col'>NParte2</th>
-                    <th scope='col'>NParte3</th>
+                    <th scope='col'>Nserie</th>
                     <th scope='col'>Marca</th>
                     <th scope='col'>U.M</th>";
                     if($privilegio==0 or $privilegio==1){
@@ -200,7 +201,7 @@ Class componentesControlador extends componentesModelo {
                     <td>{$row['descripcion']}</td>                      
                     <td>{$row['nparte1']}</td>
                     <td>{$row['nparte2']}</td>
-                    <td>{$row['nparte3']}</td>
+                    <td>{$row['nserie']}</td>
                     <td>{$row['marca']}</td>
                     <td>{$row['abreviado']}</td>";
                     
@@ -345,6 +346,7 @@ Class componentesControlador extends componentesModelo {
         $nparte1 =  mainModel::limpiar_cadena($_POST["nparte1"]);
         $nparte2 =  mainModel::limpiar_cadena($_POST["nparte2"]);
         $nparte3 =  mainModel::limpiar_cadena($_POST["nparte3"]);
+        $nserie =  mainModel::limpiar_cadena($_POST["nserie"]);
         $marca =  mainModel::limpiar_cadena($_POST["marca"]);
         $id_unidad_med=  mainModel::limpiar_cadena($_POST["unidad_med_new"]);
 
@@ -360,32 +362,55 @@ Class componentesControlador extends componentesModelo {
             "nparte2"=>$nparte2,
             "nparte3"=>$nparte3,
             "marca"=>$marca,
-            "id_unidad_med"=>$id_unidad_med,        
+            "id_unidad_med"=>$id_unidad_med,
+            "nserie"=>$nserie        
         ];
 
         
 
-        if($val_question=="false"){
+        if($val_question=="false" or $val_question=="next"){
 
-            if($nparte1 !='' or $nparte2 !='' or $nparte3 != '' ){
+            if($nparte1 !='' or $nparte2 !='' or $nparte3 != '' or $nserie != '' ){
                 $validarNP1 = mainModel::ejecutar_consulta_validar("SELECT * FROM componentes WHERE (nparte1 = '{$nparte1}' OR nparte2 = '{$nparte1}' OR nparte3 = '{$nparte1}' ) AND est = 1");
                 $validarNP2 = mainModel::ejecutar_consulta_validar("SELECT * FROM componentes WHERE (nparte1 = '{$nparte2}' OR nparte2 = '{$nparte2}' OR nparte3 = '{$nparte2}' ) AND est = 1");
                 $validarNP3 = mainModel::ejecutar_consulta_validar("SELECT * FROM componentes WHERE (nparte1 = '{$nparte3}' OR nparte2 = '{$nparte3}' OR nparte3 = '{$nparte3}' ) AND est = 1");
+                $validarNS = mainModel::ejecutar_consulta_validar("SELECT * FROM componentes WHERE nserie = '{$nserie}' AND est = 1");
                 
                 //VALIDO SI ES VACIO, SI NO LO ES SE REALIZA UN COUNT DE LA CONSULTA
                 $validarNP1 = ($nparte1=="")?$nparte1=0:$validarNP1->rowCount();
                 $validarNP2 = ($nparte2=="")?$nparte2=0:$validarNP2->rowCount();
                 $validarNP3 = ($nparte3=="")?$nparte3=0:$validarNP3->rowCount();
+                $validarNS = ($nserie=="")?$nserie=0:$validarNS->rowCount();
 
-                $totNP_rep = $validarNP1 + $validarNP2 + $validarNP3;
+                $totNP_rep = $validarNP1 + $validarNP2 + $validarNP3 + $validarNS;
+                
+            }else{
+                $totNP_rep=0;
             }
-        
 
             if($totNP_rep>0){
 
                 $validarNP1 = ($validarNP1>0)?$validarNP1=$nparte1:$validarNP1="";
                 $validarNP2 = ($validarNP2>0)?$validarNP2=$nparte2:$validarNP2="";
                 $validarNP3 = ($validarNP3>0)?$validarNP3=$nparte3:$validarNP3="";
+                $validarNS = ($validarNS>0)?$validarNS=$nserie:$validarNP3="";
+                
+                //SI ES FALSE VALIDARA QUE ES LA PRIMERA RESTRICCION NSERIE, EN CASO CUMPLA LA VAR VAL_QUESTION SERA NEXT
+                // PASARA A LA SIGUIENTE CONDICION 
+                if($validarNS !="" && $val_question=="false"){
+
+                    $val_question = ($validarNP1 !="" or $validarNP2 !="")?$val_question="next":$val_question="true";
+        
+                        $alerta=[
+                            "alerta"=>"question",
+                            "Titulo"=>"Duplicidad de N° Serie",
+                            "Texto"=>"El N° serie {$nserie} se encuentra registrado, por favor verificar si se trata de otro producto ¿Desea continuar de todas maneras?",
+                            "Tipo"=>"info",
+                            "Variable"=>$val_question
+                        ];
+                    
+    
+                }else{
                     $alerta=[
                         "alerta"=>"question",
                         "Titulo"=>"Duplicidad de N° parte",
@@ -393,6 +418,8 @@ Class componentesControlador extends componentesModelo {
                         "Tipo"=>"info",
                         "Variable"=>"true"
                     ];
+                }
+     
                     return mainModel::sweet_alert($alerta);   
             }else{
 
@@ -454,12 +481,7 @@ Class componentesControlador extends componentesModelo {
             }
             echo mainModel::localstorage_reiniciar($localStorage);
             return mainModel::sweet_alert($alerta);
-
-
         }
-
-
- 
 
     }
 
@@ -469,8 +491,18 @@ Class componentesControlador extends componentesModelo {
         $nparte1 = mainModel::limpiar_cadena($_POST["nparte1"]);
         $nparte2 = mainModel::limpiar_cadena($_POST["nparte2"]);
         $nparte3 = mainModel::limpiar_cadena($_POST["nparte3"]);
+        $nserie = mainModel::limpiar_cadena($_POST["nserie"]);
         $marca = mainModel::limpiar_cadena($_POST["marca"]);
         $id_unidad_med = mainModel::limpiar_cadena($_POST["unidad_med"]);
+
+        $nparte1_respaldo = mainModel::limpiar_cadena($_POST["nparte1_respaldo"]);
+        $nparte2_respaldo = mainModel::limpiar_cadena($_POST["nparte2_respaldo"]);
+        $nserie_respaldo = mainModel::limpiar_cadena($_POST["nserie_respaldo"]);
+
+        $val_question = "false";
+        if(isset($_POST["mydata"])){
+            $val_question = mainModel::limpiar_cadena($_POST["mydata"]);
+        }
 
         $datos = [
             "id_comp"=>$id_comp,
@@ -479,29 +511,104 @@ Class componentesControlador extends componentesModelo {
             "nparte2"=>$nparte2,
             "nparte3"=>$nparte3,
             "marca"=>$marca,
-            "id_unidad_med"=>$id_unidad_med
+            "id_unidad_med"=>$id_unidad_med,
+            "nserie"=>$nserie
 
         ];
-        
-        $resp = componentesModelo::update_componente_modelo($datos);
 
-        if($resp->rowCount()>=1){
-            $alerta=[
-                "alerta"=>"recargar",
-                "Titulo"=>"Datos Actualizados",
-                "Texto"=>"Los siguientes datos han sido Actualizados",
-                "Tipo"=>"success"
-            ];
+        if($val_question=="false" or $val_question=="next"){
+
+            if($nparte1 !='' or $nparte2 !='' or $nparte3 != '' or $nserie != '' ){
+                $validarNP1 = mainModel::ejecutar_consulta_validar("SELECT * FROM componentes WHERE (nparte1 = '{$nparte1}' OR nparte2 = '$nparte1') AND (nparte1 != '$nparte1_respaldo' ) AND est = 1");
+                $validarNP2 = mainModel::ejecutar_consulta_validar("SELECT * FROM componentes WHERE (nparte1 = '{$nparte2}' OR nparte2 = '$nparte2') AND (nparte2 != '$nparte2_respaldo' ) AND est = 1");
+                $validarNS = mainModel::ejecutar_consulta_validar("SELECT * FROM componentes WHERE nserie = '{$nserie}' AND nserie != '{$nserie_respaldo}' AND est = 1");
+                
+                //VALIDO SI ES VACIO, SI NO LO ES SE REALIZA UN COUNT DE LA CONSULTA
+                $validarNP1 = ($nparte1=="")?$nparte1=0:$validarNP1->rowCount();
+                $validarNP2 = ($nparte2=="")?$nparte2=0:$validarNP2->rowCount();
+                $validarNS = ($nserie=="")?$nserie=0:$validarNS->rowCount();
+
+                $totNP_rep = $validarNP1 + $validarNP2 + $validarNS;
+                
+            }else{
+                $totNP_rep=0;
+            }
+            
+            if($totNP_rep>0){
+                $validarNP1 = ($validarNP1>0)?$validarNP1=$nparte1:$validarNP1="";
+                $validarNP2 = ($validarNP2>0)?$validarNP2=$nparte2:$validarNP2="";
+                $validarNS = ($validarNS>0)?$validarNS=$nserie:$validarNP3="";
+                      //SI ES FALSE VALIDARA QUE ES LA PRIMERA RESTRICCION NSERIE, EN CASO CUMPLA LA VAR VAL_QUESTION SERA NEXT
+                // PASARA A LA SIGUIENTE CONDICION 
+                if($validarNS !="" && $val_question=="false"){
+                    $val_question = ($validarNP1 !="" or $validarNP2 !="")?$val_question="next":$val_question="true";
+                        $alerta=[
+                            "alerta"=>"question",
+                            "Titulo"=>"Duplicidad de N° Serie",
+                            "Texto"=>"El N° serie {$nserie} se encuentra registrado, por favor verificar si se trata de otro producto ¿Desea continuar de todas maneras?",
+                            "Tipo"=>"info",
+                            "Variable"=>$val_question
+                        ];
+                }else{
+                    $alerta=[
+                        "alerta"=>"question",
+                        "Titulo"=>"Duplicidad de N° parte",
+                        "Texto"=>"El/Los N° parte {$validarNP1} | {$validarNP2} | {$validarNP3}  ya se encuentran registrados ¿Desea continuar de todas maneras?",
+                        "Tipo"=>"info",
+                        "Variable"=>"true"
+                    ];
+                }
+
+                return mainModel::sweet_alert($alerta);
+            }else{
+                
+                $resp = componentesModelo::update_componente_modelo($datos);
+
+                if($resp->rowCount()>0){
+                    $alerta=[
+                        "alerta"=>"recargar",
+                        "Titulo"=>"Datos Actualizados",
+                        "Texto"=>"Los siguientes datos han sido Actualizados",
+                        "Tipo"=>"success"
+                    ];
+                }else{
+                    $alerta=[
+                        "alerta"=>"simple",
+                        "Titulo"=>"Ocurrio un error inesperado",
+                        "Texto"=>"No hemos podido actualizar el componente seleccionado",
+                        "Tipo"=>"error"
+                    ];
+                }
+
+                return mainModel::sweet_alert($alerta);
+
+            }
         }else{
-            $alerta=[
-                "alerta"=>"simple",
-                "Titulo"=>"Ocurrio un error inesperado",
-                "Texto"=>"No hemos podido actualizar el componente seleccionado",
-                "Tipo"=>"error"
-            ];
+
+            $resp = componentesModelo::update_componente_modelo($datos);
+
+            if($resp->rowCount()>0){
+                $alerta=[
+                    "alerta"=>"recargar",
+                    "Titulo"=>"Datos Actualizados",
+                    "Texto"=>"Los siguientes datos han sido Actualizados",
+                    "Tipo"=>"success"
+                ];
+            }else{
+                $alerta=[
+                    "alerta"=>"simple",
+                    "Titulo"=>"Ocurrio un error inesperado",
+                    "Texto"=>"No hemos podido actualizar el componente seleccionado",
+                    "Tipo"=>"error"
+                ];
+            }
+    
+            return mainModel::sweet_alert($alerta);
+
         }
 
-        return mainModel::sweet_alert($alerta);
+
+
     }
 
 

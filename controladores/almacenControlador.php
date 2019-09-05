@@ -381,20 +381,21 @@ Class almacenControlador extends almacenModelo {
         if($buscador!=""){
             $datos=$conexion->query("SELECT SQL_CALC_FOUND_ROWS ac.id_ac,c.id_comp,c.descripcion,c.nparte1,c.nparte2,c.nparte3,
             um.abreviado,ac.stock,ac.fk_idalm,ac.u_nombre,ac.u_seccion,e.Nombre_Equipo,e.Id_Equipo,
-            eu.alias_equipounidad,ac.Referencia,ac.control_stock
+            eu.alias_equipounidad,ac.Referencia,ac.control_stock,c.nserie
               FROM componentes c
               INNER JOIN almacen_componente ac ON ac.fk_idcomp = c.id_comp 
               INNER JOIN equipos e  ON e.Id_Equipo = ac.fk_Id_Equipo
               INNER JOIN unidad_medida um ON um.id_unidad_med = c.fk_idunidad_med
               INNER JOIN equipo_unidad eu ON eu.fk_idequipo = e.Id_Equipo
             WHERE ( c.id_comp like '%$buscador%' or c.descripcion  like '%$buscador%' or c.nparte1 like '%$buscador%' or 
-            c.nparte2 like '%$buscador%' or c.nparte3 like '%$buscador%' or e.Nombre_Equipo like '%$buscador%' or ac.Referencia like '%$buscador%'  ) AND ac.est=1
+            c.nparte2 like '%$buscador%' or c.nparte3 like '%$buscador%' or e.Nombre_Equipo like '%$buscador%' or ac.Referencia like '%$buscador%'
+            or c.nserie like '%$buscador%'  ) AND ac.est=1
             AND ac.fk_idalm={$id_alm} LIMIT {$inicio},{$registros} ");
             
         }else{
             $datos=$conexion->query("SELECT SQL_CALC_FOUND_ROWS ac.id_ac,c.id_comp,c.descripcion,c.nparte1,c.nparte2,c.nparte3,
         um.abreviado,ac.stock,ac.fk_idalm,ac.u_nombre,ac.u_seccion,e.Nombre_Equipo,e.Id_Equipo,
-        eu.alias_equipounidad,ac.Referencia,ac.control_stock
+        eu.alias_equipounidad,ac.Referencia,ac.control_stock,c.nserie
         FROM componentes c
         INNER JOIN almacen_componente ac ON ac.fk_idcomp = c.id_comp 
         INNER JOIN equipos e  ON e.Id_Equipo = ac.fk_Id_Equipo
@@ -416,10 +417,10 @@ Class almacenControlador extends almacenModelo {
                     <th scope='col'>Cod.Interno</th>
                     <th scope='col'>Descripcion</th>               
                     <th scope='col'>NParte</th>
+                    <th scope='col'>NSerie</th>
                     <th scope='col'>Equipo</th>
                     <th scope='col'>Referencia</th>
                     <th scope='col'>Ubicacion</th>
-            
                     <th scope='col'>Stock</th>
                     <th scope='col'>cantidad</th>
                     <th scope='col'>Add</th>";
@@ -437,6 +438,7 @@ Class almacenControlador extends almacenModelo {
                     <td>{$row['id_comp']}</td>
                     <td>{$row['descripcion']}</td>                      
                     <td>{$row['nparte1']}</td>
+                    <td>{$row['nserie']}</td>
                     <td>{$row['alias_equipounidad']}</td>
                     <td>{$row['Referencia']}</td>
                     <td>{$row['u_nombre']}-{$row['u_seccion']}</td>
@@ -464,7 +466,7 @@ Class almacenControlador extends almacenModelo {
                             <th scope='col'>Descripcion</th>               
                             <th scope='col'>NParte1</th>
                             <th scope='col'>NParte2</th>
-                            <th scope='col'>NParte3</th>
+                            <th scope='col'>NSerie</th>
                             <th scope='col'>Ubicacion</th>
                             <th scope='col'>Stock</th>
                             <th scope='col'>Control Stock</th>
@@ -487,7 +489,7 @@ Class almacenControlador extends almacenModelo {
                             <td>{$row['descripcion']}</td>
                             <td>{$row['nparte1']}</td>
                             <td>{$row['nparte2']}</td>
-                            <td>{$row['nparte3']}</td>
+                            <td>{$row['nserie']}</td>
                             <td>{$row['u_nombre']}-{$row['u_seccion']}</td>
                             <td>{$row['stock']} {$row['abreviado']}</td>";
                             if($row['control_stock']==1){
@@ -807,6 +809,8 @@ Class almacenControlador extends almacenModelo {
 
         $id_alm= mainModel::limpiar_cadena($_POST["id_alm_frmIA"]);
         $id_comp[] = $_POST["id_comp"];
+        $d_nserie[] = $_POST["d_nserie"];
+        $d_descripcion[] = $_POST["d_descripcion"];
         $d_stock = 0;
         $d_u_nom[] = $_POST["d_u_nom"];
         $d_u_sec[] = $_POST["d_u_sec"];
@@ -814,37 +818,63 @@ Class almacenControlador extends almacenModelo {
         $d_referencia[] = $_POST["d_referencia"];
 
 
+
+        $validar=almacenModelo::save_registro_almacen_modelo($id_comp,$d_u_nom,$d_nserie,$d_descripcion,$d_u_sec,$d_id_equipo,$d_referencia,$id_alm,$d_stock);
+        $val_registro=($validar[0]!='')?$val_registro=$validar[0]->rowCount():$val_registro=0;
+
+        if($val_registro==0){
+
+            foreach($validar[1] as $i){
+                $mensaje ="El item: | {$i['id_comp']} | {$i['descripcion']} | NS: {$i['nserie']} | ya se encuentra registrado en su almacen, no puede repetirse, Verificar!";
+                $datos = [
+                    "tipo"=>"danger",
+                    "mensaje"=>"$mensaje"
+                ];
+                echo mainModel::bootstrap_alert($datos);
+            }
+
+        }else{
+            if($validar[0]->rowCount()>0){
+                $alerta=[
+                    "alerta"=>"recargar_tiempo",
+                    "Titulo"=>"Componentes registrados",
+                    "Texto"=>"Registrados en su almacen",
+                    "Tipo"=>"success",
+                    "tiempo"=>5000
+                ];
+                
+                $localStorage = [
+                    "BDcomp_gen",
+                    "BDproductos",
+                    "carritoGen",
+                    "carritoIn",
+                    "carritoS"
+                ];
+                echo mainModel::localstorage_reiniciar($localStorage);
+
+                foreach($validar[1] as $i){
+                    $mensaje ="El item: | {$i['id_comp']} | {$i['descripcion']} | NS: {$i['nserie']} | ya se encuentra registrado en su almacen, no puede repetirse";
+                    $datos = [
+                        "tipo"=>"danger",
+                        "mensaje"=>"$mensaje"
+                    ];
+                    echo mainModel::bootstrap_alert($datos);
+                }
+    
+            }else{
+                $alerta=[
+                    "alerta"=>"simple",
+                    "Titulo"=>"Ocurrio un error inesperado",
+                    "Texto"=>"No hemos podido registrar el componente seleccionado",
+                    "Tipo"=>"error"
+                ];
+                
+            }
+            return mainModel::sweet_alert($alerta);
+        }
+
+            
         
-       /* $datos =  [
-            "id_alm"=>1,
-            $id_comp[] 
-            "id_comp"=>$id_comp,
-            "d_stock"=>0,
-            "d_u_nom"=>$d_u_nom,
-            "d_u_sec"=>$d_u_sec,
-            "d_id_equipo"=>$d_id_equipo,
-            "d_referencia"=>$d_referencia
-        ];*/
-
-        almacenModelo::save_registro_almacen_modelo($id_comp,$d_u_nom,$d_u_sec,$d_id_equipo,$d_referencia,$id_alm,$d_stock);
-
-        $alerta=[
-            "alerta"=>"recargar",
-            "Titulo"=>"Componentes registrados",
-            "Texto"=>"Registrados en su almacen",
-            "Tipo"=>"success"
-        ];
-        
-        $localStorage = [
-            "BDcomp_gen",
-            "BDproductos",
-            "carritoGen",
-            "carritoIn",
-            "carritoS"
-        ];
-
-        echo mainModel::localstorage_reiniciar($localStorage);
-        return mainModel::sweet_alert($alerta);
 
     }
 

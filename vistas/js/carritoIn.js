@@ -23,10 +23,12 @@
                 let data = await response.json();
             
                 await localStorage.setItem('BDproductos',JSON.stringify(data));
-                this.getBDproductos = await JSON.parse(localStorage.getItem('BDproductos')); 
+                this.getBDproductos = await JSON.parse(localStorage.getItem('BDproductos'));
+
                 this.getCarritoIn = await JSON.parse(localStorage.getItem('carritoIn'));
                 await view.renderCarritoIn();
 
+                await this.numrowsCarrito();
         }
 
         this.agregarItem = function(item,cant){
@@ -74,6 +76,14 @@
         this.varciarCarrito = function(){
             this.getCarritoIn.splice(0);
             localStorage.setItem('carritoIn','[]');
+        }
+
+        this.numrowsCarrito = function(){
+            if(this.getCarritoIn.length>0){
+                document.querySelector('#btnvale').disabled = false;
+            }else{
+                document.querySelector('#btnvale').disabled = true;
+            }
         }
           
     }
@@ -123,12 +133,13 @@
                         <th scope="col">Cod.Interno</th>
                         <th scope="col">Descriocion</th>
                         <th scope="col">Nparte</th>
+                        <th scope="col">NSerie</th>
                         <th scope="col">Ubicacion</th>
                         <th scope="col">Stock</th>
-                        <th scope="col">U.M</th>
                         <th scope="col">Equipo</th>
                         <th scope="col">Referencia</th>
                         <th scope="col">Ingreso</th>
+                        <th scope="col">Quitar</th>
                         
                     </tr>
                 </thead><tbody>`;
@@ -140,9 +151,9 @@
                         <td>${i.id_comp}</td>
                         <td>${i.descripcion}</td>
                         <td>${i.nparte1}</td>
+                        <td>${i.nserie}</td>
                         <td>${i.u_nombre}-${i.u_seccion}</td>
-                        <td>${i.stock}</td>
-                        <td>${i.abreviado}</td>
+                        <td>${i.stock} ${i.abreviado}</td>
                         <td>${i.alias_equipounidad}</td>
                         <td>${i.Referencia}</td>
                         <td>${i.cantidad}</td>
@@ -182,6 +193,7 @@
     
     document.querySelector('#buscador_comp_text').addEventListener("keyup", async function(ev){
         render.RenderTableComp();
+        //carrito.numrowsCarrito();
     });
     
     $('#catalogo').addEventListener("click",function(ev){
@@ -193,7 +205,8 @@
             //console.log(ev.target);
             cant=document.getElementById("salida"+ev.target.dataset.producto).value;
             carrito.agregarItem(ev.target.dataset.producto,cant);
-            view.renderCarritoIn();          
+            view.renderCarritoIn();
+            carrito.numrowsCarrito();          
         }
     });
   
@@ -202,6 +215,7 @@
         if(ev.target.id == "deleteProducto"){
             carrito.eliminarItemCI(ev.target.dataset.producto);
             view.renderCarritoIn();
+            carrito.numrowsCarrito();
         }
     });
 
@@ -209,6 +223,7 @@
         ev.preventDefault();
         carrito.varciarCarrito();
         view.renderCarritoIn();
+        carrito.numrowsCarrito();
     });
 
     //card_remitente

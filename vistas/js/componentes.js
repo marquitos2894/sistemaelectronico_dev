@@ -109,23 +109,32 @@
                     <input type="text" value="${data[0].descripcion}" name="descripcion_formEdit"  id="descripcion"  class="form-control" placeholder="Descripcion">
                 </div>
                 <div class="form-row">
-                    <div class="form-group col-md-4">
+                    <div class="form-group col-md-6">
                         <label for="inputEmail4">Nparte1</label>
                         <input type="text" value="${data[0].nparte1}" name="nparte1" id="nparte1"  class="form-control"  placeholder="Nparte 1">
+                        <input type="hidden" value="${data[0].nparte1}" name="nparte1_respaldo">
                     </div>
-                    <div class="form-group col-md-4">
+                    <div class="form-group col-md-6">
                         <label for="inputPassword4">Nparte2</label>
                         <input type="text" value="${data[0].nparte2}" name="nparte2" id="nparte2"  class="form-control" placeholder="Nparte 2" >
+                        <input type="hidden" value="${data[0].nparte2}" name="nparte2_respaldo">
                     </div>
-                    <div class="form-group col-md-4">
+                    <div style="display:none" class="form-group col-md-4">
                         <label for="inputPassword4">Nparte3</label>
-                        <input type="text" value="${data[0].nparte3}" name="nparte3"  id="nparte3"  class="form-control" placeholder="Nparte 3" >
+                        <input type="hidden" value="${data[0].nparte3}" name="nparte3"  id="nparte3"  class="form-control" placeholder="Nparte 3" >
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group col-md-6">
+                        <label for="inputEmail4">Nserie</label>
+                        <input type="text" value="${data[0].nserie}" name="nserie" id="nserie" class="form-control"   placeholder="N° Serie">
+                        <input type="hidden" value="${data[0].nserie}" name="nserie_respaldo">
+                    </div>
+                </div>  
+                <div class="form-row">
+                    <div class="form-group col-md-6">
                         <label for="inputEmail4">Marca</label>
-                        <input type="text" value="${data[0].marca}" name="marca" id="marca" class="form-control"   placeholder="Nparte 1">
+                        <input type="text" value="${data[0].marca}" name="marca" id="marca" class="form-control"   placeholder="Marca">
                     </div>
                     <div class="form-group col-md-6">
                         <label for="inputPassword4">Unidad Medida</label>
@@ -133,7 +142,6 @@
                             <option value="${data[0].id_unidad_med}">${data[0].abreviado}</option>
                             ${data0}
                         </select>
-                        
                     </div>
                 </div>                          
             `;

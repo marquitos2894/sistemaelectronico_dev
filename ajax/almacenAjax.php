@@ -19,7 +19,8 @@
    if(isset($_POST["id_alm"])){
       session_start(['name'=>'SBP']);
       echo $almCont->obtener_consulta_json_controlador("SELECT ac.id_ac,c.id_comp,c.descripcion,c.nparte1,
-      c.nparte2,c.nparte3,um.id_unidad_med,um.abreviado,ac.stock,ac.fk_idalm,ac.u_nombre,ac.u_seccion,eu.alias_equipounidad,e.Nombre_Equipo,e.Id_Equipo,ac.Referencia
+      c.nparte2,c.nparte3,um.id_unidad_med,um.abreviado,ac.stock,ac.fk_idalm,ac.u_nombre,ac.u_seccion,
+      eu.alias_equipounidad,e.Nombre_Equipo,e.Id_Equipo,ac.Referencia,c.nserie
       FROM componentes c
       INNER JOIN almacen_componente ac ON ac.fk_idcomp = c.id_comp 
       INNER JOIN equipos e  ON e.Id_Equipo = ac.fk_Id_Equipo
@@ -56,7 +57,7 @@
    if(isset($_POST["id_ac"])){
       echo $almCont->obtener_consulta_json_controlador("SELECT ac.id_ac,c.id_comp,c.descripcion,c.nparte1,c.nparte2,c.nparte3,
       um.abreviado,ac.stock,ac.fk_idalm,ac.u_nombre,ac.u_seccion,e.Nombre_Equipo,e.Id_Equipo,
-      eu.alias_equipounidad,ac.Referencia,ac.control_stock
+      eu.alias_equipounidad,ac.Referencia,ac.control_stock,c.nserie
         FROM componentes c
         INNER JOIN almacen_componente ac ON ac.fk_idcomp = c.id_comp 
         INNER JOIN equipos e  ON e.Id_Equipo = ac.fk_Id_Equipo

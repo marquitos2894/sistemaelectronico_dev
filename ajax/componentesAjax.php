@@ -9,7 +9,9 @@ if(isset($_POST["descripcion"]) && isset($_POST["unidad_med_new"])){
   echo $compCont->save_componente_controlador();
 }
 
-
+if(isset($_POST["descripcion_formEdit"]) && isset($_POST["nparte1"])){
+  echo $compCont->update_componente_controlador();
+}
 
 if(isset($_POST["dataReferencia"])){
   echo $compCont->select_combo("SELECT * FROM datos_referencia WHERE id_dr != 1 ",1,1);
@@ -29,14 +31,12 @@ if(isset($_POST["idunidad_compgen"])){
 
 if(isset($_POST["id_comp"])){
   echo $compCont->obtener_consulta_json_controlador("SELECT c.id_comp,c.descripcion,c.nparte1,
-  c.nparte2,c.nparte3,c.marca,um.id_unidad_med,um.abreviado
+  c.nparte2,c.nparte3,c.marca,um.id_unidad_med,um.abreviado,c.nserie
   FROM componentes c 
   INNER JOIN unidad_medida um ON um.id_unidad_med = c.fk_idunidad_med WHERE c.id_comp = {$_POST["id_comp"]}");
 }
 
-if(isset($_POST["descripcion_formEdit"]) && isset($_POST["nparte1"])){
-  echo $compCont->update_componente_controlador();
-}
+
 
 //VISTA INGRESO ALMACEN
 
