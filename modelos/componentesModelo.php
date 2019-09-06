@@ -12,13 +12,15 @@ Class componentesModelo extends mainModel {
 
     protected function save_componentenes_modelo($datos){
         $conex  = mainModel::conectar();
-        $sql=$conex->prepare("CALL i_componentesnew(:descripcion,:nparte1,:nparte2,:nparte3,:marca,:id_unidad_med,:nserie)");
+        $sql=$conex->prepare("CALL i_componentesnew(:descripcion,:nparte1,:nparte2,:nparte3,:marca,:id_unidad_med,:nserie,:medida,:categoria)");
         $sql->bindParam(":descripcion",$datos["descripcion"]);
         $sql->bindParam(":nparte1",$datos["nparte1"]);
         $sql->bindParam(":nparte2",$datos["nparte2"]);
         $sql->bindParam(":nparte3",$datos["nparte3"]);
         $sql->bindParam(":nserie",$datos["nserie"]);
         $sql->bindParam(":marca",$datos["marca"]);
+        $sql->bindParam(":categoria",$datos["categoria"]);
+        $sql->bindParam(":medida",$datos["medida"]);
         $sql->bindParam(":id_unidad_med",$datos["id_unidad_med"]);
         $sql->execute();
         return $sql;    

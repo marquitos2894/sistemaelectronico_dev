@@ -105,16 +105,16 @@ Class componentesControlador extends componentesModelo {
 
         if($buscador!=""){
             $datos=$conexion->query("SELECT SQL_CALC_FOUND_ROWS c.id_comp,c.descripcion,c.nparte1,
-            c.nparte2,c.nparte3,c.marca,um.abreviado,c.nserie
+            c.nparte2,c.nparte3,c.marca,um.abreviado,c.nserie,c.medida
             FROM componentes c 
             INNER JOIN unidad_medida um ON um.id_unidad_med = c.fk_idunidad_med
             WHERE ( c.id_comp  like '%$buscador%' or c.descripcion  like '%$buscador%' or c.nparte1 like '%$buscador%' or 
-            c.nparte2 like '%$buscador%' or c.nparte3 like '%$buscador%' or c.nserie like '%$buscador%'  ) AND est_baja = {$est_baja}
+            c.nparte2 like '%$buscador%' or c.nparte3 like '%$buscador%' or c.nserie like '%$buscador%' or c.medida like '%$buscador%'  ) AND est_baja = {$est_baja}
             AND c.est=1 LIMIT {$inicio},{$registros} ");
             
         }else{
             $datos=$conexion->query("SELECT SQL_CALC_FOUND_ROWS  c.id_comp,c.descripcion,c.nparte1,
-            c.nparte2,c.nparte3,c.marca,um.abreviado,c.nserie
+            c.nparte2,c.nparte3,c.marca,um.abreviado,c.nserie,c.medida
             FROM componentes c 
             INNER JOIN unidad_medida um ON um.id_unidad_med = c.fk_idunidad_med 
             WHERE est_baja = {$est_baja} AND c.est = 1  LIMIT {$inicio},{$registros}");           
@@ -138,6 +138,7 @@ Class componentesControlador extends componentesModelo {
                     <th scope='col'>NParte1</th>
                     <th scope='col'>NParte2</th>
                     <th scope='col'>NSerie</th>
+                    <th scope='col'>Medida</th>
                     <th scope='col'>Marca</th>
                     <th scope='col'>Add</th>
             </thead>
@@ -157,6 +158,7 @@ Class componentesControlador extends componentesModelo {
                             <td>{$row['nparte1']}</td>
                             <td>{$row['nparte2']}</td>
                             <td>{$row['nserie']}</td>
+                            <td>{$row['medida']}</td>
                             <td>{$row['marca']}</td>
                             <td><a href='#' class='card-footer-item' id='addItem'  data-producto='{$row['id_comp']}' data-toggle='modal' data-target='#exampleModalCenter'>+</a></td>
                         </tr>
@@ -181,6 +183,7 @@ Class componentesControlador extends componentesModelo {
                     <th scope='col'>NParte2</th>
                     <th scope='col'>Nserie</th>
                     <th scope='col'>Marca</th>
+                    <th scope='col'>Medida</th>
                     <th scope='col'>U.M</th>";
                     if($privilegio==0 or $privilegio==1){
                     $tabla.="
@@ -203,6 +206,7 @@ Class componentesControlador extends componentesModelo {
                     <td>{$row['nparte2']}</td>
                     <td>{$row['nserie']}</td>
                     <td>{$row['marca']}</td>
+                    <td>{$row['medida']}</td>
                     <td>{$row['abreviado']}</td>";
                     
                     if($privilegio==0 or $privilegio==1){
@@ -349,6 +353,10 @@ Class componentesControlador extends componentesModelo {
         $nserie =  mainModel::limpiar_cadena($_POST["nserie"]);
         $marca =  mainModel::limpiar_cadena($_POST["marca"]);
         $id_unidad_med=  mainModel::limpiar_cadena($_POST["unidad_med_new"]);
+        $categoria=  mainModel::limpiar_cadena($_POST["categoria_newcomp"]);
+        
+        $medida = (isset($_POST["medida_simple"]))?$medida=$_POST["medida_simple"]:$medida=$_POST["medida_neumatico"];
+        $medida = mainModel::limpiar_cadena($medida);
 
         $val_question = "false";
         if(isset($_POST["mydata"])){
@@ -363,7 +371,9 @@ Class componentesControlador extends componentesModelo {
             "nparte3"=>$nparte3,
             "marca"=>$marca,
             "id_unidad_med"=>$id_unidad_med,
-            "nserie"=>$nserie        
+            "nserie"=>$nserie,
+            "categoria"=>$categoria,
+            "medida"=>$medida        
         ];
 
         

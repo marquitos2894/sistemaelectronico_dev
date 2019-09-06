@@ -209,6 +209,7 @@
                 });
             }
         }else{
+
             if(ev.target.id=="control_stock"){
                 document.querySelector('#control_stock').addEventListener("change",function(ev){
                     ev.preventDefault();

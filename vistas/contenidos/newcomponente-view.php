@@ -74,6 +74,24 @@ $compCont = new componentesControlador();
                         </select>
                     </div>
                 </div>
+                <div class="form-row">
+                    <div class="form-group col-sm-4">
+                        <label for="inputEmail4">Categoria</label>
+                        <select name="categoria_newcomp" class="form-control" id="cbocategoria" required>
+                            <option value="">Seleccione categoria</option>
+                            <?php echo $compCont->select_combo("SELECT * FROM categoriacomp WHERE est = 1",0,1); ?>
+                        </select>
+                    </div>
+                    <div id="medida_simple" class="form-group col-sm-4">                      
+                    </div>
+                    <div style="display:none" id="medida_neumatico" class="form-group col-sm-4">
+                        <label for="inputEmail4">Medida</label>
+                        <select name="medida_neumatico" id="cbomedida_neumatico" class="form-control">
+                            <option value="">Seleccione medida</option>
+                            <?php echo $compCont->select_combo("SELECT * FROM medida_neumaticos",1,1); ?>
+                        </select>
+                    </div>    
+                </div>
             </div>
         </div>
         
@@ -82,3 +100,5 @@ $compCont = new componentesControlador();
     </form>
 
 </div>
+
+<script src="../vistas/js/newcomponentes.js"></script>

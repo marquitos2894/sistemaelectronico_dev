@@ -84,7 +84,7 @@
                         if($paginador!=$i){
                             $tabla.='<li class="active"><a class="page-link" href="'.SERVERURL.''.$vista.'/'.$i.'">'.$i.'</a></li>';
                         }else{
-                            $tabla.='<li class="page-item"><a class="page-link">'.$i.'</a></li>';
+                            $tabla.='<li class="page-item active"><a class="page-link">'.$i.'</a></li>';
                         }
                     }
                  
@@ -92,7 +92,7 @@
                 if ($Npaginas>=6){
                     if($paginador!=$i){
                         $tabla.='<li class="active"><a class="page-link" href="'.SERVERURL.''.$vista.'/1">inicio</a></li>';
-                        $tabla.='<li class="active"><a class="page-link" href="'.SERVERURL.''.$vista.'/'.$paginador.'">'.$paginador.'</a></li>';
+                        $tabla.='<li class="page-item active"><a class="page-link" href="'.SERVERURL.''.$vista.'/'.$paginador.'">'.$paginador.'</a></li>';
                         $tabla.='<li class="active"><a class="page-link" href="'.SERVERURL.''.$vista.'/'.($paginador+1).'">'.($paginador+1).'</a></li>';
                         $tabla.='<li class="active"><a class="page-link" href="'.SERVERURL.''.$vista.'/'.($paginador+2).'">'.($paginador+2).'</a></li>';
                         $tabla.='<li class="active"><a class="page-link" href="'.SERVERURL.''.$vista.'/'.($paginador+3).'">'.($paginador+3).'</a></li>';
@@ -135,7 +135,7 @@
                         if($paginador!=$i){
                             $tabla.='<li class="active"><a class="page-link" id="page" data-page="'.$i.'" href="#" >'.$i.'</a></li>';
                         }else{
-                            $tabla.='<li class="page-item"><a class="page-link" id="page" data-page="'.$i.'" href="#">'.$i.'</a></li>';
+                            $tabla.='<li class="page-item active"><a class="page-link" id="page" data-page="'.$i.'" href="#">'.$i.'</a></li>';
                         }
                     }
                  
@@ -143,7 +143,7 @@
                 if ($Npaginas>=6){
                     if($paginador!=$i){
                         $tabla.='<li class="active"><a class="page-link" id="page" data-page="1" href="#">inicio</a></li>';
-                        $tabla.='<li class="active"><a class="page-link" id="page" data-page="'.$paginador.'" href="#">'.$paginador.'</a></li>';
+                        $tabla.='<li class="page-item active"><a class="page-link" id="page" data-page="'.$paginador.'" href="#">'.$paginador.'</a></li>';
                         $tabla.='<li class="active"><a class="page-link" id="page" data-page="'.($paginador+1).'" href="#"  >'.($paginador+1).'</a></li>';
                         $tabla.='<li class="active"><a class="page-link" id="page" data-page="'.($paginador+2).'" href="#" >'.($paginador+2).'</a></li>';
                         $tabla.='<li class="active"><a class="page-link" id="page" data-page="'.($paginador+3).'" href="#" >'.($paginador+3).'</a></li>';

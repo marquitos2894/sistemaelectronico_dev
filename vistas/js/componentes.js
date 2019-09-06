@@ -99,11 +99,31 @@
                 body : datos0
             });
             let data0 = await response0.text();
-            console.log(data0);
+            //console.log(data0);
+            
+            const datoscat = new FormData();
+            datoscat.append('categoriacat',data[0].id_categoria);
+            let responsecat = await fetch('../ajax/categoriacompAjax.php',{
+                method: 'POST',
+                body : datoscat
+            });
+            let datacat = await responsecat.text();
+            console.log(datacat);
+
+
+            const datosneu = new FormData();
+            datosneu.append('medida_neumatico',data[0].medida);
+            let responseneu = await fetch('../ajax/componentesAjax.php',{
+                method: 'POST',
+                body : datosneu
+            });
+            let dataneu = await responseneu.text();
+            console.log(dataneu);
 
 
             let template = `
                 <input type="hidden" value="${data[0].id_comp}" name="id_comp_formEdit" />
+                <input type="hidden" name="categoria_inicial" id="categoria_inicial" value="${data[0].id_categoria}">
                 <div class="form-group">
                     <label for="inputAddress">Descripcion</label>
                     <input type="text" value="${data[0].descripcion}" name="descripcion_formEdit"  id="descripcion"  class="form-control" placeholder="Descripcion">
@@ -130,7 +150,8 @@
                         <input type="text" value="${data[0].nserie}" name="nserie" id="nserie" class="form-control"   placeholder="N° Serie">
                         <input type="hidden" value="${data[0].nserie}" name="nserie_respaldo">
                     </div>
-                </div>  
+                </div>
+                
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         <label for="inputEmail4">Marca</label>
@@ -143,15 +164,82 @@
                             ${data0}
                         </select>
                     </div>
-                </div>                          
-            `;
+                </div>`;
+
+                template +=`  
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="inputEmail4">Categoria</label>
+                        <select name="categoria_edit" id="cbocategoria" class="form-control" >
+                        <option value="${data[0].id_categoria}">${data[0].nombre}</option>
+                            ${datacat}
+                        </select>
+                    </div>`;
+                    /*   let display_MN = 'none';
+                       let display_MS = true;
+                    if(data[0].id_categoria==2){
+                        display_MN = true;
+                        display_MS = 'none';
+                    }*/
+                    
+                    if(data[0].id_categoria==2){
+                        template +=` 
+                        <div style="display:true" id="medida_neumatico" class="form-group col-md-6">
+                            <label for="inputPassword4">Medida</label>
+                            <select name="medida_edit" class="form-control" >
+                                <option value="${data[0].medida}">${data[0].medida}</option>
+                                ${dataneu}
+                            </select>
+                        </div>`;
+                        template +=` 
+                        <div style="display:none" id="medida_simple" class="form-group col-md-6">
+                            <label for="inputEmail4">Medida</label>
+                            <input type="text" name="medida_simple" class="form-control" value="" id="inputEmail4" placeholder="Medida">
+                        </div>`;
+                    }else{
+                        template +=` 
+                        <div style="display:none" id="medida_neumatico" class="form-group col-md-6">
+                            <label for="inputPassword4">Medida</label>
+                            <select name="medida_edit" class="form-control" >
+                                <option>Seleccione medida</option>
+                                ${dataneu}
+                            </select>
+                        </div>`;
+                        template +=` 
+                        <div style="display:true" id="medida_simple" class="form-group col-md-6">
+                            <label for="inputEmail4">Medida</label>
+                            <input type="text" name="medida_simple" class="form-control" value="${data[0].medida}" id="inputEmail4" placeholder="Medida">
+                        </div>`;
+                    }
+       
+                    
+     
+                
+                template +=`
+                </div>`;
          document.querySelector('#modal-body').innerHTML=template;   
         }
     });
-    
+
+    document.querySelector('#modal-body').addEventListener("click",function(ev){
+  
+
+        if(ev.target.id=='cbocategoria'){
+            document.querySelector('#cbocategoria').addEventListener("change",function(){
+                console.log(document.querySelector('#cbocategoria').value);
+                if(document.querySelector('#cbocategoria').value==2){
+                    document.querySelector('#medida_neumatico').setAttribute("style","display:true");
+                    document.querySelector('#medida_simple').setAttribute("style","display:none");
+                }else{
+                    document.querySelector('#medida_neumatico').setAttribute("style","display:none");
+                    document.querySelector('#medida_simple').setAttribute("style","display:true");
+                }
+
+            });
+        }
 
 
-
+    });
 
 })();
 

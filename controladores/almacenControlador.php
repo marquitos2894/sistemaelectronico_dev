@@ -818,7 +818,6 @@ Class almacenControlador extends almacenModelo {
         $d_referencia[] = $_POST["d_referencia"];
 
 
-
         $validar=almacenModelo::save_registro_almacen_modelo($id_comp,$d_u_nom,$d_nserie,$d_descripcion,$d_u_sec,$d_id_equipo,$d_referencia,$id_alm,$d_stock);
         $val_registro=($validar[0]!='')?$val_registro=$validar[0]->rowCount():$val_registro=0;
 

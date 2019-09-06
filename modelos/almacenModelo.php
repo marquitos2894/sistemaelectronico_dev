@@ -141,7 +141,12 @@ class almacenModelo extends mainModel{
             
             $validar_duplicado=0;
             if($d_nserie[0][$i]!=''){
-                $validar_duplicado = mainModel::ejecutar_consulta_validar("SELECT * FROM componentes WHERE id_comp = '{$id_comp[0][$i]}' AND nserie='{$d_nserie[0][$i]}' ");
+                $validar_duplicado = mainModel::ejecutar_consulta_validar("SELECT ac.id_ac,c.id_comp,c.nserie
+                FROM almacen_componente ac
+                INNER JOIN componentes c
+                ON ac.fk_idcomp = c.id_comp
+                WHERE ac.fk_idcomp = '{$id_comp[0][$i]}' AND c.nserie = '{$d_nserie[0][$i]}' AND ac.fk_idalm = {$id_alm} AND ac.est =1 ");
+ 
                 $validar_duplicado= $validar_duplicado->rowCount();
             }
            
