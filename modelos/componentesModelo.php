@@ -28,7 +28,7 @@ Class componentesModelo extends mainModel {
 
     protected function update_componente_modelo($datos){
         $conex = mainModel::conectar();
-        $sql =$conex->prepare("CALL u_componentes(:id_comp,:descripcion,:nparte1,:nparte2,:nparte3,:marca,:id_unidad_med,:nserie)");
+        $sql =$conex->prepare("CALL u_componentes(:id_comp,:descripcion,:nparte1,:nparte2,:nparte3,:marca,:id_unidad_med,:nserie,:medida,:categoria)");
         $sql->bindParam(":id_comp",$datos["id_comp"]);
         $sql->bindParam(":descripcion",$datos["descripcion"]);
         $sql->bindParam(":nparte1",$datos["nparte1"]);
@@ -36,6 +36,8 @@ Class componentesModelo extends mainModel {
         $sql->bindParam(":nparte3",$datos["nparte3"]);
         $sql->bindParam(":nserie",$datos["nserie"]);
         $sql->bindParam(":marca",$datos["marca"]);
+        $sql->bindParam(":categoria",$datos["categoria"]);
+        $sql->bindParam(":medida",$datos["medida"]);
         $sql->bindParam("id_unidad_med",$datos["id_unidad_med"]);
         $sql->execute();
         return $sql;

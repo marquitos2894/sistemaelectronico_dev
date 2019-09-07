@@ -105,18 +105,21 @@ Class componentesControlador extends componentesModelo {
 
         if($buscador!=""){
             $datos=$conexion->query("SELECT SQL_CALC_FOUND_ROWS c.id_comp,c.descripcion,c.nparte1,
-            c.nparte2,c.nparte3,c.marca,um.abreviado,c.nserie,c.medida
+            c.nparte2,c.nparte3,c.marca,um.abreviado,c.nserie,c.medida,ca.nombre,ca.color
             FROM componentes c 
             INNER JOIN unidad_medida um ON um.id_unidad_med = c.fk_idunidad_med
+            INNER JOIN categoriacomp ca ON ca.id_categoria  = c.fk_idcategoria
             WHERE ( c.id_comp  like '%$buscador%' or c.descripcion  like '%$buscador%' or c.nparte1 like '%$buscador%' or 
-            c.nparte2 like '%$buscador%' or c.nparte3 like '%$buscador%' or c.nserie like '%$buscador%' or c.medida like '%$buscador%'  ) AND est_baja = {$est_baja}
+            c.nparte2 like '%$buscador%' or c.nparte3 like '%$buscador%' or c.nserie like '%$buscador%' or 
+            c.medida like '%$buscador%'  or ca.nombre like '%$buscador%' ) AND est_baja = {$est_baja}
             AND c.est=1 LIMIT {$inicio},{$registros} ");
             
         }else{
             $datos=$conexion->query("SELECT SQL_CALC_FOUND_ROWS  c.id_comp,c.descripcion,c.nparte1,
-            c.nparte2,c.nparte3,c.marca,um.abreviado,c.nserie,c.medida
+            c.nparte2,c.nparte3,c.marca,um.abreviado,c.nserie,c.medida,ca.nombre,ca.color
             FROM componentes c 
-            INNER JOIN unidad_medida um ON um.id_unidad_med = c.fk_idunidad_med 
+            INNER JOIN unidad_medida um ON um.id_unidad_med = c.fk_idunidad_med
+            INNER JOIN categoriacomp ca ON ca.id_categoria  = c.fk_idcategoria 
             WHERE est_baja = {$est_baja} AND c.est = 1  LIMIT {$inicio},{$registros}");           
         }
         //$datos->execute();
@@ -129,11 +132,14 @@ Class componentesControlador extends componentesModelo {
         $Npaginas = ceil($total/$registros);
         if($vista=="ingresoAlmacen"){
             $tabla.="
+            <button type='button' class='btn btn-primary'>
+                Total de productos <span class='badge badge-light'>{$total}</span>
+            </button>
             <div><table class='table table-bordered'>
             <thead>
                 <tr>
                     <th scope='col'>#</th>
-                    <th scope='col'>Cod.Interno</th>
+                    <th scope='col'>Codigo</th>
                     <th scope='col'>Descripcion</th>               
                     <th scope='col'>NParte1</th>
                     <th scope='col'>NParte2</th>
@@ -154,7 +160,7 @@ Class componentesControlador extends componentesModelo {
                             <input type='hidden' id='nserie{$row['id_comp']}' value='{$row['nserie']}'/>
                             <td>{$contador}</td>
                             <td>{$row['id_comp']}</td>
-                            <td>{$row['descripcion']}</td> 
+                            <td>{$row['descripcion']} <span class='badge badge-{$row['color']}'>{$row['nombre']}</span></td> 
                             <td>{$row['nparte1']}</td>
                             <td>{$row['nparte2']}</td>
                             <td>{$row['nserie']}</td>
@@ -174,10 +180,13 @@ Class componentesControlador extends componentesModelo {
             $tabla.= mainModel::paginador_ajax($total,$paginador,$Npaginas,$vista);
         }else{
             $tabla.="
+            <button type='button' class='btn btn-primary'>
+                Total de productos <span class='badge badge-light'>{$total}</span>
+            </button>
             <div><table class='table table-bordered'>
             <thead>
                 <tr>
-                    <th scope='col'>Cod.Interno</th>
+                    <th scope='col'>Codigo</th>
                     <th scope='col'>Descripcion</th>               
                     <th scope='col'>NParte</th>
                     <th scope='col'>NParte2</th>
@@ -201,7 +210,7 @@ Class componentesControlador extends componentesModelo {
                     $tabla .="
                 <tr>
                     <td>{$row['id_comp']}</td>
-                    <td>{$row['descripcion']}</td>                      
+                    <td>{$row['descripcion']} <span class='badge badge-{$row['color']}'>{$row['nombre']}</span></td>                      
                     <td>{$row['nparte1']}</td>
                     <td>{$row['nparte2']}</td>
                     <td>{$row['nserie']}</td>
@@ -509,6 +518,10 @@ Class componentesControlador extends componentesModelo {
         $nparte2_respaldo = mainModel::limpiar_cadena($_POST["nparte2_respaldo"]);
         $nserie_respaldo = mainModel::limpiar_cadena($_POST["nserie_respaldo"]);
 
+        $categoria = mainModel::limpiar_cadena($_POST["categoria_edit"]);        
+        $medida = ($_POST["categoria_edit"]!=2)?$medida=$_POST["medida_simple_edit"]:$medida=$_POST["medida_neumatico_edit"];
+        $medida = mainModel::limpiar_cadena($medida);
+
         $val_question = "false";
         if(isset($_POST["mydata"])){
             $val_question = mainModel::limpiar_cadena($_POST["mydata"]);
@@ -522,7 +535,9 @@ Class componentesControlador extends componentesModelo {
             "nparte3"=>$nparte3,
             "marca"=>$marca,
             "id_unidad_med"=>$id_unidad_med,
-            "nserie"=>$nserie
+            "nserie"=>$nserie,
+            "categoria"=>$categoria,
+            "medida"=>$medida 
 
         ];
 

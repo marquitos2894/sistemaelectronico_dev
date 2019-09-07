@@ -186,7 +186,7 @@
                         template +=` 
                         <div style="display:true" id="medida_neumatico" class="form-group col-md-6">
                             <label for="inputPassword4">Medida</label>
-                            <select name="medida_edit" class="form-control" >
+                            <select name="medida_neumatico_edit" id="cbomedida" class="form-control" required>
                                 <option value="${data[0].medida}">${data[0].medida}</option>
                                 ${dataneu}
                             </select>
@@ -194,21 +194,21 @@
                         template +=` 
                         <div style="display:none" id="medida_simple" class="form-group col-md-6">
                             <label for="inputEmail4">Medida</label>
-                            <input type="text" name="medida_simple" class="form-control" value="" id="inputEmail4" placeholder="Medida">
+                            <input type="text" name="medida_simple_edit" class="form-control" value="" id="inputEmail4" placeholder="Medida">
                         </div>`;
                     }else{
                         template +=` 
                         <div style="display:none" id="medida_neumatico" class="form-group col-md-6">
                             <label for="inputPassword4">Medida</label>
-                            <select name="medida_edit" class="form-control" >
-                                <option>Seleccione medida</option>
+                            <select name="medida_neumatico_edit" id="cbomedida" class="form-control">
+                                <option value="">Seleccione medida</option>
                                 ${dataneu}
                             </select>
                         </div>`;
                         template +=` 
                         <div style="display:true" id="medida_simple" class="form-group col-md-6">
                             <label for="inputEmail4">Medida</label>
-                            <input type="text" name="medida_simple" class="form-control" value="${data[0].medida}" id="inputEmail4" placeholder="Medida">
+                            <input type="text" name="medida_simple_edit" class="form-control" value="${data[0].medida}" id="inputEmail4" placeholder="Medida">
                         </div>`;
                     }
        
@@ -230,9 +230,11 @@
                 if(document.querySelector('#cbocategoria').value==2){
                     document.querySelector('#medida_neumatico').setAttribute("style","display:true");
                     document.querySelector('#medida_simple').setAttribute("style","display:none");
+                    document.querySelector('#cbomedida').required=true;
                 }else{
                     document.querySelector('#medida_neumatico').setAttribute("style","display:none");
                     document.querySelector('#medida_simple').setAttribute("style","display:true");
+                    document.querySelector('#cbomedida').required=false;
                 }
 
             });
