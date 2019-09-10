@@ -98,7 +98,7 @@ class personalControlador extends personalModelo {
         }
         $contenido.="</div>";*/
 
-        $tabla.="<div><table class='table table-bordered'>
+        $tabla.="<div class='table-responsive'><table class='table table-bordered'>
         <thead>
             <tr>
                 <th scope='col'>#</th>
@@ -132,6 +132,7 @@ class personalControlador extends personalModelo {
                         <form name='FrmDel_UM' action='".SERVERURL."ajax/personalAjax.php' method='POST' class='FormularioAjax' 
                             data-form='delete' entype='multipart/form-data' autocomplete='off'>
                             <input type='hidden' name='id_per_del' value='{$row['id_per']}'/>
+                            <input type='hidden'  name='privilegio_sbp' value='{$privilegio}' />
                             <button type='submit' class='btn btn-danger'><i class='far fa-trash-alt'></i></button> 
                             <div class='RespuestaAjax'></div>   
                         </form>
@@ -172,6 +173,7 @@ class personalControlador extends personalModelo {
         $distrito = mainModel::limpiar_cadena($_POST["distrito_in"]);
         $cargo = mainModel::limpiar_cadena($_POST["cargo_in"]);
         $unidad = mainModel::limpiar_cadena($_POST["unidad_in"]);
+        $privilegio = mainModel::limpiar_cadena($_POST["privilegio_sbp"]);
 
         $datosIN = [
             "correo_p"=>$correo_per,
@@ -189,38 +191,49 @@ class personalControlador extends personalModelo {
             "unidad"=>$unidad
         ];
 
-        $validar = ($dni_per=="")?$validar=0:$validar=mainModel::ejecutar_consulta_validar("SELECT * FROM personal WHERE Dni_per = '{$dni_per}' AND est = 1")->rowCount();
+        $validarPrivilegios=mainModel::privilegios_transact($privilegio);
 
-        if($validar>0){
+        if($validarPrivilegios){
 
-            $alerta=[
-                "alerta"=>"simple",
-                "Titulo"=>"Dni registrado",
-                "Texto"=>"El dni ya ha sido registrado, por favor verifique !",
-                "Tipo"=>"info"
-            ];
+            $validar = ($dni_per=="")?$validar=0:$validar=mainModel::ejecutar_consulta_validar("SELECT * FROM personal WHERE Dni_per = '{$dni_per}' AND est = 1")->rowCount();
 
+            if($validar>0){
 
-        }else{
-
-            if(personalModelo::save_personal_modelo($datosIN)->rowCount()>=1){
-                $alerta=[
-                    "alerta"=>"recargar",
-                    "Titulo"=>"Datos guardados",
-                    "Texto"=>"Los siguientes datos han sido guardados",
-                    "Tipo"=>"success"
-                ];
-            }else{
                 $alerta=[
                     "alerta"=>"simple",
-                    "Titulo"=>"Ocurrio un error inesperado",
-                    "Texto"=>"No hemos podido actualizar los datos, contacte al admin",
-                    "Tipo"=>"error"
+                    "Titulo"=>"Dni registrado",
+                    "Texto"=>"El dni ya ha sido registrado, por favor verifique !",
+                    "Tipo"=>"info"
                 ];
+
+
+            }else{
+
+                if(personalModelo::save_personal_modelo($datosIN)->rowCount()>=1){
+                    $alerta=[
+                        "alerta"=>"recargar",
+                        "Titulo"=>"Datos guardados",
+                        "Texto"=>"Los siguientes datos han sido guardados",
+                        "Tipo"=>"success"
+                    ];
+                }else{
+                    $alerta=[
+                        "alerta"=>"simple",
+                        "Titulo"=>"Ocurrio un error inesperado",
+                        "Texto"=>"No hemos podido actualizar los datos, contacte al admin",
+                        "Tipo"=>"error"
+                    ];
+                }
             }
+        }else{
+            $alerta=[
+                "alerta"=>"recargar",
+                "Titulo"=>"Privilegios insuficientes",
+                "Texto"=>"Sus privilegios, son solo para vistas",
+                "Tipo"=>"info"
+            ];
         }
-
-
+        
 
         return mainModel::sweet_alert($alerta);
 
@@ -241,6 +254,7 @@ class personalControlador extends personalModelo {
         $distrito = mainModel::limpiar_cadena($_POST["distrito_edit"]);
         $cargo = mainModel::limpiar_cadena($_POST["cargo_edit"]);
         $unidad = mainModel::limpiar_cadena($_POST["unidad_edit"]);
+        $privilegio = mainModel::limpiar_cadena($_POST["privilegio_sbp"]);
 
         $datosIN = [
             "id_per"=>$id_per,
@@ -259,23 +273,34 @@ class personalControlador extends personalModelo {
             "unidad"=>$unidad
         ];
 
-        $validar=personalModelo::update_personal_modelo($datosIN);
-        if($validar->rowCount()>0){
-            $alerta=[
-                "alerta"=>"recargar",
-                "Titulo"=>"Datos guardados",
-                "Texto"=>"Los siguientes datos han sido guardados",
-                "Tipo"=>"success"
-            ];
+        $validarPrivilegios=mainModel::privilegios_transact($privilegio);
+
+        if($validarPrivilegios){
+            $validar=personalModelo::update_personal_modelo($datosIN);
+            if($validar->rowCount()>0){
+                $alerta=[
+                    "alerta"=>"recargar",
+                    "Titulo"=>"Datos guardados",
+                    "Texto"=>"Los siguientes datos han sido guardados",
+                    "Tipo"=>"success"
+                ];
+            }else{
+                $alerta=[
+                    "alerta"=>"simple",
+                    "Titulo"=>"Ocurrio un error inesperado",
+                    "Texto"=>"No hemos podido actualizar los datos, contacte al admin",
+                    "Tipo"=>"error"
+                ];
+            }
+
         }else{
             $alerta=[
-                "alerta"=>"simple",
-                "Titulo"=>"Ocurrio un error inesperado",
-                "Texto"=>"No hemos podido actualizar los datos, contacte al admin",
-                "Tipo"=>"error"
+                "alerta"=>"recargar",
+                "Titulo"=>"Privilegios insuficientes",
+                "Texto"=>"Sus privilegios, son solo para vistas",
+                "Tipo"=>"info"
             ];
         }
-
         return mainModel::sweet_alert($alerta);
 
     }
@@ -284,21 +309,35 @@ class personalControlador extends personalModelo {
     public function delete_personal_controlador(){
 
         $id_per = mainModel::limpiar_cadena($_POST["id_per_del"]);
+        $privilegio = mainModel::limpiar_cadena($_POST["privilegio_sbp"]);
+        
+        
+        $validarPrivilegios=mainModel::privilegios_transact($privilegio);
 
-        $validar=personalModelo::delete_personal_modelo($id_per);
-        if($validar->rowCount()>=1){
+        if($validarPrivilegios){
+            $validar=personalModelo::delete_personal_modelo($id_per);
+            if($validar->rowCount()>=1){
+                $alerta=[
+                    "alerta"=>"recargar",
+                    "Titulo"=>"Datos Eliminados",
+                    "Texto"=>"Los siguientes datos han sido eliminados",
+                    "Tipo"=>"success"
+                ];
+            }else{
+                $alerta=[
+                    "alerta"=>"simple",
+                    "Titulo"=>"Ocurrio un error inesperado",
+                    "Texto"=>"No hemos podido actualizar los datos, contacte al admin",
+                    "Tipo"=>"error"
+                ];
+            }
+        }else{
+            
             $alerta=[
                 "alerta"=>"recargar",
-                "Titulo"=>"Datos Eliminados",
-                "Texto"=>"Los siguientes datos han sido eliminados",
-                "Tipo"=>"success"
-            ];
-        }else{
-            $alerta=[
-                "alerta"=>"simple",
-                "Titulo"=>"Ocurrio un error inesperado",
-                "Texto"=>"No hemos podido actualizar los datos, contacte al admin",
-                "Tipo"=>"error"
+                "Titulo"=>"Privilegios insuficientes",
+                "Texto"=>"Sus privilegios, son solo para vistas",
+                "Tipo"=>"info"
             ];
         }
 

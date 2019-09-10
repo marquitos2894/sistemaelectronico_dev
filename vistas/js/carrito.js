@@ -108,7 +108,8 @@
         }
         
         this.numrowsCarrito = function(){
-        
+                let personal = document.querySelector("#personal").value;
+                console.log(personal.length);
             if(this.getCarritoS.length>0){
                 document.querySelector('#btnvale').disabled = false;
             }else{
@@ -144,6 +145,17 @@
             document.querySelector('#catalogo').innerHTML = data;
         }
         
+        this.Alert = function (title,mensaje){
+            let template = `
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>${title}</strong>${mensaje}.
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            `;
+            document.querySelector("#alert").innerHTML = template;
+        }
     }
 
     function CarritoView(){
@@ -252,6 +264,17 @@
             carrito.numrowsCarrito();
         }
 
+    });
+
+
+    $("#btnvale").addEventListener("click",function(ev){
+        
+        let personal = $("#personal").value;
+        if(personal.length==0){
+            ev.preventDefault();
+            render.Alert("(*) Campo obligatorio: ","Seleccione la persona que solicita el repuesto");     
+        } 
+     
     });
 
     $("#varciarCarrito").addEventListener("click",function(ev){

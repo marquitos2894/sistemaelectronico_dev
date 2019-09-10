@@ -27,7 +27,7 @@ document.querySelector('#table_personal').addEventListener("click", async functi
 
         let template = `
             <input type="hidden" name="id_per_edit" value="${data[0].id_per}"  />
-            <input type="text" name="unidad_edit" value="${data[0].idunidad}"  />
+            <input type="hidden" name="unidad_edit" value="${data[0].idunidad}"  />
             <div class="form-row">
             <div class="form-group col-md-6">
               <label for="inputEmail4">Nombres</label>

@@ -224,7 +224,7 @@ Class almacenControlador extends almacenModelo {
         
         //devuel valor entero redondeado hacia arriba 4.2 = 5
         $Npaginas = ceil($total/$registros);
-        $tabla.="<div><table class='table table-bordered'>
+        $tabla.="<div class='table-responsive' ><table class='table table-bordered'>
         <thead>
             <tr>
                 <th scope='col'>#</th>
@@ -416,8 +416,8 @@ Class almacenControlador extends almacenModelo {
             $tabla.="
             <button type='button' class='btn btn-primary'>
                 Total de productos <span class='badge badge-light'>{$total}</span>
-            </button
-            <div><table class='table table-bordered'>
+            </button>
+            <div class='table-responsive'><table class='table'>
             <thead>
                 <tr>
                     <th scope='col'>Codigo</th>
@@ -434,7 +434,7 @@ Class almacenControlador extends almacenModelo {
                 $tabla.="
                 </tr>
             </thead>
-            <tbody id='table_componente' >";
+            <tbody id='table_componente'>";
             if($total>=1 && $paginador<=$Npaginas)
             {
             
@@ -455,20 +455,20 @@ Class almacenControlador extends almacenModelo {
                     
                 }
             }else{
-                $tabla.='<tr><td colspan="10"> No existen registros</td></tr>';
+                $tabla.='
+                <tr><td colspan="10"> No existen registros</td></tr>';
             }
 
-            $tabla.='</tbody></table></div>';
+            //$tabla.='</tbody></table></div>';
         }
         else{
             $contador=$inicio+1;
             if($total>=1 && $paginador<=$Npaginas){
                 $tabla .="
-                
                 <button type='button' class='btn btn-primary'>
                     Total de productos <span class='badge badge-light'>{$total}</span>
-                </button
-                <div><table class='table table-bordered'>
+                </button>
+                <div class='table-responsive'><table class='table'>
                     <thead>
                         <tr>
                             <th scope='col'>#</th>
@@ -490,7 +490,7 @@ Class almacenControlador extends almacenModelo {
                      $tabla.="
                         </tr>
                     </thead>                   
-                    <tbody id='dtbody' >"; 
+                    <tbody id='dtbody'>"; 
                             
                 foreach($datos as $row){
                   
@@ -513,24 +513,12 @@ Class almacenControlador extends almacenModelo {
                             }
             
                             $tabla .=" 
-                            
                             <td>{$row['alias_equipounidad']}</td>
                             <td>{$row['Referencia']}</td>";
                             if($privilegio==0 or $privilegio==1){   
                             $tabla .=" 
                             <td><a href='#' data-toggle='modal' data-target='#config_comp' ><span style='font-size: 1.5rem;' ><i id='controlstock' data-producto='{$row['id_ac']}' class='fas fa-cog'></i></span></a></td>";
-                            
-                            /*$tabla .="
-                            <td>
-                                <form action='".SERVERURL."ajax/almacenAjax.php' method='POST' class='FormularioAjax'
-                                    data-form='update' entype='multipart/form-data' autocomplete='off'>
-                                    <input type='hidden' name='id_comp_del' value='{$row['id_comp']}'/>
-                                    <input type='hidden' name='id_alm_del' value='{$id_alm}'/>
-                                    <input type='hidden' name='id_ac_del' value='".mainModel::encryption($row['id_ac'])."'/>
-                                    <button type='submit' class='btn btn-danger'><i class='far fa-trash-alt'></i></button>
-                                    <div class='RespuestaAjax'></div>   
-                                </form>
-                            </td>";*/
+                        
                             } 
 
                         $tabla .="
@@ -538,6 +526,7 @@ Class almacenControlador extends almacenModelo {
 
                     $contador++;
                 }
+
             }else{
                 $tabla.='<tr>
                             <td colspan="10"> No existen registros</td>
@@ -545,11 +534,15 @@ Class almacenControlador extends almacenModelo {
             }
             
             
-            $tabla.='
-            </tbody></table></div>';  
-            $tabla.= mainModel::paginador_ajax($total,$paginador,$Npaginas,$vista);
+            /*$tabla.='
+            </tbody></table></div>';*/  
+            
         }
-   
+        $tabla.='
+            </tbody>
+            </table></div>';
+
+        $tabla.= mainModel::paginador_ajax($total,$paginador,$Npaginas,$vista);
         return $tabla;
     }
 
@@ -609,7 +602,7 @@ Class almacenControlador extends almacenModelo {
     
             $validar[0]=mainModel::ejecutar_consulta_simple("SELECT MAX(vs.id_vsalida)FROM vale_salida vs WHERE fk_idalm = {$id_alm};");  
             $validar=$validar[0][0];
-    
+            
             if($validar==$id_vsalida){
                 $info_dvsalida=almacenModelo::save_dvsalida_modelo($id_vsalida,$id_ac,$dv_descripcion,$dv_nparte1,$dv_stock,$dv_solicitado,$dv_entregado,$dv_unombre,$dv_useccion,$id_alm);
                 if($id_vsalida!=0){
@@ -711,7 +704,7 @@ Class almacenControlador extends almacenModelo {
         $fk_idpersonal = mainModel::limpiar_cadena($_POST["personal"]);
         $documento=mainModel::limpiar_cadena($_POST["documento"]);
         //$fk_idpersonal = ($documento==1)? $fk_idpersonal=$fk_idpersonal:$fk_idpersonal=$fk_idusuario; 
-        
+        $privilegio=mainModel::limpiar_cadena($_POST["privilegio_in"]);
         if($documento==1){
             $id_usuario= mainModel::ejecutar_consulta_simple("SELECT fk_idper FROM usuario WHERE id_usu = {$fk_idusuario}");
             $fk_idpersonal = $id_usuario["fk_idper"];
@@ -748,48 +741,62 @@ Class almacenControlador extends almacenModelo {
             "id_alm"=>$id_alm
         ];
 
-        $id_vingreso=almacenModelo::save_vingreso_modelo($datos);
-        $id_vingreso = $id_vingreso[0][0];
+        //VALIDAR PRIVILEGIO
+        
+        $validarPrivilegios=mainModel::privilegios_transact($privilegio);
 
-        $validar[0]=mainModel::ejecutar_consulta_simple("SELECT MAX(vs.id_vingreso)
-        FROM vale_ingreso vs WHERE fk_idalm = {$id_alm};");  
+        if($validarPrivilegios){
 
-        $validar=$validar[0][0];
+            $id_vingreso=almacenModelo::save_vingreso_modelo($datos);
+            $id_vingreso = $id_vingreso[0][0];
 
-        if($validar==$id_vingreso){
+            $validar[0]=mainModel::ejecutar_consulta_simple("SELECT MAX(vs.id_vingreso)
+            FROM vale_ingreso vs WHERE fk_idalm = {$id_alm};");  
 
-            $ingreso=almacenModelo::save_dvingreso_modelo($id_vingreso,$dvi_id_ac,$dvi_descripcion,$dvi_nparte1,$dvi_stock,$dvi_ingreso,$dvi_nom_equipo,$dvi_fkid_equipo,$id_alm,$dvi_referencia);
-            if($id_vingreso!=0){
-                if($ingreso->rowCount()>0){
-                    $alerta=[
-                        "alerta"=>"recargar_tiempo",
-                        "Titulo"=>"Vale Ingreso N°{$id_vingreso} generado! ",
-                        "Texto"=>"Los siguientes datos han sido guardados",
-                        "Tipo"=>"success",
-                        "tiempo"=>5000
-                    ];
-                    $datos = ["tipo"=>"success","mensaje"=>"<h5><strong>Vale de ingreso N°{$id_vingreso}</strong> generado con exito !! haga <a href='../PDFvaleingreso/{$id_vingreso}/{$id_alm}' target='_blank' >CLICK AQUI </a>para ver su registro, o la pagina se actualizara en 5s</h5> "];
+            $validar=$validar[0][0];
+
+            if($validar==$id_vingreso){
+
+                $ingreso=almacenModelo::save_dvingreso_modelo($id_vingreso,$dvi_id_ac,$dvi_descripcion,$dvi_nparte1,$dvi_stock,$dvi_ingreso,$dvi_nom_equipo,$dvi_fkid_equipo,$id_alm,$dvi_referencia);
+                if($id_vingreso!=0){
+                    if($ingreso->rowCount()>0){
+                        $alerta=[
+                            "alerta"=>"recargar_tiempo",
+                            "Titulo"=>"Vale Ingreso N°{$id_vingreso} generado! ",
+                            "Texto"=>"Los siguientes datos han sido guardados",
+                            "Tipo"=>"success",
+                            "tiempo"=>5000
+                        ];
+                        $datos = ["tipo"=>"success","mensaje"=>"<h5><strong>Vale de ingreso N°{$id_vingreso}</strong> generado con exito !! haga <a href='../PDFvaleingreso/{$id_vingreso}/{$id_alm}' target='_blank' >CLICK AQUI </a>para ver su registro, o la pagina se actualizara en 5s</h5> "];
+                        
+                        
+                        $localStorage = [
+                            "BDcomp_gen",
+                            "BDproductos",
+                            "carritoGen",
+                            "carritoIn",
+                            "carritoS"
+                        ];
+
+                        echo mainModel::localstorage_reiniciar($localStorage);
+                        echo mainModel::bootstrap_alert($datos);
+                    }else {
+                        $alerta=[
+                            "alerta"=>"simple",
+                            "Titulo"=>"Ocurrio un error inesperado",
+                            "Texto"=>"No hemos podido registrar el vale de ingreso, contacte al admin",
+                            "Tipo"=>"error"
+                        ];
+                    }   
                     
-                    
-                    $localStorage = [
-                        "BDcomp_gen",
-                        "BDproductos",
-                        "carritoGen",
-                        "carritoIn",
-                        "carritoS"
-                    ];
-
-                    echo mainModel::localstorage_reiniciar($localStorage);
-                    echo mainModel::bootstrap_alert($datos);
-                }else {
+                }else{
                     $alerta=[
                         "alerta"=>"simple",
                         "Titulo"=>"Ocurrio un error inesperado",
                         "Texto"=>"No hemos podido registrar el vale de ingreso, contacte al admin",
                         "Tipo"=>"error"
                     ];
-                }   
-                
+                }
             }else{
                 $alerta=[
                     "alerta"=>"simple",
@@ -797,18 +804,18 @@ Class almacenControlador extends almacenModelo {
                     "Texto"=>"No hemos podido registrar el vale de ingreso, contacte al admin",
                     "Tipo"=>"error"
                 ];
+
             }
+
         }else{
+            
             $alerta=[
-                "alerta"=>"simple",
-                "Titulo"=>"Ocurrio un error inesperado",
-                "Texto"=>"No hemos podido registrar el vale de ingreso, contacte al admin",
-                "Tipo"=>"error"
+                "alerta"=>"recargar",
+                "Titulo"=>"Privilegios insuficientes",
+                "Texto"=>"Sus privilegios, son solo para vistas",
+                "Tipo"=>"info"
             ];
-
         }
-
-
         return mainModel::sweet_alert($alerta);
     }
 
@@ -820,8 +827,9 @@ Class almacenControlador extends almacenModelo {
         $d_u_sec = mainModel::limpiar_cadena($_POST["d_u_sec"]);
         $d_id_equipo = mainModel::limpiar_cadena($_POST["d_id_equipo"]);
         $d_referencia = mainModel::limpiar_cadena($_POST["d_referencia"]);*/
-
+        
         $id_alm= mainModel::limpiar_cadena($_POST["id_alm_frmIA"]);
+        $privilegio= mainModel::limpiar_cadena($_POST["privilegio_sbp_ia"]);
         $id_comp[] = $_POST["id_comp"];
         $d_nserie[] = $_POST["d_nserie"];
         $d_descripcion[] = $_POST["d_descripcion"];
@@ -832,60 +840,73 @@ Class almacenControlador extends almacenModelo {
         $d_referencia[] = $_POST["d_referencia"];
 
 
-        $validar=almacenModelo::save_registro_almacen_modelo($id_comp,$d_u_nom,$d_nserie,$d_descripcion,$d_u_sec,$d_id_equipo,$d_referencia,$id_alm,$d_stock);
-        $val_registro=($validar[0]!='')?$val_registro=$validar[0]->rowCount():$val_registro=0;
+        $validarPrivilegios=mainModel::privilegios_transact($privilegio);
 
-        if($val_registro==0){
+        if($validarPrivilegios){
 
-            foreach($validar[1] as $i){
-                $mensaje ="El item: | {$i['id_comp']} | {$i['descripcion']} | NS: {$i['nserie']} | ya se encuentra registrado en su almacen, no puede repetirse, Verificar!";
-                $datos = [
-                    "tipo"=>"danger",
-                    "mensaje"=>"$mensaje"
-                ];
-                echo mainModel::bootstrap_alert($datos);
-            }
+            $validar=almacenModelo::save_registro_almacen_modelo($id_comp,$d_u_nom,$d_nserie,$d_descripcion,$d_u_sec,$d_id_equipo,$d_referencia,$id_alm,$d_stock);
+            $val_registro=($validar[0]!='')?$val_registro=$validar[0]->rowCount():$val_registro=0;
 
-        }else{
-            if($validar[0]->rowCount()>0){
-                $alerta=[
-                    "alerta"=>"recargar_tiempo",
-                    "Titulo"=>"Componentes registrados",
-                    "Texto"=>"Registrados en su almacen",
-                    "Tipo"=>"success",
-                    "tiempo"=>5000
-                ];
-                
-                $localStorage = [
-                    "BDcomp_gen",
-                    "BDproductos",
-                    "carritoGen",
-                    "carritoIn",
-                    "carritoS"
-                ];
-                echo mainModel::localstorage_reiniciar($localStorage);
+            if($val_registro==0){
 
                 foreach($validar[1] as $i){
-                    $mensaje ="El item: | {$i['id_comp']} | {$i['descripcion']} | NS: {$i['nserie']} | ya se encuentra registrado en su almacen, no puede repetirse";
+                    $mensaje ="El item: | {$i['id_comp']} | {$i['descripcion']} | NS: {$i['nserie']} | ya se encuentra registrado en su almacen, no puede repetirse, Verificar!";
                     $datos = [
                         "tipo"=>"danger",
                         "mensaje"=>"$mensaje"
                     ];
                     echo mainModel::bootstrap_alert($datos);
                 }
-    
+
             }else{
-                $alerta=[
-                    "alerta"=>"simple",
-                    "Titulo"=>"Ocurrio un error inesperado",
-                    "Texto"=>"No hemos podido registrar el componente seleccionado",
-                    "Tipo"=>"error"
-                ];
-                
+                if($validar[0]->rowCount()>0){
+                    $alerta=[
+                        "alerta"=>"recargar_tiempo",
+                        "Titulo"=>"Componentes registrados",
+                        "Texto"=>"Registrados en su almacen",
+                        "Tipo"=>"success",
+                        "tiempo"=>5000
+                    ];
+                    
+                    $localStorage = [
+                        "BDcomp_gen",
+                        "BDproductos",
+                        "carritoGen",
+                        "carritoIn",
+                        "carritoS"
+                    ];
+                    echo mainModel::localstorage_reiniciar($localStorage);
+
+                    foreach($validar[1] as $i){
+                        $mensaje ="El item: | {$i['id_comp']} | {$i['descripcion']} | NS: {$i['nserie']} | ya se encuentra registrado en su almacen, no puede repetirse";
+                        $datos = [
+                            "tipo"=>"danger",
+                            "mensaje"=>"$mensaje"
+                        ];
+                        echo mainModel::bootstrap_alert($datos);
+                    }
+        
+                }else{
+                    $alerta=[
+                        "alerta"=>"simple",
+                        "Titulo"=>"Ocurrio un error inesperado",
+                        "Texto"=>"No hemos podido registrar el componente seleccionado",
+                        "Tipo"=>"error"
+                    ];
+                    
+                }
+                return mainModel::sweet_alert($alerta);
             }
+        }else{
+            $alerta=[
+                "alerta"=>"recargar",
+                "Titulo"=>"Privilegios insuficientes",
+                "Texto"=>"Sus privilegios, son solo para vistas",
+                "Tipo"=>"info"
+            ];
+
             return mainModel::sweet_alert($alerta);
         }
-
             
         
 
@@ -898,7 +919,7 @@ Class almacenControlador extends almacenModelo {
         $id_comp = mainModel::limpiar_cadena($_POST["id_comp_del"]);
         $id_alm = mainModel::limpiar_cadena($_POST["id_alm_del"]);
         
-
+        
         $validar=almacenModelo::delete_componente_almacen_modelo($id_ac,$id_comp,$id_alm);
         
         if($validar->rowCount()>0){

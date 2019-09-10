@@ -91,13 +91,6 @@ if(isset($_POST["idcomp_DarAlta"])){
 }
 
 
-
-
-
-
-
-
-
 /*if(isset($_POST["id_equipo"])){
     echo $compCont->validar_equipo($_POST["id_equipo"]);
 }*/

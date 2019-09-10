@@ -73,6 +73,7 @@ if(isset($_POST["eliminar_busqueda"])){
 
             </div>
             <div class="modal-footer">
+              <input type="hidden"  name="privilegio_sbp" value="<?php echo $_SESSION['privilegio_sbp']?>"/>
               <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
               <input type="submit"  class="btn btn-primary " value="Actualizar"/>
             </div>

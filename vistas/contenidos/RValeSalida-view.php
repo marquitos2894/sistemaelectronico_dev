@@ -72,7 +72,7 @@
                     
                 </div>
             </div>
-            <form action="<?php echo SERVERURL;?>ajax/almacenAjax.php"  method="POST" data-form="save" class="FormularioAjax" autocomplete="off" enctype="multipart/form-data" >
+            <form action="<?php echo SERVERURL;?>ajax/almacenAjax.php"  id="formVS" method="POST" data-form="save" class="FormularioAjax" autocomplete="off" enctype="multipart/form-data" >
                 <div id="productosCarrito">
                                 <!-- item de local storage para salida del almacen-->
                 </div>
@@ -98,9 +98,9 @@
                                         <blockquote >
                                             <div class="form-row">                                  
                                                 <div class="form-group col-8"> 
-                                                    <label for="inputEmail4">Solicitado por</label>                              
-                                                    <select data-placeholder="Seleccione personal" name="personal" class="chosen-select" >
-                                                        <option value=""></option>
+                                                    <label for="inputEmail4">Solicitado por (*)</label>                              
+                                                    <select name="personal" id="personal" class="chosen-select">
+                                                        <option value="">Seleccione personal</option>
                                                         <?php 
                                                            echo $almCont->select_combo("select p.id_per, concat(p.Nom_per,' ',p.Ape_per)
                                                            from personal p where idunidad = {$_SESSION['unidad']} AND est = 1",0,1);
@@ -162,6 +162,7 @@
                             <input type="hidden"  name="privilegio_sbp_vs" value="<?php echo $_SESSION['privilegio_sbp']?>"/>
                             <input type="hidden"  name="vale" value="valesalida"/>
                             <input type="hidden"  name="id_alm_vs" id="id_alm_vs" value="<?php echo $id_alm ?>"/>
+                            <div id="alert"></div>
                             <button type="submit" id="btnvale" class="btn btn-danger btn-lg btn-block" disabled='true' >Emitir Vale de salida</button>
                         </div>
                     </div>

@@ -1,16 +1,7 @@
 
-<!DOCTYPE html>
-<html lang="es">
 
-<head>
 
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="">
-  <meta name="author" content="">
 
-  <title>SB Admin 2 - Dashboard</title>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
   <script src="<?php echo SERVERURL?>vistas/vendor/jquery/jquery.min.js"></script>
 
@@ -26,12 +17,10 @@
 
   <?php  include "vistas/modulos/logoutscript.php"; ?>
 
-</head>
 
-<body id="page-top">
+
 
   <?php   
-      
           $peticionAjax=false;
           require_once './controladores/vistasControladores.php'; 
           $vt= new vistasControladores();
@@ -45,34 +34,25 @@
             }else{
               require_once './vistas/contenidos/404-view.php'; 
             }
-            
           }else{
 
-            //session_start(['name'=>'SBP']);
-           
             require_once "./controladores/loginControlador.php";
             $lc = new loginControlador();
             if(!isset($_SESSION['token_sbp']) || !isset($_SESSION['usuario_sbp']) ){
                 $lc->forzar_cierre_sesion_controlador();
             }
     ?>
- 
-    
-
     <?php  include "vistas/modulos/Sidebar1.php";?>
 
-    <?php  require_once $vistasR;     ?>
+    <?php  require_once $vistasR;  ?>
 
     <?php  include "vistas/modulos/Sidebar2.php";?>
-    
       
           <?php   }?>
-
 
   <!-- Bootstrap core JavaScript-->
 
  <?php  include "vistas/modulos/Script.php"; ?>
 
-</body>
+
 <?php  include "vistas/modulos/chngeunidadscript.php"; ?>
-</html>

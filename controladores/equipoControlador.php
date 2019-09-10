@@ -43,7 +43,7 @@ Class equipoControlador extends equipoModelo {
         //devuel valor entero redondeado hacia arriba 4.2 = 5
         $Npaginas = ceil($total/$registros);
         $tabla.="
-        <div><table class='table table-bordered'>
+        <div class='table-responsive'><table class='table table-bordered'>
             <thead>
                 <tr>
                     <th scope='col'>#</th>
@@ -90,6 +90,7 @@ Class equipoControlador extends equipoModelo {
                         <form name='FrmDelEquipo' action='".SERVERURL."ajax/EquiposAjax.php' method='POST' class='FormularioAjax' 
                             data-form='delete' entype='multipart/form-data' autocomplete='off'>
                             <input type='hidden' name='Id_Equipo_darBaja' value='{$row['Id_Equipo']}'/>
+                            <input type='hidden'  name='privilegio_sbp' value='{$privilegio}' />
                             <button type='submit' class='btn btn-danger'><i class='fas fa-arrow-circle-down'></i></button> 
                             <div class='RespuestaAjax'></div>   
                         </form>
@@ -148,7 +149,7 @@ Class equipoControlador extends equipoModelo {
         //devuel valor entero redondeado hacia arriba 4.2 = 5
         $Npaginas = ceil($total/$registros);
 
-                $tabla.="<div><table class='table table-bordered'>
+                $tabla.="<div class='table-responsive'><table class='table table-bordered'>
                 <thead>
                     <tr>
                         <th scope='col'>#</th>
@@ -208,6 +209,7 @@ Class equipoControlador extends equipoModelo {
                                         <button type='submit' class='btn btn-success'><i class='fas fa-arrow-circle-up'></i></button>";
                             }
                                     $tabla .="
+                                        <input type='hidden'  name='privilegio_sbp' value='{$privilegio}' />
                                         <div class='RespuestaAjax'></div>   
                                     </form>
                                 </td>";
@@ -218,6 +220,7 @@ Class equipoControlador extends equipoModelo {
                                     <form name='Frm_ue' action='".SERVERURL."ajax/EquiposAjax.php' method='POST' class='FormularioAjax' 
                                         data-form='update' entype='multipart/form-data' autocomplete='off'>
                                         <input type='hidden' name='idequipounidad_delete' value='{$row['id_equipounidad']}'/>
+                                        <input type='hidden'  name='privilegio_sbp' value='{$privilegio}' />
                                         <button type='submit' class='btn btn-danger'><i class='far fa-trash-alt'></i></button>
                                         <div class='RespuestaAjax'></div>   
                                     </form>
@@ -259,7 +262,7 @@ Class equipoControlador extends equipoModelo {
         $ModeloMotor_Equipo = mainModel::limpiar_cadena($_POST["ModeloMotor_Equipo_save"]);
         $MarcaMotor_Equipo = mainModel::limpiar_cadena($_POST["MarcaMotor_Equipo_save"]);
         $SerieMotor_Equipo = mainModel::limpiar_cadena($_POST["SerieMotor_Equipo_save"]);
-        
+        $privilegio = mainModel::limpiar_cadena($_POST["privilegio_sbp"]);
 
         $datos = [
             "Modelo_Equipo"=>$Modelo_Equipo,
@@ -275,24 +278,34 @@ Class equipoControlador extends equipoModelo {
             "SerieMotor_Equipo"=>$SerieMotor_Equipo
         ];
 
-        $validar = equipoModelo::save_equipos_modelo($datos);
+        $validarPrivilegios=mainModel::privilegios_transact($privilegio);
 
-        if($validar->rowCount()>0){
-            $alerta=[
-                "alerta"=>"recargar",
-                "Titulo"=>"Datos Guardados",
-                "Texto"=>"Los siguientes datos han sido guardados",
-                "Tipo"=>"success"
-            ];
+        if($validarPrivilegios){
+            $validar = equipoModelo::save_equipos_modelo($datos);
+
+            if($validar->rowCount()>0){
+                $alerta=[
+                    "alerta"=>"recargar",
+                    "Titulo"=>"Datos Guardados",
+                    "Texto"=>"Los siguientes datos han sido guardados",
+                    "Tipo"=>"success"
+                ];
+            }else{
+                $alerta=[
+                    "alerta"=>"simple",
+                    "Titulo"=>"Ocurrio un error inesperado",
+                    "Texto"=>"No hemos podido actualizar el equipo seleccionado",
+                    "Tipo"=>"error"
+                ];
+            }
         }else{
             $alerta=[
-                "alerta"=>"simple",
-                "Titulo"=>"Ocurrio un error inesperado",
-                "Texto"=>"No hemos podido actualizar el equipo seleccionado",
-                "Tipo"=>"error"
+                "alerta"=>"recargar",
+                "Titulo"=>"Privilegios insuficientes",
+                "Texto"=>"Sus privilegios, son solo para vistas",
+                "Tipo"=>"info"
             ];
         }
-
         return mainModel::sweet_alert($alerta);
     }
 
@@ -309,6 +322,7 @@ Class equipoControlador extends equipoModelo {
         $ModeloMotor_Equipo = mainModel::limpiar_cadena($_POST["ModeloMotor_Equipo_edit"]);
         $MarcaMotor_Equipo = mainModel::limpiar_cadena($_POST["MarcaMotor_Equipo_edit"]);
         $SerieMotor_Equipo = mainModel::limpiar_cadena($_POST["SerieMotor_Equipo_edit"]);
+        $privilegio = mainModel::limpiar_cadena($_POST["privilegio_sbp"]);
 
         $datos = [
             "Id_Equipo"=>$Id_Equipo,
@@ -323,30 +337,41 @@ Class equipoControlador extends equipoModelo {
             "MarcaMotor_Equipo"=>$MarcaMotor_Equipo,
             "SerieMotor_Equipo"=>$SerieMotor_Equipo
         ];
+        
+        $validarPrivilegios=mainModel::privilegios_transact($privilegio);
 
-        $validar = equipoModelo::update_equipos_modelo($datos);
+        if($validarPrivilegios){
+            $validar = equipoModelo::update_equipos_modelo($datos);
 
-        if($validar->rowCount()>0){
-            $alerta=[
-                "alerta"=>"recargar",
-                "Titulo"=>"Datos Actualizados",
-                "Texto"=>"Los siguientes datos han sido Actualizados",
-                "Tipo"=>"success"
-            ];
+            if($validar->rowCount()>0){
+                $alerta=[
+                    "alerta"=>"recargar",
+                    "Titulo"=>"Datos Actualizados",
+                    "Texto"=>"Los siguientes datos han sido Actualizados",
+                    "Tipo"=>"success"
+                ];
+            }else{
+                $alerta=[
+                    "alerta"=>"simple",
+                    "Titulo"=>"Ocurrio un error inesperado",
+                    "Texto"=>"No hemos podido actualizar el equipo seleccionado",
+                    "Tipo"=>"error"
+                ];
+            }
         }else{
             $alerta=[
-                "alerta"=>"simple",
-                "Titulo"=>"Ocurrio un error inesperado",
-                "Texto"=>"No hemos podido actualizar el equipo seleccionado",
-                "Tipo"=>"error"
+                "alerta"=>"recargar",
+                "Titulo"=>"Privilegios insuficientes",
+                "Texto"=>"Sus privilegios, son solo para vistas",
+                "Tipo"=>"info"
             ];
         }
-
         return mainModel::sweet_alert($alerta);
     }
 
     public function darbaja_equipo_controlador(){
         $Id_Equipo = mainModel::limpiar_cadena($_POST["Id_Equipo_darBaja"]);
+        $privilegio = mainModel::limpiar_cadena($_POST["privilegio_sbp"]);
 
         $validar=equipoModelo::darbaja_equipo_modelo($Id_Equipo);
 
@@ -371,24 +396,35 @@ Class equipoControlador extends equipoModelo {
 
     public function delete_equipo_controlador(){
         $Id_Equipo = mainModel::limpiar_cadena($_POST["Id_Equipo_delete"]);
+        $privilegio = mainModel::limpiar_cadena($_POST["privilegio_sbp"]);
 
-        $validar=equipoModelo::delete_equipo_modelo($Id_Equipo);
-        if($validar->rowCount()>0){
-            $alerta=[
-                "alerta"=>"recargar",
-                "Titulo"=>"Equipo eliminado",
-                "Texto"=>"El siguiente equipo ha sido eliminado",
-                "Tipo"=>"success"
-            ];
+        $validarPrivilegios=mainModel::privilegios_transact($privilegio);
+
+        if($validarPrivilegios){
+            $validar=equipoModelo::delete_equipo_modelo($Id_Equipo);
+            if($validar->rowCount()>0){
+                $alerta=[
+                    "alerta"=>"recargar",
+                    "Titulo"=>"Equipo eliminado",
+                    "Texto"=>"El siguiente equipo ha sido eliminado",
+                    "Tipo"=>"success"
+                ];
+            }else{
+                $alerta=[
+                    "alerta"=>"simple",
+                    "Titulo"=>"Ocurrio un error inesperado",
+                    "Texto"=>"No hemos podido realizar la accion requerida en el equipo seleccionado",
+                    "Tipo"=>"error"
+                ];
+            }
         }else{
             $alerta=[
                 "alerta"=>"simple",
                 "Titulo"=>"Ocurrio un error inesperado",
                 "Texto"=>"No hemos podido realizar la accion requerida en el equipo seleccionado",
                 "Tipo"=>"error"
-            ];
+            ];    
         }
-
         return mainModel::sweet_alert($alerta);
     }
 
@@ -401,7 +437,7 @@ Class equipoControlador extends equipoModelo {
         $fk_idunidad = mainModel::limpiar_cadena($_POST["session_idunidad_agregarF"]);
         $alias_equipounidad = mainModel::limpiar_cadena($_POST["Alias_Equipo_agregarF"]);
         $estado_equipounidad = mainModel::limpiar_cadena($_POST["estado_equipo_agregarF"]);
-
+        $privilegio = mainModel::limpiar_cadena($_POST["privilegio_sbp"]);
 
         $datos = [
             "fk_idequipo"=>$fk_idequipo,
@@ -410,37 +446,46 @@ Class equipoControlador extends equipoModelo {
             "estado_equipounidad"=>$estado_equipounidad
         ];
 
-        $validar=mainModel::ejecutar_consulta_validar("SELECT * FROM equipo_unidad WHERE fk_idequipo = {$fk_idequipo} AND fk_idunidad = {$fk_idunidad}");
+        $validarPrivilegios=mainModel::privilegios_transact($privilegio);
+        if($validarPrivilegios){
+            $validar=mainModel::ejecutar_consulta_validar("SELECT * FROM equipo_unidad WHERE fk_idequipo = {$fk_idequipo} AND fk_idunidad = {$fk_idunidad}");
 
-        if($validar->rowCount()>0){
-            $dato=mainModel::ejecutar_consulta_simple("SELECT * FROM  equipo_unidad WHERE fk_idequipo = {$fk_idequipo} ");
-
-            $alerta=[
-                "alerta"=>"simple",
-                "Titulo"=>"Ya se encuentra registrado",
-                "Texto"=>"El equipo que desea agregar ya esta registrado como <h2><strong>{$dato["alias_equipounidad"]}</strong></h2>",
-                "Tipo"=>"info"
-            ];    
-
-        }else{
-            $validar=equipoModelo::save_flota_modelo($datos);
             if($validar->rowCount()>0){
-                $alerta=[
-                    "alerta"=>"recargar",
-                    "Titulo"=>"Datos Guardados",
-                    "Texto"=>"Los siguientes datos han sido guardados",
-                    "Tipo"=>"success"
-                ];
-            }else{
+                $dato=mainModel::ejecutar_consulta_simple("SELECT * FROM  equipo_unidad WHERE fk_idequipo = {$fk_idequipo} ");
+
                 $alerta=[
                     "alerta"=>"simple",
-                    "Titulo"=>"Ocurrio un error inesperado",
-                    "Texto"=>"No hemos podido actualizar el equipo seleccionado",
-                    "Tipo"=>"error"
-                ];
-            }
-        }
+                    "Titulo"=>"Ya se encuentra registrado",
+                    "Texto"=>"El equipo que desea agregar ya esta registrado como <h2><strong>{$dato["alias_equipounidad"]}</strong></h2>",
+                    "Tipo"=>"info"
+                ];    
 
+            }else{
+                $validar=equipoModelo::save_flota_modelo($datos);
+                if($validar->rowCount()>0){
+                    $alerta=[
+                        "alerta"=>"recargar",
+                        "Titulo"=>"Datos Guardados",
+                        "Texto"=>"Los siguientes datos han sido guardados",
+                        "Tipo"=>"success"
+                    ];
+                }else{
+                    $alerta=[
+                        "alerta"=>"simple",
+                        "Titulo"=>"Ocurrio un error inesperado",
+                        "Texto"=>"No hemos podido actualizar el equipo seleccionado",
+                        "Tipo"=>"error"
+                    ];
+                }
+            }
+        }else{
+            $alerta=[
+                "alerta"=>"recargar",
+                "Titulo"=>"Privilegios insuficientes",
+                "Texto"=>"Sus privilegios, son solo para vistas",
+                "Tipo"=>"info"
+            ];
+        }
         return mainModel::sweet_alert($alerta);
     }
 
@@ -449,7 +494,7 @@ Class equipoControlador extends equipoModelo {
         $id_equipounidad = mainModel::limpiar_cadena($_POST["id_eu_edit"]);
         $alias_equipounidad = mainModel::limpiar_cadena($_POST["alias_eu_edit"]);
         $estado_equipounidad = mainModel::limpiar_cadena($_POST["estado_eu_edit"]);
-
+        $privilegio = mainModel::limpiar_cadena($_POST["privilegio_sbp"]);
 
         $datos = [
             "id_equipounidad"=>$id_equipounidad,
@@ -457,6 +502,9 @@ Class equipoControlador extends equipoModelo {
             "estado_equipounidad"=>$estado_equipounidad
         ];
 
+        
+        $validarPrivilegios=mainModel::privilegios_transact($privilegio);
+        if($validarPrivilegios){
             $validar=equipoModelo::update_flota_modelo($datos);
             if($validar->rowCount()>0){
                 $alerta=[
@@ -473,29 +521,48 @@ Class equipoControlador extends equipoModelo {
                     "Tipo"=>"error"
                 ];
             }
-        
+        }else{
+            $alerta=[
+                "alerta"=>"recargar",
+                "Titulo"=>"Privilegios insuficientes",
+                "Texto"=>"Sus privilegios, son solo para vistas",
+                "Tipo"=>"info"
+            ]; 
+        }
 
         return mainModel::sweet_alert($alerta);
     }
 
     public function darbaja_flota_controlador(){
         $id_equipounidad = mainModel::limpiar_cadena($_POST["idequipounidad_darBaja"]);
+        $privilegio = mainModel::limpiar_cadena($_POST["privilegio_sbp"]);
 
-        $validar=equipoModelo::darbaja_flota_modelo($id_equipounidad);
+        $validarPrivilegios=mainModel::privilegios_transact($privilegio);
 
-        if($validar->rowCount()>0){
-            $alerta=[
-                "alerta"=>"recargar",
-                "Titulo"=>"Equipo dado de Baja",
-                "Texto"=>"El siguiente equipo ha sido dado de baja",
-                "Tipo"=>"success"
-            ];
+        if($validarPrivilegios){
+            $validar=equipoModelo::darbaja_flota_modelo($id_equipounidad);
+
+            if($validar->rowCount()>0){
+                $alerta=[
+                    "alerta"=>"recargar",
+                    "Titulo"=>"Equipo dado de Baja",
+                    "Texto"=>"El siguiente equipo ha sido dado de baja",
+                    "Tipo"=>"success"
+                ];
+            }else{
+                $alerta=[
+                    "alerta"=>"simple",
+                    "Titulo"=>"Ocurrio un error inesperado",
+                    "Texto"=>"No hemos podido realizar la accion requerida en el equipo seleccionado",
+                    "Tipo"=>"error"
+                ];
+            }
         }else{
             $alerta=[
-                "alerta"=>"simple",
-                "Titulo"=>"Ocurrio un error inesperado",
-                "Texto"=>"No hemos podido realizar la accion requerida en el equipo seleccionado",
-                "Tipo"=>"error"
+                "alerta"=>"recargar",
+                "Titulo"=>"Privilegios insuficientes",
+                "Texto"=>"Sus privilegios, son solo para vistas",
+                "Tipo"=>"info"
             ];
         }
 
@@ -503,23 +570,35 @@ Class equipoControlador extends equipoModelo {
     }
 
     public function darAlta_flota_controlador(){
+
         $id_equipounidad = mainModel::limpiar_cadena($_POST["idequipounidad_darAlta"]);
+        $privilegio = mainModel::limpiar_cadena($_POST["privilegio_sbp"]);
 
-        $validar=equipoModelo::darAlta_flota_modelo($id_equipounidad);
+        $validarPrivilegios=mainModel::privilegios_transact($privilegio);
+        if($validarPrivilegios){
+            $validar=equipoModelo::darAlta_flota_modelo($id_equipounidad);
 
-        if($validar->rowCount()>0){
-            $alerta=[
-                "alerta"=>"recargar",
-                "Titulo"=>"Equipo dado de Alta",
-                "Texto"=>"El siguiente equipo ha sido dado de Alta",
-                "Tipo"=>"success"
-            ];
+            if($validar->rowCount()>0){
+                $alerta=[
+                    "alerta"=>"recargar",
+                    "Titulo"=>"Equipo dado de Alta",
+                    "Texto"=>"El siguiente equipo ha sido dado de Alta",
+                    "Tipo"=>"success"
+                ];
+            }else{
+                $alerta=[
+                    "alerta"=>"simple",
+                    "Titulo"=>"Ocurrio un error inesperado",
+                    "Texto"=>"No hemos podido realizar la accion requerida en el equipo seleccionado",
+                    "Tipo"=>"error"
+                ];
+            }
         }else{
             $alerta=[
-                "alerta"=>"simple",
-                "Titulo"=>"Ocurrio un error inesperado",
-                "Texto"=>"No hemos podido realizar la accion requerida en el equipo seleccionado",
-                "Tipo"=>"error"
+                "alerta"=>"recargar",
+                "Titulo"=>"Privilegios insuficientes",
+                "Texto"=>"Sus privilegios, son solo para vistas",
+                "Tipo"=>"info"
             ];
         }
 
@@ -527,22 +606,34 @@ Class equipoControlador extends equipoModelo {
     }
 
     public function delete_flota_controlador(){
+        
         $id_equipounidad = mainModel::limpiar_cadena($_POST["idequipounidad_delete"]);
+        $privilegio = mainModel::limpiar_cadena($_POST["privilegio_sbp"]);
 
-        $validar=equipoModelo::delete_flota_modelo($id_equipounidad);
-        if($validar->rowCount()>0){
-            $alerta=[
-                "alerta"=>"recargar",
-                "Titulo"=>"Equipo eliminado",
-                "Texto"=>"El siguiente equipo ha sido eliminado",
-                "Tipo"=>"success"
-            ];
+        $validarPrivilegios=mainModel::privilegios_transact($privilegio);
+        if($validarPrivilegios){
+            $validar=equipoModelo::delete_flota_modelo($id_equipounidad);
+            if($validar->rowCount()>0){
+                $alerta=[
+                    "alerta"=>"recargar",
+                    "Titulo"=>"Equipo eliminado",
+                    "Texto"=>"El siguiente equipo ha sido eliminado",
+                    "Tipo"=>"success"
+                ];
+            }else{
+                $alerta=[
+                    "alerta"=>"simple",
+                    "Titulo"=>"Ocurrio un error inesperado",
+                    "Texto"=>"No hemos podido realizar la accion requerida en el equipo seleccionado",
+                    "Tipo"=>"error"
+                ];
+            }
         }else{
             $alerta=[
-                "alerta"=>"simple",
-                "Titulo"=>"Ocurrio un error inesperado",
-                "Texto"=>"No hemos podido realizar la accion requerida en el equipo seleccionado",
-                "Tipo"=>"error"
+                "alerta"=>"recargar",
+                "Titulo"=>"Privilegios insuficientes",
+                "Texto"=>"Sus privilegios, son solo para vistas",
+                "Tipo"=>"info"
             ];
         }
 

@@ -86,7 +86,7 @@ $compCont = new componentesControlador();
                     </div>
                     <div style="display:none" id="medida_neumatico" class="form-group col-sm-4">
                         <label for="inputEmail4">Medida</label>
-                        <select name="medida_neumatico" id="cbomedida_neumatico" class="form-control">
+                        <select name="medida_neumatico_newcomp" id="cbomedida_neumatico" class="form-control">
                             <option value="">Seleccione medida</option>
                             <?php echo $compCont->select_combo("SELECT * FROM medida_neumaticos",1,1); ?>
                         </select>
@@ -94,7 +94,7 @@ $compCont = new componentesControlador();
                 </div>
             </div>
         </div>
-        
+        <input type="hidden"  name="privilegio_sbp" value="<?php echo $_SESSION['privilegio_sbp']?>"/>    
         <button type="submit" class="btn btn-primary">Guardar</button>
         <div class="RespuestaAjax"></div>
     </form>

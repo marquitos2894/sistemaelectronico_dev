@@ -113,6 +113,18 @@
             document.querySelector('#catalogo').innerHTML = data;
         }
 
+        this.Alert = function (title,mensaje){
+            let template = `
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>${title}</strong>${mensaje}.
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            `;
+            document.querySelector("#alert").innerHTML = template;
+        }
+
         
     }
 
@@ -230,10 +242,10 @@
     $('#documento').addEventListener("change",function(ev){
         ev.preventDefault();
         console.log(document.querySelector('#documento').value);
-        $documento=document.querySelector('#documento').value;
-        if($documento==1){
+        let documento=document.querySelector('#documento').value;
+        if(documento==1){
             document.querySelector('#card_remitente').setAttribute("style","visibility:hidden"); 
-        }else if($documento==2){
+        }else if(documento==2){
             document.querySelector('#card_remitente').setAttribute("style","visibility:true");
         }else{
             document.querySelector('#card_remitente').setAttribute("style","visibility:hidden"); 
@@ -241,6 +253,25 @@
 
     });
 
+    
+    $("#btnvale").addEventListener("click",function(ev){
+        
+        let personal = $("#personal").value;
+        let documento=document.querySelector('#documento').value;
+         
+        console.log(documento);
+        if(documento == ""){
+            ev.preventDefault();
+            render.Alert("(*) Campo obligatorio: ","Seleccione documento");     
+        } 
+     
+
+        if(personal.length==0 && documento == 2){
+            ev.preventDefault();
+            render.Alert("(*) Campo obligatorio: ","Seleccione la persona que remite la devolucion");     
+        } 
+     
+    });
 
 
    /*window.addEventListener("onload", async function(e) {
