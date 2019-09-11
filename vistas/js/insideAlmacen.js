@@ -14,7 +14,6 @@
             });
             let data = await response.json();
            
-
             const datosEquipo = new FormData();
             datosEquipo.append('id_equipo_insideAlm',data[0].Id_Equipo);
             datosEquipo.append('id_unidad_insideAlm',id_unidad);
@@ -34,23 +33,33 @@
                      });
                      let dataDR = await responseDR.text();
                      console.log(dataDR);
-
+           let templateHeader = `
+           <input type="hidden" name="id_comp_del" value="${data[0].id_comp}">
+           <input type="hidden" name="id_alm_del" value="${data[0].fk_idalm}">
+           <input type="hidden" name="id_ac_del" value="${data[0].id_ac}">
+           `;        
            var template =  `         
             <div class="form-row">
                 <input type="hidden" name="id_comp_almacen" value="${data[0].id_comp}">
                 <input type="hidden" name="fk_idalm_almacen" value="${data[0].fk_idalm}">
                 <input type="hidden" name="id_ac_almacen" value="${data[0].id_ac}">
                 <input type="hidden" name="cs_inicial" id="cs_inicial" value="${data[0].control_stock}">
-                <div class="form-group col-md-8">
-                    <h5>${data[0].descripcion} <span class="badge badge-primary">${data[0].nparte1}</span></h5>  
+
+                     
+                
+                <div class="form-group col-md-10">
+                    <h5> <span class="badge badge-danger">${data[0].id_comp}</span>${data[0].descripcion} <span class="badge badge-primary">NP:${data[0].nparte1} | NS: ${data[0].nserie}</span></h5>  
+                </div>
+                <div class="form-group col-md-2">
+
                 </div>   
                <div class="form-group col-md-6">
                    <label for="inputEmail4">Ubicacion</label>
-                   <input type="text" value="${data[0].u_nombre}" name="u_nombre" class="form-control"  placeholder="Nparte 1">
+                   <input type="text" value="${data[0].u_nombre}" name="u_nombre" class="form-control"  placeholder="Ubicacion">
                </div>
                <div class="form-group col-md-6">
                    <label for="inputPassword4">Seccion</label>
-                   <input type="text" value="${data[0].u_seccion}" name="u_seccion" class="form-control" placeholder="Nparte 2" >
+                   <input type="text" value="${data[0].u_seccion}" name="u_seccion" class="form-control" placeholder="Seccion" >
                </div>
             </div>
             <div class="form-row">
@@ -83,6 +92,7 @@
                     </select>
                 </div> 
             </div>
+
             <!--control stock con estado 0-->
             <div id='div_cs_est0'></div>`;
             if(data[0].control_stock==1){
@@ -113,6 +123,7 @@
       
        
             document.querySelector('#modal-body').innerHTML =  template;
+            document.querySelector('#modal-header').innerHTML = templateHeader;
 
             (async function($) 
             {  
@@ -127,6 +138,7 @@
         }
 
         this.RenderTableComp = async function(page){
+
             let buscar = document.querySelector('#buscador_comp_text').value;
             //let paginador = document.querySelector('#paginador').value
             let vista = document.querySelector('#vista').value
@@ -155,17 +167,20 @@
     render = new Render();
 
 
-    document.addEventListener("DOMContentLoaded", async function(){
+    document.addEventListener("DOMContentLoaded", async function(ev){
+        
         render.RenderTableComp();
+       
     });
 
     document.querySelector('#buscador_comp_text').addEventListener("keyup", async function(ev){
+        
         render.RenderTableComp();
     });
 
 
     document.querySelector('#catalogo').addEventListener("click",function(ev){
-            
+          
         if(ev.target.id=='page'){
             render.RenderTableComp(ev.target.dataset.page);
         }
@@ -210,6 +225,7 @@
                 });
             }
         }else{
+
             if(ev.target.id=="control_stock"){
                 document.querySelector('#control_stock').addEventListener("change",function(ev){
                     ev.preventDefault();

@@ -24,11 +24,13 @@
                     this.getBDproductos = await JSON.parse(localStorage.getItem('BDproductos')); 
               
                     this.getCarritoS = JSON.parse(localStorage.getItem("carritoS"));
-                    await view.renderCarritoS();                 
+                    await view.renderCarritoS();            
+                    
+                    await this.numrowsCarrito();
         }
 
         this.agregarItemCarritoS = function(item,valor){
-            
+            var existe = false;
             if(!this.getBDproductos || this.getCarritoS==null ){
                 location.reload();
             }
@@ -36,8 +38,14 @@
             for(i of this.getBDproductos){
                 if(i.id_ac == item){
                     var registro = i;
-                    var stock = i.stock;      
+                    var stock = i.stock;
+                    existe=true;         
                 }
+            }
+            
+            if(existe == false){
+                location.reload();
+                return;
             }
       
             if(!registro){
@@ -103,7 +111,17 @@
         this.varciarCarrito = function(){
             this.getCarritoS.splice(0);
             localStorage.setItem('carritoS','[]');
-        }     
+        }
+        
+        this.numrowsCarrito = function(){
+                let personal = document.querySelector("#personal").value;
+                console.log(personal.length);
+            if(this.getCarritoS.length>0){
+                document.querySelector('#btnvale').disabled = false;
+            }else{
+                document.querySelector('#btnvale').disabled = true;
+            }
+        }
         
     }
 
@@ -133,6 +151,17 @@
             document.querySelector('#catalogo').innerHTML = data;
         }
         
+        this.Alert = function (title,mensaje){
+            let template = `
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>${title}</strong>${mensaje}.
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            `;
+            document.querySelector("#alert").innerHTML = template;
+        }
     }
 
     function CarritoView(){
@@ -152,9 +181,9 @@
                         <th scope="col">Cod</th>
                         <th scope="col">Descriocion</th>
                         <th scope="col">Nparte</th>
+                        <th scope="col">NSerie</th>
                         <th scope="col">Referencia</th>
                         <th scope="col">Ubicacion</th>
-                        <th scope="col">U.M</th>
                         <th scope="col">Stock</th>
                         <th scope="col">Solicitado</th>
                         <th scope="col">Entregado</th>
@@ -169,10 +198,10 @@
                             <td>${i.id_comp}</td>
                             <td>${i.descripcion}</td>
                             <td>${i.nparte1}</td>
+                            <td>${i.nserie}</td>
                             <td>${i.Referencia}</td>
                             <td>${i.u_nombre}-${i.u_seccion}</td>
-                            <td>${i.abreviado}</td>
-                            <td><strong>${i.stock}</strong></td>
+                            <td><strong>${i.stock} ${i.abreviado}</strong></td>
                             <td>${i.solicitado}</td>
                             <td>${i.cantidad}</td>
                             <td><p class="field"><a href="#" class="button is-danger" id="deleteProducto" data-producto="${i.id_ac}">x</a></p></td>
@@ -207,12 +236,14 @@
         carrito.constructor();
         console.log("constructor");
         render.RenderTableComp();
+        //carrito.numrowsCarrito();
  
     });
 
 
     document.querySelector('#buscador_comp_text').addEventListener("keyup", async function(ev){
         render.RenderTableComp();
+        carrito.numrowsCarrito();
     });
     
 
@@ -227,7 +258,7 @@
         cant=document.getElementById("salida"+ev.target.dataset.producto).value;
         carrito.agregarItemCarritoS(ev.target.dataset.producto,cant);
         view.renderCarritoS();
-
+        carrito.numrowsCarrito();   
         }   
     }); 
 
@@ -236,14 +267,27 @@
         if(ev.target.id == "deleteProducto"){
             carrito.eliminarItemCS(ev.target.dataset.producto);
             view.renderCarritoS();
+            carrito.numrowsCarrito();
         }
 
+    });
+
+
+    $("#btnvale").addEventListener("click",function(ev){
+        
+        let personal = $("#personal").value;
+        if(personal.length==0){
+            ev.preventDefault();
+            render.Alert("(*) Campo obligatorio: ","Seleccione la persona que solicita el repuesto");     
+        } 
+     
     });
 
     $("#varciarCarrito").addEventListener("click",function(ev){
         ev.preventDefault();
         carrito.varciarCarrito();
         view.renderCarritoS();
+        carrito.numrowsCarrito();
     });
 
 })();

@@ -65,8 +65,8 @@
                       <div class="form-group col-md-4">
                         <label for="inputCity">Cargo</label>
                         <div>
-                          <select required data-placeholder="Seleccione cargo" name="cargo_in" class="chosen-select" tabindex="">
-                            <option value=""></option>
+                          <select required data-placeholder="" id="cargo_in" name="cargo_in" class="chosen-select" tabindex="">
+                            <option value="">Seleccione cargo</option>
                             <?php echo $perCont->chosen_cargo(0,1)?>
                           </select>
                         </div>
@@ -91,8 +91,17 @@
                     </div>
                   </div>
           </div>
+<<<<<<< HEAD
           <input type="hidden"  name="privilegio_sbp_personal" value="<?php echo $_SESSION['privilegio_sbp']?>"/>  
           <button type="submit" class="btn btn-success btn-lg btn-block">Guardar</button>
+=======
+          <input type="hidden"  name="privilegio_sbp" value="<?php echo $_SESSION['privilegio_sbp']?>"/>
+          <div id='alert'></div>
+          <button type="submit" id="btnsave" class="btn btn-success btn-lg btn-block">Guardar</button>
+>>>>>>> newdev
           <div class="RespuestaAjax"></div>
         </form>
 </div>
+
+
+<script src="../vistas/js/newpersonal.js"></script>

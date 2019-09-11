@@ -96,8 +96,8 @@
                                             <div class="form-row">                                  
                                                 <div class="form-group col-10"> 
                                                     <label for="inputEmail4">Tipo Documento</label>                                                         
-                                                    <select class="form-control" name="documento" id="documento">
-                                                        <option>Seleccione</option>
+                                                    <select class="form-control" name="documento" id="documento" required>
+                                                        <option value="">Seleccione documento</option>
                                                         <option value="1">Guia remision</option>
                                                         <option value="2">Devolucion</option>
                                                     </select>
@@ -143,9 +143,14 @@
                                     <textarea  name="comentario" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
                             </div>
                             <input type="hidden" value="valeingreso" name="vale"/>
+<<<<<<< HEAD
                             <input type="hidden"  name="privilegio_sbp_vi" value="<?php echo $_SESSION['privilegio_sbp']?>"/>
+=======
+                            <input type="hidden" name="privilegio_in" value="<?php echo $_SESSION['privilegio_sbp'] ?>" />
+>>>>>>> newdev
                             <input type="hidden"  name="id_alm_vi" id="id_alm_vi" value="<?php echo $id_alm ?>"/>
-                            <button type="submit" class="btn btn-success btn-lg btn-block">Emitir Vale de Ingreso</button>
+                            <div id="alert"></div>
+                            <button type="submit" id="btnvale" class="btn btn-success btn-lg btn-block" disabled='true'>Emitir Vale de Ingreso</button>
                         </div>
                     </div>
                 </div>

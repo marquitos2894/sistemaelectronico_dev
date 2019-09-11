@@ -77,6 +77,7 @@ if(isset($_POST["eliminar_busqueda"])){
 
             </div>
             <div class="modal-footer">
+              <input type="hidden"  name="privilegio_sbp" value="<?php echo $_SESSION['privilegio_sbp']?>"/>
               <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
               <input type="submit"  class="btn btn-primary " value="Actualizar"/>
             </div>
@@ -103,6 +104,8 @@ if(isset($_POST["eliminar_busqueda"])){
             </div>
             <input type="hidden" name="session_idunidad_agregarF" value="<?php echo $_SESSION['unidad'] ?>" /> 
             <div class="modal-footer">
+            
+              <input type="hidden"  name="privilegio_sbp" value="<?php echo $_SESSION['privilegio_sbp']?>"/>
               <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
               <input type="submit"  class="btn btn-primary " value="Agregar"/>
             </div>

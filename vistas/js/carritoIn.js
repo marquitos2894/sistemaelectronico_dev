@@ -23,18 +23,28 @@
                 let data = await response.json();
             
                 await localStorage.setItem('BDproductos',JSON.stringify(data));
-                this.getBDproductos = await JSON.parse(localStorage.getItem('BDproductos')); 
+                this.getBDproductos = await JSON.parse(localStorage.getItem('BDproductos'));
+
                 this.getCarritoIn = await JSON.parse(localStorage.getItem('carritoIn'));
                 await view.renderCarritoIn();
 
+                await this.numrowsCarrito();
         }
 
         this.agregarItem = function(item,cant){
+
+            var existe = false;
             for(i of this.getBDproductos){
                 if(i.id_ac == item){
                    var datos = i;          
                    //i.cant = parseFloat(i.cant) + 1;
+                   existe=true;   
                 }
+            }
+
+            if(existe == false){
+                location.reload();
+                return;
             }
 
             for(i of this.getCarritoIn){
@@ -75,6 +85,14 @@
             this.getCarritoIn.splice(0);
             localStorage.setItem('carritoIn','[]');
         }
+
+        this.numrowsCarrito = function(){
+            if(this.getCarritoIn.length>0){
+                document.querySelector('#btnvale').disabled = false;
+            }else{
+                document.querySelector('#btnvale').disabled = true;
+            }
+        }
           
     }
 
@@ -103,6 +121,18 @@
             document.querySelector('#catalogo').innerHTML = data;
         }
 
+        this.Alert = function (title,mensaje){
+            let template = `
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>${title}</strong>${mensaje}.
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            `;
+            document.querySelector("#alert").innerHTML = template;
+        }
+
         
     }
 
@@ -123,12 +153,13 @@
                         <th scope="col">Cod.Interno</th>
                         <th scope="col">Descriocion</th>
                         <th scope="col">Nparte</th>
+                        <th scope="col">NSerie</th>
                         <th scope="col">Ubicacion</th>
                         <th scope="col">Stock</th>
-                        <th scope="col">U.M</th>
                         <th scope="col">Equipo</th>
                         <th scope="col">Referencia</th>
                         <th scope="col">Ingreso</th>
+                        <th scope="col">Quitar</th>
                         
                     </tr>
                 </thead><tbody>`;
@@ -140,9 +171,9 @@
                         <td>${i.id_comp}</td>
                         <td>${i.descripcion}</td>
                         <td>${i.nparte1}</td>
+                        <td>${i.nserie}</td>
                         <td>${i.u_nombre}-${i.u_seccion}</td>
-                        <td>${i.stock}</td>
-                        <td>${i.abreviado}</td>
+                        <td>${i.stock} ${i.abreviado}</td>
                         <td>${i.alias_equipounidad}</td>
                         <td>${i.Referencia}</td>
                         <td>${i.cantidad}</td>
@@ -182,6 +213,7 @@
     
     document.querySelector('#buscador_comp_text').addEventListener("keyup", async function(ev){
         render.RenderTableComp();
+        //carrito.numrowsCarrito();
     });
     
     $('#catalogo').addEventListener("click",function(ev){
@@ -193,7 +225,8 @@
             //console.log(ev.target);
             cant=document.getElementById("salida"+ev.target.dataset.producto).value;
             carrito.agregarItem(ev.target.dataset.producto,cant);
-            view.renderCarritoIn();          
+            view.renderCarritoIn();
+            carrito.numrowsCarrito();          
         }
     });
   
@@ -202,6 +235,7 @@
         if(ev.target.id == "deleteProducto"){
             carrito.eliminarItemCI(ev.target.dataset.producto);
             view.renderCarritoIn();
+            carrito.numrowsCarrito();
         }
     });
 
@@ -209,16 +243,17 @@
         ev.preventDefault();
         carrito.varciarCarrito();
         view.renderCarritoIn();
+        carrito.numrowsCarrito();
     });
 
     //card_remitente
     $('#documento').addEventListener("change",function(ev){
         ev.preventDefault();
         console.log(document.querySelector('#documento').value);
-        $documento=document.querySelector('#documento').value;
-        if($documento==1){
+        let documento=document.querySelector('#documento').value;
+        if(documento==1){
             document.querySelector('#card_remitente').setAttribute("style","visibility:hidden"); 
-        }else if($documento==2){
+        }else if(documento==2){
             document.querySelector('#card_remitente').setAttribute("style","visibility:true");
         }else{
             document.querySelector('#card_remitente').setAttribute("style","visibility:hidden"); 
@@ -226,6 +261,25 @@
 
     });
 
+    
+    $("#btnvale").addEventListener("click",function(ev){
+        
+        let personal = $("#personal").value;
+        let documento=document.querySelector('#documento').value;
+         
+        console.log(documento);
+        if(documento == ""){
+            ev.preventDefault();
+            render.Alert("(*) Campo obligatorio: ","Seleccione documento");     
+        } 
+     
+
+        if(personal.length==0 && documento == 2){
+            ev.preventDefault();
+            render.Alert("(*) Campo obligatorio: ","Seleccione la persona que remite la devolucion");     
+        } 
+     
+    });
 
 
    /*window.addEventListener("onload", async function(e) {

@@ -37,7 +37,7 @@ class unidadmedidaControlador extends unidadmedidaModelo {
         
         //devuel valor entero redondeado hacia arriba 4.2 = 5
         $Npaginas = ceil($total/$registros);
-        $tabla.="<div><table class='table table-bordered'>
+        $tabla.="<div class='table-responsive'><table class='table table-bordered'>
         <thead>
             <tr>
                 <th scope='col'>#</th>
@@ -97,31 +97,42 @@ class unidadmedidaControlador extends unidadmedidaModelo {
     public function save_unidadmed_controlador(){
         $descripcion=mainModel::limpiar_cadena($_POST["descripcion_um"]);
         $abreviado=mainModel::limpiar_cadena($_POST["abreviado_um"]);
+        $privilegio = mainModel::limpiar_cadena($_POST["privilegio_sbp"]);
 
         $datos = [
             "descripcion"=>$descripcion,
             "abreviado"=>$abreviado
         ];
 
-        $validar = unidadmedidaModelo::save_unidadmed_modelo($datos);
+        $validarPrivilegios=mainModel::privilegios_transact($privilegio);
 
-        if($validar->rowCount()>0){
+        if($validarPrivilegios){
+            $validar = unidadmedidaModelo::save_unidadmed_modelo($datos);
 
-            $alerta=[
-                "alerta"=>"recargar",
-                "Titulo"=>"Registrado con exito",
-                "Texto"=>"Unidad de medida registrado",
-                "Tipo"=>"success"
-            ];
+            if($validar->rowCount()>0){
+
+                $alerta=[
+                    "alerta"=>"recargar",
+                    "Titulo"=>"Registrado con exito",
+                    "Texto"=>"Unidad de medida registrado",
+                    "Tipo"=>"success"
+                ];
+            }else{
+                $alerta=[
+                    "alerta"=>"simple",
+                    "Titulo"=>"Ocurrio un error inesperado",
+                    "Texto"=>"No hemos podido elinar lo seleccionado",
+                    "Tipo"=>"error"
+                ];
+            }
         }else{
             $alerta=[
-                "alerta"=>"simple",
-                "Titulo"=>"Ocurrio un error inesperado",
-                "Texto"=>"No hemos podido elinar lo seleccionado",
-                "Tipo"=>"error"
+                "alerta"=>"recargar",
+                "Titulo"=>"Privilegios insuficientes",
+                "Texto"=>"Sus privilegios, son solo para vistas",
+                "Tipo"=>"info"
             ];
         }
-
         return mainModel::sweet_alert($alerta);
     }
     

@@ -129,11 +129,13 @@ if(isset($_POST["eliminar_busqueda"])){
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
-          <form  action="<?php echo SERVERURL;?>ajax/componentesAjax.php" id="formEdit"  method="POST" data-form="update" class="FormularioAjax" autocomplete="off" enctype="multipart/form-data">
+          <form  action="<?php echo SERVERURL;?>ajax/componentesAjax.php" method="POST" data-form="update" class="FormularioAjax" id="FormularioAjax" autocomplete="off" enctype="multipart/form-data">
+              
             <div class="modal-body" id="modal-body">
 
             </div>
             <div class="modal-footer">
+              <input type="hidden"  name="privilegio_sbp" value="<?php echo $_SESSION['privilegio_sbp']?>"/> 
               <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
               <input type="submit"  class="btn btn-primary " value="Actualizar"/>
             </div>

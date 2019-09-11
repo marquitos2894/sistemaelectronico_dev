@@ -11,13 +11,6 @@
 
   <title>Conmciv Admin</title>
 
-  <!-- Custom fonts for this template-->
-  <!--link href="vistas/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet"-->
-
-  <!-- Custom styles for this template-->
-  <!--link href="vistas/css/sb-admin-2.min.css" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script-->
 </head>
 
 <body id="page-top">
@@ -33,7 +26,7 @@
         <div class="sidebar-brand-icon rotate-n-15">
           <i class="fas fa-laugh-wink"></i>
         </div>
-        <div class="sidebar-brand-text mx-3">Conmciv<sup>1.1</sup></div>
+        <div class="sidebar-brand-text mx-3">Conmciv<sup>1.2</sup></div>
       </a>
 
       <!-- Divider -->
@@ -111,7 +104,7 @@
       <!-- Nav Item - Pages Collapse Menu -->
       <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
-          <i class="fas fa-fw fa-folder"></i>
+          <i class="fas fa-people-carry"></i>
           <span>Persona</span>
         </a>
         <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
@@ -126,7 +119,7 @@
       </li>
       <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages-equipos" aria-expanded="true" aria-controls="collapsePages">
-          <i class="fas fa-fw fa-folder"></i>
+          <i class="fas fa-tractor"></i>
           <span>Equipos</span>
         </a>
         <div id="collapsePages-equipos" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
@@ -139,7 +132,7 @@
       </li>
       <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages-comp" aria-expanded="true" aria-controls="collapsePages">
-          <i class="fas fa-fw fa-folder"></i>
+          <i class="fas fa-box-open"></i>
           <span>Componentes</span>
         </a>
         <div id="collapsePages-comp" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
@@ -153,7 +146,7 @@
       </li>
       <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseAlmacen" aria-expanded="true" aria-controls="collapseAlmacen">
-          <i class="fas fa-fw fa-wrench"></i>
+          <i class="fas fa-store"></i>
           <span>Almacen</span>
         </a>
         <div id="collapseAlmacen" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">

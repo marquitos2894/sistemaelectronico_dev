@@ -1,7 +1,7 @@
 <?php 
 
 define('SERVER','localhost');
-define('DB','ordencompra1');
+define('DB','ordencompra_pruebas');
 define('USER','root');
 define('PASS','marquitosxD');
 //define('PASS','');

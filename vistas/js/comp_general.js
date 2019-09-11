@@ -37,7 +37,7 @@
 
             //nom_equipo = await consultaBD.validarEquipo(id_equi);
             //nom_equipo = nom_equipo[0]['Nombre_Equipo'];
-
+            var existe = false;
             for (i of this.getBDcomp_gen){
                 if(i.id_comp == item){
                     i.u_nom = u_nom;
@@ -46,9 +46,14 @@
                     i.nom_equipo = nom_equipo 
                     i.referencia = referencia;
                     var datos = i;
+                    existe = true;
                 }
             }
             
+            if(existe == false){
+                location.reload();
+                return;
+            }
     
            
             this.carrito.push(datos);
@@ -108,10 +113,11 @@
                         <th scope="col">Descriocion</th>
                         <th scope="col">Nparte1</th>
                         <th scope="col">Nparte2</th>
+                        <th scope="col">NSerie</th>
                         <th scope="col">Ubicacion</th>
                         <th scope="col">Equipo</th>
                         <th scope="col">Referencia</th>
-                        <th scope="col">Delete</th>
+                        <th scope="col">Quitar</th>
                     </tr>
                 </thead><tbody>`;
                 let j=1;
@@ -123,6 +129,7 @@
                         <td>${i.descripcion}</td>
                         <td>${i.nparte1}</td>
                         <td>${i.nparte2}</td>
+                        <td>${i.nserie}</td>
                         <td>${i.u_nom}-${i.u_sec}</td>
                         <td>${i.nom_equipo}</td>
                         <td>${i.referencia}</td>
@@ -134,6 +141,7 @@
                             <input type="hidden" name="d_descripcion[]" value="${i.descripcion}">
                             <input type="hidden" name="d_nparte1[]" value="${i.nparte1}">
                             <input type="hidden" name="d_nparte2[]" value="${i.nparte2}">
+                            <input type="hidden" name="d_nserie[]" value="${i.nserie}">
                             <input type="hidden" name="d_u_nom[]" value="${i.u_nom}">
                             <input type="hidden" name="d_u_sec[]" value="${i.u_sec}">
                             <input type="hidden" name="d_id_equipo[]" value="${i.id_equipo}">
@@ -197,6 +205,7 @@
             let iditem = ev.target.dataset.producto;
             let descripcion = $1('#descripcion'+iditem).value;
             let nparte= $1('#nparte'+iditem).value;
+            let nserie= $1('#nserie'+iditem).value;
 
             console.log();
             let id_unidad = document.querySelector("#session_idunidad").value;
@@ -222,7 +231,7 @@
 
             let template = `<input type="hidden" id="iditem" value="${iditem}" />
             <div class="form-group col-md-8">
-            <h5>${descripcion} <span class="badge badge-primary">${nparte}</span></h5>  
+            <h5><span class="badge badge-danger">${iditem} »</span>${descripcion} <span class="badge badge-primary">NP:${nparte} | NS:${nserie} </span></h5>  
             </div> 
             <div class="form-row">
                 <div class="form-group col-sm-6">

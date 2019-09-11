@@ -2,7 +2,7 @@
 
     <ul class="nav nav-tabs">
         <li class="nav-item">
-            <a class="nav-link" href="<?php echo SERVERURL;?>equipos/"><i class="fas fa-dolly-flatbed"></i> Equipos</a>
+            <a class="nav-link" href="<?php echo SERVERURL;?>equipos/"><i class="fas fa-tractor"></i> Equipos</a>
         </li>
         <li class="nav-item">
             <a class="nav-link active" href="<?php echo SERVERURL;?>newequipos/"><i class="fas fa-plus-circle"></i> Nuevo</a>
@@ -15,11 +15,11 @@
         <div class="form-row">
             <div class="form-group col-md-4">
                 <label for="inputEmail4">Modelo</label>
-                <input type="text" name="Modelo_Equipo_save" value="" class="form-control" placeholder="Modelo de equipo">
+                <input type="text" name="Modelo_Equipo_save" value="" class="form-control" placeholder="Modelo de equipo" required>
             </div>
             <div class="form-group col-md-4">
                 <label for="inputPassword4">Tipo</label>
-                <input type="text" name="Tipo_Equipo_save" value="" class="form-control"  placeholder="Tipo">
+                <input type="text" name="Tipo_Equipo_save" value="" class="form-control"  placeholder="Tipo" required>
             </div>
             <div class="form-group col-md-4">
                 <label for="inputPassword4">Aplicacion</label>
@@ -76,7 +76,7 @@
                 <input type="text" name="SerieMotor_Equipo_save" value="" class="form-control" placeholder="N° serie del motor">
             </div>
         </div>
-        <input type="hidden"  name="privilegio_sbp_equipo" value="<?php echo $_SESSION['privilegio_sbp']?>"/>
+        <input type="hidden"  name="privilegio_sbp" value="<?php echo $_SESSION['privilegio_sbp']?>"/>
         <button type="submit" class="btn btn-primary">Guardar</button>
         <div class="RespuestaAjax"></div>
     </form>         

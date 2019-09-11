@@ -132,23 +132,47 @@ class almacenModelo extends mainModel{
     }
 
 
-    protected function save_registro_almacen_modelo($id_comp,$d_u_nom,$d_u_sec,$d_id_equipo,$d_referencia,$id_alm,$d_stock){
+    protected function save_registro_almacen_modelo($id_comp,$d_u_nom,$d_nserie,$d_descripcion,$d_u_sec,$d_id_equipo,$d_referencia,$id_alm,$d_stock){
         $conex = mainModel::conectar();
         $i=0;
+        $mensaje=[];
+        $sql="";
         foreach($id_comp[0] as $valor){
-            $sql = $conex->prepare("CALL i_registroalmacen(:id_alm,:id_comp,:d_stock,:d_u_nom,:d_u_sec,:d_id_equipo,:d_referencia)");
-            $sql->bindParam(":id_alm",$id_alm);
-            $sql->bindParam(":id_comp",$id_comp[0][$i]);
-            $sql->bindParam(":d_stock",$d_stock);
-            $sql->bindParam(":d_u_nom",$d_u_nom[0][$i]);
-            $sql->bindParam(":d_u_sec",$d_u_sec[0][$i]);
-            $sql->bindParam(":d_id_equipo",$d_id_equipo[0][$i]);
-            $sql->bindParam(":d_referencia",$d_referencia[0][$i]);
-            $sql->execute();
+            
+            $validar_duplicado=0;
+            if($d_nserie[0][$i]!=''){
+                $validar_duplicado = mainModel::ejecutar_consulta_validar("SELECT ac.id_ac,c.id_comp,c.nserie
+                FROM almacen_componente ac
+                INNER JOIN componentes c
+                ON ac.fk_idcomp = c.id_comp
+                WHERE ac.fk_idcomp = '{$id_comp[0][$i]}' AND c.nserie = '{$d_nserie[0][$i]}' AND ac.fk_idalm = {$id_alm} AND ac.est =1 ");
+ 
+                $validar_duplicado= $validar_duplicado->rowCount();
+            }
+           
+            if($validar_duplicado>0){
+                $mensaje[$i] = [
+                    "id_comp"=>$id_comp[0][$i],
+                    "descripcion"=>$d_descripcion[0][$i],
+                    "nserie"=>$d_nserie[0][$i]
+                ];
+            }else{
+                $sql = $conex->prepare("CALL i_registroalmacen(:id_alm,:id_comp,:d_stock,:d_u_nom,:d_u_sec,:d_id_equipo,:d_referencia)");
+                $sql->bindParam(":id_alm",$id_alm);
+                $sql->bindParam(":id_comp",$id_comp[0][$i]);
+                $sql->bindParam(":d_stock",$d_stock);
+                $sql->bindParam(":d_u_nom",$d_u_nom[0][$i]);
+                $sql->bindParam(":d_u_sec",$d_u_sec[0][$i]);
+                $sql->bindParam(":d_id_equipo",$d_id_equipo[0][$i]);
+                $sql->bindParam(":d_referencia",$d_referencia[0][$i]);
+                $sql->execute();
+               
+            }
             $i++;
         }
 
-        return $sql;
+        $array = [$sql,$mensaje];
+        return $array;
     }
 
     protected function update_comp_almacen_modelo($datos){

@@ -41,79 +41,39 @@
             <a class="nav-link " href="#" aria-disabled="true">Import</a>
         </li>
     </ul><br>
+
+
           <div class="card shadow mb-4">
             <div class="card-header py-3">
               <h6 class="m-0 font-weight-bold text-primary">Componentes</h6>
             </div>
             <div class="card-body">
-              <!--div class="table-responsive">
-                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                  <thead>
-                    <tr>
-                      <th>#</th>
-                      <th>Cod.Interno</th>
-                      <th>Descripcion</th>
-                      <th>Nparte1</th>
-                      <th>Nparte2</th>
-                      <th>Nparte3</th>
-                      <th>Ubicacion</th>
-                      <th>Stock</th>
-                      <th>Control Stock</th>
-                      <th>U.M</th>
-                      <th>Equipo</th>
-                      <th>Referencia</th>
-                      <?php //if($_SESSION['privilegio_sbp']==0 or $_SESSION['privilegio_sbp']==1): ?>
-                      <th>Config</th>
-                      <th>Delete</th>
-                      <?php //endif; ?>
-                    </tr>
-                  </thead>
-                  <tfoot>
-                    <tr>
-                      <th>#</th>
-                      <th>Cod.Interno</th>
-                      <th>Descripcion</th>
-                      <th>Nparte1</th>
-                      <th>Nparte2</th>
-                      <th>Nparte3</th>
-                      <th>Ubicacion</th>
-                      <th>Stock</th>
-                      <th>Control Stock</th>
-                      <th>U.M</th>
-                      <th>Equipo</th>
-                      <th>Referencia</th>
-                      <?php //if($_SESSION['privilegio_sbp']==0 or $_SESSION['privilegio_sbp']==1): ?>
-                      <th>Config</th>
-                      <th>Delete</th>
-                      <?php //endif; ?>
-                    </tr>
-                  </tfoot>
-                  <tbody id="dtbody">
-                      <?php //echo $almCont->databale_componentes($_SESSION["almacen"],"simple",$_SESSION['privilegio_sbp']); ?>
-                  </tbody>
-                </table>
-              </div-->
+
               <div class="input-group mb-3">
                   <div class="input-group-prepend">
                       <span class="input-group-text" id="basic-addon1">Buscar</span>
                   </div>
                   <input type="search" class="form-control"  id="buscador_comp_text" placeholder="Buscar componente" aria-label="Username" aria-describedby="basic-addon1">                       
               </div>
-              <div id='catalogo'></div>      
-            </div>
+
+                 <div id='catalogo'></div>   
+           
+           </div>
           </div>
-          
+
           <input type="hidden" id="id_alm_session" value="<?php echo $_SESSION["almacen"] ?>" />
           <div class="modal fade" id="config_comp" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
               <div class="modal-content">
                 <div class="modal-header">
                   <h5 class="modal-title" id="exampleModalCenterTitle">Configuracion</h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
+                  <form name="almacen" action="<?php echo SERVERURL;?>ajax/almacenAjax.php" id="formEdit"  method="POST" data-form="delete" class="FormularioAjax" autocomplete="off" enctype="multipart/form-data">
+                    <div id="modal-header"></div>
+                    <button type='submit' class='btn btn-danger'><i class='far fa-trash-alt'></i></button>
+                    <div class="RespuestaAjax"></div>
+                  </form>
                 </div>
-                <form name="almacen"  action="<?php echo SERVERURL;?>ajax/almacenAjax.php" id="formEdit"  method="POST" data-form="update" class="FormularioAjax" autocomplete="off" enctype="multipart/form-data">
+                <form name="almacen" action="<?php echo SERVERURL;?>ajax/almacenAjax.php" id="formEdit"  method="POST" data-form="update" class="FormularioAjax" autocomplete="off" enctype="multipart/form-data">
                   <div class="modal-body" id="modal-body">
                   </div>
 
@@ -135,3 +95,4 @@
 
 
 <script src="../vistas/js/insideAlmacen.js"></script>
+

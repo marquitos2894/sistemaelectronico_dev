@@ -22,7 +22,7 @@ if(isset($_POST["eliminar_busqueda"])){
 <div class="container-fluid"> 
   <ul class="nav nav-tabs">
       <li class="nav-item">
-          <a class="nav-link active" href=""><i class="fas fa-dolly-flatbed"></i> Equipos</a>
+          <a class="nav-link active" href=""><i class="fas fa-tractor"></i> Equipos</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="<?php echo SERVERURL;?>newequipos/"><i class="fas fa-plus-circle"></i> Nuevo</a>
@@ -73,6 +73,7 @@ if(isset($_POST["eliminar_busqueda"])){
 
             </div>
             <div class="modal-footer">
+              <input type="hidden"  name="privilegio_sbp" value="<?php echo $_SESSION['privilegio_sbp']?>"/>
               <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
               <input type="submit"  class="btn btn-primary " value="Actualizar"/>
             </div>

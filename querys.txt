@@ -57,3 +57,12 @@ se agregro est tinyint default 1;
 ///////// TABLE PERSONAL ////////////
 
 se agregro est tinyint default 1
+
+
+///*** AGREGO TABLA medida_neumaticos ////
+
+create table medida_neumaticos
+(
+id_medidaneumatico int primary key auto_increment,
+descripcion varchar(20)
+)

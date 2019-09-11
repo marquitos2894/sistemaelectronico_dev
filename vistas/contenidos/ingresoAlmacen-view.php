@@ -108,6 +108,7 @@
         <input type="hidden"  name="id_alm_frmIA" value="<?php echo $_SESSION["almacen"] ?>"/>
         <input type="hidden"  name="privilegio_ingresoalmacen" value="<?php echo $_SESSION['privilegio_sbp']?>"/>
         <input type="submit"  class="btn btn-primary btn-lg btn-block" value="Registrar"/>
+        <input type="hidden"  name="privilegio_sbp_ia" value="<?php echo $_SESSION['privilegio_sbp']?>"/>
         <div class="RespuestaAjax"></div>
     </form> 
   
