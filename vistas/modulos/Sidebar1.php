@@ -104,7 +104,7 @@
       <!-- Nav Item - Pages Collapse Menu -->
       <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
-          <i class="fas fa-fw fa-folder"></i>
+          <i class="fas fa-people-carry"></i>
           <span>Persona</span>
         </a>
         <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
@@ -119,7 +119,7 @@
       </li>
       <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages-equipos" aria-expanded="true" aria-controls="collapsePages">
-          <i class="fas fa-fw fa-folder"></i>
+          <i class="fas fa-tractor"></i>
           <span>Equipos</span>
         </a>
         <div id="collapsePages-equipos" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
@@ -132,7 +132,7 @@
       </li>
       <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages-comp" aria-expanded="true" aria-controls="collapsePages">
-          <i class="fas fa-fw fa-folder"></i>
+          <i class="fas fa-box-open"></i>
           <span>Componentes</span>
         </a>
         <div id="collapsePages-comp" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
@@ -146,7 +146,7 @@
       </li>
       <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseAlmacen" aria-expanded="true" aria-controls="collapseAlmacen">
-          <i class="fas fa-fw fa-wrench"></i>
+          <i class="fas fa-store"></i>
           <span>Almacen</span>
         </a>
         <div id="collapseAlmacen" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">

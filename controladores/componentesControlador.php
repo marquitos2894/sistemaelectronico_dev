@@ -309,10 +309,13 @@ Class componentesControlador extends componentesModelo {
             <tr>
                 <th scope='col'>#</th>
                 <th scope='col'>Referencia</th>               
-                <th scope='col'>Descripcion</th>
-                <th colspan='2' scope='col'>Acciones</th>";
+                <th scope='col'>Descripcion</th>";
+                if($privilegio==0 or $privilegio==1){
+        $tabla.="<th colspan='2' scope='col'>Acciones</th>";
+                }   
                 //programar privilegios
-        $tabla.="</tr>
+        $tabla.="
+            </tr>
         </thead>
         <tbody id='table_dr' >";
         if($total>=1 && $paginador<=$Npaginas)
@@ -321,9 +324,10 @@ Class componentesControlador extends componentesModelo {
             foreach($datos as $row){
                 $tabla .="
             <tr>
-                            <td>{$contador}</td>
-                            <td>{$row['dato_referencia']}</td>                      
-                            <td>{$row['descripcion_dr']}</td>";                          
+                <td>{$contador}</td>
+                <td>{$row['dato_referencia']}</td>                      
+                <td>{$row['descripcion_dr']}</td>"; 
+                if($privilegio==0 or $privilegio==1){                                     
                 $tabla .="<td><a style='font-size: 1.5em;'  class='fas fa-edit' href='{$row['id_dr']}' id='EditItem' data-idreferencia='{$row['id_dr']}' data-toggle='modal' data-target='#ModalEdit'></a> </td>";
                             
                 $tabla .="
@@ -334,7 +338,10 @@ Class componentesControlador extends componentesModelo {
                         <button type='submit' class='btn btn-danger'><i class='far fa-trash-alt'></i></button> 
                         <div class='RespuestaAjax'></div>   
                     </form>
-                </td>
+                </td>";
+                }
+
+            $tabla .="
             </tr>";
             $contador++;
             }
@@ -460,6 +467,7 @@ Class componentesControlador extends componentesModelo {
                             "carritoIn",
                             "carritoS"
                         ];
+
                     }else{
                         $alerta=[
                             "alerta"=>"simple",
@@ -469,7 +477,7 @@ Class componentesControlador extends componentesModelo {
                         ];
                         $localStorage = [];
                     }
-                    echo mainModel::localstorage_reiniciar($localStorage);
+                    //echo mainModel::localstorage_reiniciar($localStorage);
                     return mainModel::sweet_alert($alerta);
                 }
 
@@ -782,10 +790,10 @@ Class componentesControlador extends componentesModelo {
             
         }else{
             $alerta=[
-                "alerta"=>"simple",
-                "Titulo"=>"Ocurrio un error inesperado",
-                "Texto"=>"No hemos podido realizar la accion requerida en el equipo seleccionado",
-                "Tipo"=>"error"
+                "alerta"=>"recargar",
+                "Titulo"=>"Privilegios insuficientes",
+                "Texto"=>"Sus privilegios, son solo para vistas",
+                "Tipo"=>"info"
             ];
         }
         return mainModel::sweet_alert($alerta);

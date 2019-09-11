@@ -32,11 +32,19 @@
         }
 
         this.agregarItem = function(item,cant){
+
+            var existe = false;
             for(i of this.getBDproductos){
                 if(i.id_ac == item){
                    var datos = i;          
                    //i.cant = parseFloat(i.cant) + 1;
+                   existe=true;   
                 }
+            }
+
+            if(existe == false){
+                location.reload();
+                return;
             }
 
             for(i of this.getCarritoIn){

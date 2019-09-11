@@ -37,7 +37,7 @@
 
             //nom_equipo = await consultaBD.validarEquipo(id_equi);
             //nom_equipo = nom_equipo[0]['Nombre_Equipo'];
-
+            var existe = false;
             for (i of this.getBDcomp_gen){
                 if(i.id_comp == item){
                     i.u_nom = u_nom;
@@ -46,9 +46,14 @@
                     i.nom_equipo = nom_equipo 
                     i.referencia = referencia;
                     var datos = i;
+                    existe = true;
                 }
             }
             
+            if(existe == false){
+                location.reload();
+                return;
+            }
     
            
             this.carrito.push(datos);

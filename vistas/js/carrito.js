@@ -30,7 +30,7 @@
         }
 
         this.agregarItemCarritoS = function(item,valor){
-            
+            var existe = false;
             if(!this.getBDproductos || this.getCarritoS==null ){
                 location.reload();
             }
@@ -38,8 +38,14 @@
             for(i of this.getBDproductos){
                 if(i.id_ac == item){
                     var registro = i;
-                    var stock = i.stock;      
+                    var stock = i.stock;
+                    existe=true;         
                 }
+            }
+            
+            if(existe == false){
+                location.reload();
+                return;
             }
       
             if(!registro){

@@ -127,10 +127,10 @@ class unidadmedidaControlador extends unidadmedidaModelo {
             }
         }else{
             $alerta=[
-                "alerta"=>"simple",
-                "Titulo"=>"Ocurrio un error inesperado",
-                "Texto"=>"No hemos podido realizar la accion requerida en el equipo seleccionado",
-                "Tipo"=>"error"
+                "alerta"=>"recargar",
+                "Titulo"=>"Privilegios insuficientes",
+                "Texto"=>"Sus privilegios, son solo para vistas",
+                "Tipo"=>"info"
             ];
         }
         return mainModel::sweet_alert($alerta);

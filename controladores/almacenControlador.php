@@ -381,7 +381,7 @@ Class almacenControlador extends almacenModelo {
         if($buscador!=""){
             $datos=$conexion->query("SELECT SQL_CALC_FOUND_ROWS ac.id_ac,c.id_comp,c.descripcion,c.nparte1,c.nparte2,c.nparte3,
             um.abreviado,ac.stock,ac.fk_idalm,ac.u_nombre,ac.u_seccion,e.Nombre_Equipo,e.Id_Equipo,
-            eu.alias_equipounidad,ac.Referencia,ac.control_stock,c.nserie,ca.nombre,ca.color,c.medida
+            eu.alias_equipounidad,ac.Referencia,ac.control_stock,c.nserie,ca.nombre,ca.color,c.medida,c.est_baja,c.est
               FROM componentes c
               INNER JOIN almacen_componente ac ON ac.fk_idcomp = c.id_comp 
               INNER JOIN equipos e  ON e.Id_Equipo = ac.fk_Id_Equipo
@@ -396,7 +396,7 @@ Class almacenControlador extends almacenModelo {
         }else{
             $datos=$conexion->query("SELECT SQL_CALC_FOUND_ROWS ac.id_ac,c.id_comp,c.descripcion,c.nparte1,c.nparte2,c.nparte3,
         um.abreviado,ac.stock,ac.fk_idalm,ac.u_nombre,ac.u_seccion,e.Nombre_Equipo,e.Id_Equipo,
-        eu.alias_equipounidad,ac.Referencia,ac.control_stock,c.nserie,ca.nombre,ca.color,c.medida
+        eu.alias_equipounidad,ac.Referencia,ac.control_stock,c.nserie,ca.nombre,ca.color,c.medida,c.est_baja,c.est
         FROM componentes c
         INNER JOIN almacen_componente ac ON ac.fk_idcomp = c.id_comp 
         INNER JOIN equipos e  ON e.Id_Equipo = ac.fk_Id_Equipo
@@ -410,6 +410,9 @@ Class almacenControlador extends almacenModelo {
         $total = $conexion->query("SELECT FOUND_ROWS()");
         $total = (int)$total->fetchColumn();
         $Npaginas = ceil($total/$registros);
+        
+
+
         if($tipo=="vale"){
             //devuel valor entero redondeado hacia arriba 4.2 = 5
             
@@ -417,7 +420,7 @@ Class almacenControlador extends almacenModelo {
             <button type='button' class='btn btn-primary'>
                 Total de productos <span class='badge badge-light'>{$total}</span>
             </button>
-            <div class='table-responsive'><table class='table'>
+            <div class='table-responsive-sm'><table class='table'>
             <thead>
                 <tr>
                     <th scope='col'>Codigo</th>
@@ -437,10 +440,20 @@ Class almacenControlador extends almacenModelo {
             <tbody id='table_componente'>";
             if($total>=1 && $paginador<=$Npaginas)
             {
-            
+  
                 foreach($datos as $row){
+                    if($row['est']==0){
+                        $color = "table-danger";
+                        $title = "producto eliminado; producto desconituado, recomendable dejar usar este codigo {$row['id_comp']} o eliminarlo de su almacen";
+                    }else if($row['est_baja']==0){
+                        $color = "table-warning";
+                        $title = "producto dado de baja; producto descontinuado";
+                    }else{
+                        $color="";
+                        $title="";
+                    }
                     $tabla .="
-                <tr>
+                <tr class='{$color}' data-toggle='tooltip'  data-placement='top' data-html='true' title='{$title}'>
                     <td>{$row['id_comp']}</td>
                     <td>{$row['descripcion']} <span class='badge badge-{$row['color']}'>{$row['nombre']}</span></td>                      
                     <td>{$row['nparte1']}</td>
@@ -468,7 +481,7 @@ Class almacenControlador extends almacenModelo {
                 <button type='button' class='btn btn-primary'>
                     Total de productos <span class='badge badge-light'>{$total}</span>
                 </button>
-                <div class='table-responsive'><table class='table'>
+                <div class='table-responsive-sm'><table class='table'>
                     <thead>
                         <tr>
                             <th scope='col'>#</th>
@@ -493,9 +506,19 @@ Class almacenControlador extends almacenModelo {
                     <tbody id='dtbody'>"; 
                             
                 foreach($datos as $row){
-                  
+                    
+                    if($row['est']==0){
+                        $color = "table-danger";
+                        $title = "producto eliminado; producto desconituado, recomendable dejar usar este codigo";
+                    }else if($row['est_baja']==0){
+                        $color = "table-warning";
+                        $title = "producto dado de baja; producto descontinuado";
+                    }else{
+                        $color="";
+                        $title="";
+                    }
                         $tabla.="
-                        <tr>
+                        <tr class='{$color}' data-toggle='tooltip'  data-placement='top' data-html='true' title='{$title}'>
                             <td>{$contador}</td>
                             <td>{$row['id_comp']}</td>
                             <td>{$row['descripcion']} <span class='badge badge-{$row['color']}'>{$row['nombre']}</span></td>
@@ -861,19 +884,15 @@ Class almacenControlador extends almacenModelo {
             }else{
                 if($validar[0]->rowCount()>0){
                     $alerta=[
-                        "alerta"=>"recargar_tiempo",
+                        "alerta"=>"recargar",
                         "Titulo"=>"Componentes registrados",
                         "Texto"=>"Registrados en su almacen",
-                        "Tipo"=>"success",
-                        "tiempo"=>5000
+                        "Tipo"=>"success"
+                        
                     ];
                     
                     $localStorage = [
-                        "BDcomp_gen",
-                        "BDproductos",
                         "carritoGen",
-                        "carritoIn",
-                        "carritoS"
                     ];
                     echo mainModel::localstorage_reiniciar($localStorage);
 
@@ -1313,7 +1332,8 @@ Class almacenControlador extends almacenModelo {
         return mainModel::ejecutar_combo($consulta,$val,$vis);
     }
 
-}
+    
+}   
 
 
 ?>
