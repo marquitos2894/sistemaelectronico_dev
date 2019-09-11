@@ -729,7 +729,6 @@ Class almacenControlador extends almacenModelo {
         $fecha=$objDateTime->format('c');
         $fk_idpersonal = mainModel::limpiar_cadena($_POST["personal"]);
         $documento=mainModel::limpiar_cadena($_POST["documento"]);
-        $privilegio =  mainModel::limpiar_cadena($_POST["privilegio_sbp_vi"]);
         //$fk_idpersonal = ($documento==1)? $fk_idpersonal=$fk_idpersonal:$fk_idpersonal=$fk_idusuario; 
         $privilegio=mainModel::limpiar_cadena($_POST["privilegio_in"]);
         if($documento==1){

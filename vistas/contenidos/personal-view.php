@@ -91,14 +91,9 @@
                     </div>
                   </div>
           </div>
-<<<<<<< HEAD
-          <input type="hidden"  name="privilegio_sbp_personal" value="<?php echo $_SESSION['privilegio_sbp']?>"/>  
-          <button type="submit" class="btn btn-success btn-lg btn-block">Guardar</button>
-=======
           <input type="hidden"  name="privilegio_sbp" value="<?php echo $_SESSION['privilegio_sbp']?>"/>
           <div id='alert'></div>
           <button type="submit" id="btnsave" class="btn btn-success btn-lg btn-block">Guardar</button>
->>>>>>> newdev
           <div class="RespuestaAjax"></div>
         </form>
 </div>

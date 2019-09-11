@@ -93,13 +93,8 @@ $compCont = new componentesControlador();
                     </div>    
                 </div>
             </div>
-<<<<<<< HEAD
-        </div>  
-        <input type="hidden"  name="privilegio_comp" value="<?php echo $_SESSION['privilegio_sbp']?>"/>   
-=======
         </div>
         <input type="hidden"  name="privilegio_sbp" value="<?php echo $_SESSION['privilegio_sbp']?>"/>    
->>>>>>> newdev
         <button type="submit" class="btn btn-primary">Guardar</button>
         <div class="RespuestaAjax"></div>
     </form>

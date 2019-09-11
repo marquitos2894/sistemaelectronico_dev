@@ -43,11 +43,7 @@ Class equipoControlador extends equipoModelo {
         //devuel valor entero redondeado hacia arriba 4.2 = 5
         $Npaginas = ceil($total/$registros);
         $tabla.="
-<<<<<<< HEAD
-        <div class='table-responsive-sm'><table class='table table-bordered'>
-=======
         <div class='table-responsive'><table class='table table-bordered'>
->>>>>>> newdev
             <thead>
                 <tr>
                     <th scope='col'>#</th>
@@ -153,11 +149,7 @@ Class equipoControlador extends equipoModelo {
         //devuel valor entero redondeado hacia arriba 4.2 = 5
         $Npaginas = ceil($total/$registros);
 
-<<<<<<< HEAD
-                $tabla.="<div class='table-responsive-sm'><table class='table table-bordered'>
-=======
                 $tabla.="<div class='table-responsive'><table class='table table-bordered'>
->>>>>>> newdev
                 <thead>
                     <tr>
                         <th scope='col'>#</th>
