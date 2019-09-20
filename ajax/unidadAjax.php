@@ -1,7 +1,7 @@
 <?php
 
 $peticionAjax = true;
-require_once '../Core/configGeneral.php';
+require_once '../core/configGeneral.php';
 require_once '../controladores/unidadControlador.php';
 
 $unidadCont = new unidadControlador();

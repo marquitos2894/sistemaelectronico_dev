@@ -1,6 +1,5 @@
 <?php 
     
-
     if($peticionAjax){
         require_once '../core/configAPP.php';
     }else{
@@ -10,7 +9,7 @@
 
         protected function conectar(){
             try{
-            $gbd = new PDO(SGBD,USER,PASS);
+            $gbd = new PDO(SGBD,USER,PASS,array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"));
             }catch(PDOException $e){
                 
             }
@@ -33,11 +32,13 @@
 
 
         protected function obtener_consulta_json($consulta){
+    
             $respuesta = self::conectar()->prepare($consulta);
             $respuesta->execute();
             $respuesta=$respuesta->fetchAll(PDO::FETCH_ASSOC);
-            $json = json_encode($respuesta);
 
+            $json = json_encode($respuesta,JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE);
+            $error = json_last_error_msg();
             return $json;
         }
 

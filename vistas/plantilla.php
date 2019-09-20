@@ -1,5 +1,6 @@
+   <?php //session_start(['name'=>'SBP']); 
 
-
+   ?>
 
 
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
@@ -28,9 +29,9 @@
 
           if($vistasR == "login" || $vistasR =="404" || $vistasR=="index"){
             if($vistasR == "login"){
-              require_once './vistas/contenidos/Login-view.php'; 
+              require_once './vistas/contenidos/login-view.php'; 
             }else if($vistasR == 'index'){
-              require_once './vistas/contenidos/Login-view.php'; 
+              require_once './vistas/contenidos/login-view.php'; 
             }else{
               require_once './vistas/contenidos/404-view.php'; 
             }
@@ -52,7 +53,7 @@
 
   <!-- Bootstrap core JavaScript-->
 
- <?php  include "vistas/modulos/Script.php"; ?>
+ <?php  include "vistas/modulos/script.php"; ?>
 
 
 <?php  include "vistas/modulos/chngeunidadscript.php"; ?>

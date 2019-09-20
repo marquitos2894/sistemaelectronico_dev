@@ -13,7 +13,7 @@
 
                     let id_almacen = $('#id_alm_vs').value;
                     const datos = new FormData();
-                    datos.append('id_alm', id_almacen);
+                    datos.append('id_alm_consulta', id_almacen);
                     let response = await fetch('../ajax/almacenAjax.php',{
                         method : 'POST',
                         body :  datos

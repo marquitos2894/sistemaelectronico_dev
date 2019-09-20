@@ -18,12 +18,13 @@
                 method : 'POST',
                 body : datos
             });
-            let data = await response.json();
-            await localStorage.setItem('BDproductos',JSON.stringify(data));
-            this.getBDproductos = await JSON.parse(localStorage.getItem('BDproductos')); 
-            console.log("localStorage");
-            console.log(this.getBDproductos);
-            window.location='componentes';
+            //let data = await response.json();
+            //await localStorage.setItem('BDproductos',JSON.stringify(data));
+            //this.getBDproductos = await JSON.parse(localStorage.getItem('BDproductos'));
+            //console.log("localStorage"); 
+            //console.log(data);
+            //console.log(this.getBDproductos);
+            window.location='almacen';
         }
     });
 

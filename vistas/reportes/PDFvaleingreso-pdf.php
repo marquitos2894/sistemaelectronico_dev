@@ -1,6 +1,7 @@
 <?php 
-require_once "./Core/configGeneral.php";
+require_once "./core/configGeneral.php";
 require_once './controladores/almacenControlador.php';
+
 $almCont = new almacenControlador();
 $url = explode("/",$_GET['views']);
 $idvs=0;$idalm=0;

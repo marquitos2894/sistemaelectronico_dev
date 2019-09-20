@@ -1,6 +1,6 @@
 <?php 
    $peticionAjax = true;
-   require_once '../Core/configGeneral.php';
+   require_once '../core/configGeneral.php';
    require_once '../controladores/almacenControlador.php';
    require_once '../controladores/equipoControlador.php'; 
 
@@ -14,10 +14,8 @@
    }  
 
 
-
-
-   if(isset($_POST["id_alm"])){
-      session_start(['name'=>'SBP']);
+   if(isset($_POST["id_alm_consulta"])){
+      
       echo $almCont->obtener_consulta_json_controlador("SELECT ac.id_ac,c.id_comp,c.descripcion,c.nparte1,
       c.nparte2,c.nparte3,um.id_unidad_med,um.abreviado,ac.stock,ac.fk_idalm,ac.u_nombre,ac.u_seccion,
       eu.alias_equipounidad,e.Nombre_Equipo,e.Id_Equipo,ac.Referencia,c.nserie
@@ -26,13 +24,15 @@
       INNER JOIN equipos e  ON e.Id_Equipo = ac.fk_Id_Equipo
       INNER JOIN unidad_medida um ON um.id_unidad_med = c.fk_idunidad_med
       INNER JOIN equipo_unidad eu ON eu.fk_idequipo = e.Id_Equipo
-      WHERE ac.fk_idalm = {$_POST["id_alm"]}");
-
-      if( isset($_POST["id_alm"]) && isset($_POST["nom_almacen"])){
-         $almCont->sesion_almacen($_POST["id_alm"],$_POST["nom_almacen"]);
-      }
-
+      WHERE ac.fk_idalm = {$_POST["id_alm_consulta"]}");
    }
+
+   if(isset($_POST["id_alm"]) && isset($_POST["nom_almacen"])){
+         session_start(['name'=>'SBP']);
+         $almCont->sesion_almacen($_POST["id_alm"],$_POST["nom_almacen"]);
+   }
+
+   
 
    if(isset($_POST["logout_alm"])){
       session_start(['name'=>'SBP']);
@@ -78,6 +78,11 @@
 
    if(isset($_POST["buscarcompajax"]) && isset($_POST["almacenajax"]) ){
       echo $almCont->paginador_componentes_almacen($_POST["paginadorajax"],10,$_POST["privilegioajax"],$_POST["buscarcompajax"],$_POST["vistaajax"],$_POST["almacenajax"],$_POST["tipoajax"]);
+   }
+
+   
+   if(isset($_POST["buscadorlogajax"]) && isset($_POST["almacenlogajax"]) ){
+      echo $almCont->paginador_log_in_out($_POST["paginadorlogajax"],10,$_POST["privilegiologajax"],$_POST["buscadorlogajax"],$_POST["vistalogajax"],$_POST["almacenlogajax"],$_POST["tipologajax"]);
    }
    
 

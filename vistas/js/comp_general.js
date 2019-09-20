@@ -15,22 +15,22 @@
             if(!localStorage.getItem("BDcomp_gen")){
                 localStorage.setItem("BDcomp_gen","[]");
             }
-      
-            const datos = new FormData();
-            datos.append('comp_gen','true');
+            
+            $valor='true'
+            datos = new FormData();
+            datos.append('comp_gen',$valor);
             let response = await fetch('../ajax/componentesAjax.php',{
                 method: 'POST',
                 body : datos
             });
-
             let data = await response.json();
-      
+            
             await localStorage.setItem("BDcomp_gen", JSON.stringify(data))
             this.getBDcomp_gen = await JSON.parse(localStorage.getItem("BDcomp_gen"));
 
             this.carrito = JSON.parse(localStorage.getItem("carritoGen"));
   
-
+            await render.renderCarrito();
         }
 
         this.agregarItem =  function(item,u_nom,u_sec,id_equi,referencia,nom_equipo){
@@ -44,7 +44,7 @@
                     i.u_sec = u_sec;
                     i.id_equipo = id_equi;
                     i.nom_equipo = nom_equipo 
-                    i.referencia = referencia;
+                    i.referencia = referencia; 
                     var datos = i;
                     existe = true;
                 }
@@ -185,8 +185,8 @@
 
     document.addEventListener("DOMContentLoaded", async function(){
         await bdcomp.constructor();
-        await render.renderCarrito();
-        await render.RenderTableComp();
+        //await render.renderCarrito();
+        render.RenderTableComp();
             
     });
 

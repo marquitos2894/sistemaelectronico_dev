@@ -30,7 +30,7 @@
         localStorage.setItem('carritoGen','[]');
         localStorage.setItem('BDproductos','[]');
         //window.location='almacen';
-        location.reload();
+        //location.reload();
     
 
     });

@@ -7,8 +7,7 @@ class vistasModelo{
                         "RValeSalida","RValeIngreso","newcomponente","ingresoAlmacen","almacen","insideAlmacen","unidadmedlist",
                         "newunidadmed","reporteAlmacen","datosReferencia","newdatosReferencia","equipos","newequipos","miFlota"
                         ,"miFlotaBaja","componentesBaja","NoAccessVista"];
-           
-                 
+             
         if(isset($_SESSION['nombre_sbp'])){
             //echo $_SESSION['RvistasUsuario'];
             $Rvista_usuario =   explode("-",$_SESSION['RvistasUsuario']);      

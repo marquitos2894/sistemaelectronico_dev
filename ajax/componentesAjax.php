@@ -1,6 +1,6 @@
 <?php
 $peticionAjax = true;
-require_once '../Core/configGeneral.php';
+require_once '../core/configGeneral.php';
 require_once '../controladores/componentesControlador.php';
 
 $compCont = new componentesControlador();
@@ -18,7 +18,8 @@ if(isset($_POST["dataReferencia"])){
 }
 
 if(isset($_POST["comp_gen"])){
-   echo $compCont->componentes_gen_json();
+   //echo $compCont->componentes_gen_json();
+   echo $compCont->obtener_consulta_json_controlador("SELECT * FROM componentes WHERE est = 1 ");
 }
 
 if(isset($_POST["idunidad_compgen"])){

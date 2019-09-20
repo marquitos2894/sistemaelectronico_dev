@@ -11,7 +11,7 @@
             <a class="nav-link" href="#">Equipos dados de Baja</a>
         </li>
     </ul><br>
-    <form action="<?php echo SERVERURL;?>ajax/EquiposAjax.php" method="POST" data-form="save" class="FormularioAjax" autocomplete="off" enctype="multipart/form-data">
+    <form action="<?php echo SERVERURL;?>ajax/equiposAjax.php" method="POST" data-form="save" class="FormularioAjax" autocomplete="off" enctype="multipart/form-data">
         <div class="form-row">
             <div class="form-group col-md-4">
                 <label for="inputEmail4">Modelo</label>

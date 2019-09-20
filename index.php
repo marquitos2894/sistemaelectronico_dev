@@ -1,7 +1,6 @@
-
 <?php 
 session_start(['name'=>'SBP']);
-require_once "Core/configGeneral.php";
+require_once "core/configGeneral.php";
 require_once "controladores/vistasControladores.php";
 $plantilla = new vistasControladores();
 

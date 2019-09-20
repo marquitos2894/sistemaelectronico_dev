@@ -1,6 +1,6 @@
 <?php
 $peticionAjax = true;
-require_once '../Core/configGeneral.php';
+require_once '../core/configGeneral.php';
 require_once '../controladores/unidadmedidaControlador.php';
 
 $unimedida = new unidadmedidaControlador();

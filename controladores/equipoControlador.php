@@ -87,7 +87,7 @@ Class equipoControlador extends equipoModelo {
                     <td><a style='font-size: 1.5em;'  class='fas fa-edit' href='{$row['Id_Equipo']}' id='EditItem' data-equipo='{$row['Id_Equipo']}' data-toggle='modal' data-target='#ModalEdit'></a> </td>";
                     $tabla .="
                     <td >
-                        <form name='FrmDelEquipo' action='".SERVERURL."ajax/EquiposAjax.php' method='POST' class='FormularioAjax' 
+                        <form name='FrmDelEquipo' action='".SERVERURL."ajax/equiposAjax.php' method='POST' class='FormularioAjax' 
                             data-form='delete' entype='multipart/form-data' autocomplete='off'>
                             <input type='hidden' name='Id_Equipo_darBaja' value='{$row['Id_Equipo']}'/>
                             <input type='hidden'  name='privilegio_sbp' value='{$privilegio}' />
@@ -197,7 +197,7 @@ Class equipoControlador extends equipoModelo {
                                         
                                 $tabla .="
                                 <td>
-                                    <form name='FrmDelEquipo' action='".SERVERURL."ajax/EquiposAjax.php' method='POST' class='FormularioAjax' 
+                                    <form name='FrmDelEquipo' action='".SERVERURL."ajax/equiposAjax.php' method='POST' class='FormularioAjax' 
                                         data-form='update' entype='multipart/form-data' autocomplete='off'>";
                             if($est_baja==1){
                                     $tabla .="
@@ -217,7 +217,7 @@ Class equipoControlador extends equipoModelo {
                             if($est_baja==0){
                                 $tabla .="   
                                 <td>
-                                    <form name='Frm_ue' action='".SERVERURL."ajax/EquiposAjax.php' method='POST' class='FormularioAjax' 
+                                    <form name='Frm_ue' action='".SERVERURL."ajax/equiposAjax.php' method='POST' class='FormularioAjax' 
                                         data-form='update' entype='multipart/form-data' autocomplete='off'>
                                         <input type='hidden' name='idequipounidad_delete' value='{$row['id_equipounidad']}'/>
                                         <input type='hidden'  name='privilegio_sbp' value='{$privilegio}' />

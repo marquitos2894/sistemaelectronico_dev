@@ -24,7 +24,7 @@
                 <div class="form-row">
                     <div class="form-group col-sm-6 text-primary">
                         <label for="inputAddress">Referencia</label>
-                        <input type="text" name="referencia_dr_nuevo" class="form-control " id="inputAddress" placeholder="Nombre del componente">
+                        <input type="text" name="referencia_dr_nuevo" class="form-control " id="inputAddress" placeholder="Nombre del componente" required>
                     </div>
                 </div>
                 <div class="progress" style="height:1px;">

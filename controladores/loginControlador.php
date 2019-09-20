@@ -55,7 +55,6 @@ class loginControlador extends loginModelo{
 
     public function cerrar_sesion_controlador(){
 
-
         session_start(['name'=>'SBP']);
         $token=mainModel::decryption($_GET['Token']);
         $datos=[
