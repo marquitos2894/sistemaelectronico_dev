@@ -82,7 +82,7 @@
 
    
    if(isset($_POST["buscadorlogajax"]) && isset($_POST["almacenlogajax"]) ){
-      echo $almCont->paginador_log_in_out($_POST["paginadorlogajax"],10,$_POST["privilegiologajax"],$_POST["buscadorlogajax"],$_POST["vistalogajax"],$_POST["almacenlogajax"],$_POST["tipologajax"]);
+      echo $almCont->paginador_log_in_out($_POST["paginadorlogajax"],10,$_POST["privilegiologajax"],$_POST["buscadorlogajax"],$_POST["vistalogajax"],$_POST["almacenlogajax"],$_POST["tipologajax"],$_POST["array"]);
    }
    
 

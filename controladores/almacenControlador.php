@@ -364,64 +364,143 @@ Class almacenControlador extends almacenModelo {
 
     }*/
 
-    public function paginador_log_in_out($paginador,$registros,$privilegio,$buscador,$vista,$id_alm){
+    public function paginador_log_in_out($paginador,$registros,$privilegio,$buscador,$vista,$id_alm,$tipo,$array){
         $paginador=mainModel::limpiar_cadena($paginador);
         $registros=mainModel::limpiar_cadena($registros);
         $privilegio=mainModel::limpiar_cadena($privilegio);
         $buscador=mainModel::limpiar_cadena($buscador);
-
+        $tipo=mainModel::limpiar_cadena($tipo);
+        $array=mainModel::limpiar_cadena($array);
         $tabla='';
         $paginador=(isset($paginador) && $paginador>0)?(int)$paginador:1; 
         $inicio=($paginador>0)?(($paginador*$registros)-$registros):0;
 
         $conexion = mainModel::conectar();
 
-        if($buscador!=""){
-            $datos=$conexion->query("SELECT SQL_CALC_FOUND_ROWS 'salida',vs.id_vsalida,ac.fk_idcomp,dvs.dv_descripcion,dvs.dv_nparte1,vs.fecha,vs.nom_equipo,vs.dr_referencia,vs.nombres,u.Nombre
+        if($tipo=='ambos' or $tipo==""){
+            if($buscador!=""){
+                $datos=$conexion->query("SELECT SQL_CALC_FOUND_ROWS 'salida','danger',vs.id_vsalida as vale,ac.fk_idcomp,dvs.dv_descripcion as descripcion,dvs.dv_nparte1 as nparte1,
+                DATE(vs.fecha) AS fecha ,TIME(vs.fecha) as hora,vs.nom_equipo,vs.dr_referencia,vs.nombres,
+               CONCAT(u.Nombre,' ',u.Apellido) as usuario
+               FROM almacen_componente ac
+               INNER JOIN detalle_vale_salida dvs ON dvs.fk_id_ac = ac.id_ac
+               INNER JOIN vale_salida vs ON vs.id_vsalida = dvs.fk_vsalida
+               INNER JOIN usuario u ON u.id_usu = vs.fk_idusuario
+                WHERE (dvs.dv_descripcion like '%$buscador%' or dvs.dv_nparte1 like '%$buscador%' or ac.fk_idcomp like '%$buscador%') AND
+                vs.fk_idalm={$id_alm} AND vs.est = 1 
+                UNION
+                SELECT 'ingreso','success',vi.id_vingreso as vale,ac.fk_idcomp,dvi.dvi_descripcion as descripcion,dvi.dvi_nparte1 as nparte1,
+                DATE(vi.fecha) AS fecha ,TIME(vi.fecha) as hora,dvi.dvi_nombre_equipo as nom_equipo,dvi.dr_referencia,vi.nombres,
+                CONCAT(u.Nombre,' ',u.Apellido) as usuario
+                FROM almacen_componente ac
+                INNER JOIN detalle_vale_ingreso dvi ON dvi.fk_id_ac = ac.id_ac
+                INNER JOIN vale_ingreso vi ON vi.id_vingreso = dvi.fk_id_vingreso
+                INNER JOIN usuario u ON u.id_usu = vi.fk_idusuario
+                WHERE (dvi.dvi_descripcion LIKE '%$buscador%' OR dvi.dvi_nparte1 LIKE '%$buscador%' OR ac.fk_idcomp like '%$buscador%') AND 
+                vi.fk_idalm = {$id_alm} AND vi.est = 1
+                ORDER BY fecha DESC, hora DESC  LIMIT {$inicio},{$registros}");
+                
+            }else{
+            $datos=$conexion->query("SELECT SQL_CALC_FOUND_ROWS 'salida','danger',vs.id_vsalida as vale,ac.fk_idcomp,dvs.dv_descripcion as descripcion,dvs.dv_nparte1 as nparte1,
+             DATE(vs.fecha) AS fecha ,TIME(vs.fecha) as hora,vs.nom_equipo,vs.dr_referencia,vs.nombres,
+            CONCAT(u.Nombre,' ',u.Apellido) as usuario
             FROM almacen_componente ac
             INNER JOIN detalle_vale_salida dvs ON dvs.fk_id_ac = ac.id_ac
             INNER JOIN vale_salida vs ON vs.id_vsalida = dvs.fk_vsalida
             INNER JOIN usuario u ON u.id_usu = vs.fk_idusuario
-            WHERE (dvs.dv_descripcion like '%$buscador%' or dvs.dv_nparte1 like '%$buscador%' or ac.fk_idcomp like '%$buscador%') AND
-            vs.fk_idalm={$id_alm} AND vs.est = 1 
+            WHERE vs.fk_idalm={$id_alm}  AND vs.est = 1 
             UNION
-            SELECT 'ingreso',vi.id_vingreso,ac.fk_idcomp,dvi.dvi_descripcion,dvi.dvi_nparte1,vi.fecha,dvi.dvi_nombre_equipo,dvi.dr_referencia,vi.nombres,u.Nombre
+            SELECT 'ingreso','success',vi.id_vingreso as vale,ac.fk_idcomp,dvi.dvi_descripcion as descripcion ,dvi.dvi_nparte1 as nparte1,
+            DATE(vi.fecha) AS fecha ,TIME(vi.fecha) as hora,dvi.dvi_nombre_equipo as nom_equipo,dvi.dr_referencia,vi.nombres,
+            CONCAT(u.Nombre,' ',u.Apellido) as usuario
             FROM almacen_componente ac
             INNER JOIN detalle_vale_ingreso dvi ON dvi.fk_id_ac = ac.id_ac
             INNER JOIN vale_ingreso vi ON vi.id_vingreso = dvi.fk_id_vingreso
             INNER JOIN usuario u ON u.id_usu = vi.fk_idusuario
-            WHERE (dvi.dvi_descripcion LIKE '%$buscador%' OR dvi.dvi_nparte1 LIKE '%$buscador%' OR ac.fk_idcomp like '%$buscador%') AND 
-            vi.fk_idalm = {$id_alm} AND vi.est = 1
-            ORDER BY fecha DESC
-            LIMIT {$inicio},{$registros} ");
-            
-        }else{
-        $datos=$conexion->query("SELECT SQL_CALC_FOUND_ROWS 'salida','danger',vs.id_vsalida,ac.fk_idcomp,dvs.dv_descripcion,dvs.dv_nparte1, DATE(vs.fecha) AS fecha ,TIME(vs.fecha) as hora,vs.nom_equipo,vs.dr_referencia,vs.nombres,
-        CONCAT(u.Nombre,' ',u.Apellido) as usuario
-        FROM almacen_componente ac
-        INNER JOIN detalle_vale_salida dvs ON dvs.fk_id_ac = ac.id_ac
-        INNER JOIN vale_salida vs ON vs.id_vsalida = dvs.fk_vsalida
-        INNER JOIN usuario u ON u.id_usu = vs.fk_idusuario
-        WHERE vs.fk_idalm={$id_alm}  AND vs.est = 1 
-        UNION
-        SELECT 'ingreso','success',vi.id_vingreso,ac.fk_idcomp,dvi.dvi_descripcion,dvi.dvi_nparte1,DATE(vi.fecha) AS fecha ,TIME(vi.fecha) as hora,dvi.dvi_nombre_equipo,dvi.dr_referencia,vi.nombres,
-        CONCAT(u.Nombre,' ',u.Apellido) as usuario
-        FROM almacen_componente ac
-        INNER JOIN detalle_vale_ingreso dvi ON dvi.fk_id_ac = ac.id_ac
-        INNER JOIN vale_ingreso vi ON vi.id_vingreso = dvi.fk_id_vingreso
-        INNER JOIN usuario u ON u.id_usu = vi.fk_idusuario
-        WHERE vi.fk_idalm = {$id_alm}  AND vi.est = 1
-        ORDER BY fecha DESC, hora DESC  LIMIT {$inicio},{$registros}");           
+            WHERE vi.fk_idalm = {$id_alm}  AND vi.est = 1
+            ORDER BY fecha DESC, hora DESC  LIMIT {$inicio},{$registros}");           
+            }
         }
+        if($tipo=='salida'){
+            if($buscador!=""){
+                $datos=$conexion->query("SELECT SQL_CALC_FOUND_ROWS 'salida','danger',vs.id_vsalida as vale,ac.fk_idcomp,dvs.dv_descripcion as descripcion,dvs.dv_nparte1 as nparte1,
+                DATE(vs.fecha) AS fecha ,TIME(vs.fecha) as hora,vs.nom_equipo,vs.dr_referencia,vs.nombres,
+               CONCAT(u.Nombre,' ',u.Apellido) as usuario
+               FROM almacen_componente ac
+               INNER JOIN detalle_vale_salida dvs ON dvs.fk_id_ac = ac.id_ac
+               INNER JOIN vale_salida vs ON vs.id_vsalida = dvs.fk_vsalida
+               INNER JOIN usuario u ON u.id_usu = vs.fk_idusuario
+                WHERE (dvs.dv_descripcion like '%$buscador%' or dvs.dv_nparte1 like '%$buscador%' or ac.fk_idcomp like '%$buscador%') AND
+                vs.fk_idalm={$id_alm} AND vs.est = 1 
+                ORDER BY fecha DESC, hora DESC  LIMIT {$inicio},{$registros}");
+                
+            }else{
+            $datos=$conexion->query("SELECT SQL_CALC_FOUND_ROWS 'salida','danger',vs.id_vsalida as vale,ac.fk_idcomp,dvs.dv_descripcion as descripcion,dvs.dv_nparte1 as nparte1,
+            DATE(vs.fecha) AS fecha ,TIME(vs.fecha) as hora,vs.nom_equipo as nom_equipo,vs.dr_referencia,vs.nombres,
+            CONCAT(u.Nombre,' ',u.Apellido) as usuario
+            FROM almacen_componente ac
+            INNER JOIN detalle_vale_salida dvs ON dvs.fk_id_ac = ac.id_ac
+            INNER JOIN vale_salida vs ON vs.id_vsalida = dvs.fk_vsalida
+            INNER JOIN usuario u ON u.id_usu = vs.fk_idusuario
+            WHERE vs.fk_idalm={$id_alm}  AND vs.est = 1 
+            ORDER BY fecha DESC, hora DESC  LIMIT {$inicio},{$registros}");
+            }           
+        }
+
+        if($tipo=='ingreso'){
+            if($buscador!=""){
+                $datos=$conexion->query("SELECT SQL_CALC_FOUND_ROWS 'ingreso','success',vi.id_vingreso as vale,ac.fk_idcomp,dvi.dvi_descripcion as descripcion,dvi.dvi_nparte1 as nparte1,
+                DATE(vi.fecha) AS fecha ,TIME(vi.fecha) as hora,dvi.dvi_nombre_equipo as nom_equipo,dvi.dr_referencia,vi.nombres,
+                CONCAT(u.Nombre,' ',u.Apellido) as usuario
+                FROM almacen_componente ac
+                INNER JOIN detalle_vale_ingreso dvi ON dvi.fk_id_ac = ac.id_ac
+                INNER JOIN vale_ingreso vi ON vi.id_vingreso = dvi.fk_id_vingreso
+                INNER JOIN usuario u ON u.id_usu = vi.fk_idusuario
+                WHERE (dvi.dvi_descripcion LIKE '%$buscador%' OR dvi.dvi_nparte1 LIKE '%$buscador%' OR ac.fk_idcomp like '%$buscador%') AND 
+                vi.fk_idalm = {$id_alm} AND vi.est = 1
+                ORDER BY fecha DESC, hora DESC  LIMIT {$inicio},{$registros}");
+                
+            }else{
+            $datos=$conexion->query("SELECT SQL_CALC_FOUND_ROWS 'ingreso','success',vi.id_vingreso as vale,ac.fk_idcomp,dvi.dvi_descripcion as descripcion,dvi.dvi_nparte1 as nparte1,
+            DATE(vi.fecha) AS fecha ,TIME(vi.fecha) as hora,dvi.dvi_nombre_equipo as nom_equipo,dvi.dr_referencia,vi.nombres,
+            CONCAT(u.Nombre,' ',u.Apellido) as usuario
+            FROM almacen_componente ac
+            INNER JOIN detalle_vale_ingreso dvi ON dvi.fk_id_ac = ac.id_ac
+            INNER JOIN vale_ingreso vi ON vi.id_vingreso = dvi.fk_id_vingreso
+            INNER JOIN usuario u ON u.id_usu = vi.fk_idusuario
+            WHERE vi.fk_idalm = {$id_alm}  AND vi.est = 1
+            ORDER BY fecha DESC, hora DESC  LIMIT {$inicio},{$registros}");           
+            }
+        }
+
+        
 
         $datos = $datos->fetchAll();
         $total = $conexion->query("SELECT FOUND_ROWS()");
         $total = (int)$total->fetchColumn();
         $Npaginas = ceil($total/$registros);
         $contador=$inicio+1;
+        
+        $activeA='';$activeI='';$activeO='';
+
+        if($tipo=='ambos'){
+            $activeA='active';
+        }else if($tipo=="salida"){
+            $activeO='active';
+        }else{
+            $activeI='active';
+        }
+
 
         $tabla.="
-        <div class='table-responsive-sm'><table class='table'>
+        <nav>
+            <ul class='pagination pagination' id='list_log'>
+                <li id='li_ambos' class='page-item {$activeA}'><a class='page-link' id='ambos' href='#list_log'>Ingreso/Salida</a></li>
+                <li id='li_in' class='page-item {$activeI}'><a class='page-link' id='ingreso' href='#list_log'>Ingreso</a></li>
+                <li id='li_out' class='page-item {$activeO}'><a class='page-link' id='salida' href='#list_log'>Salida</a></li>
+            </ul>
+        </nav>
+        <div class='table-responsive-sm'><table id='tblog' class='table'>
         <thead>
             <tr>
                 <th scope='col'>In/Out</th>
@@ -444,12 +523,12 @@ Class almacenControlador extends almacenModelo {
                 $tabla .="
                 <tr>
                     <td><span class='badge badge-{$row[1]}'>{$row[0]}</span></td>
-                    <td>{$row['id_vsalida']}</td>
+                    <td>{$row['vale']}</td>
                     <td>{$row['fk_idcomp']}</td>
-                    <td>{$row['dv_descripcion']}</td>                      
-                    <td>{$row['dv_nparte1']}</td>
-                    <td>".mainModel::dateFormat($row['fecha'])."</td>
-                    <td>{$row['hora']}</td>
+                    <td>{$row['descripcion']}</td>                      
+                    <td>{$row['nparte1']}</td>
+                    <td><span class='badge badge-{$row[1]}'>".mainModel::dateFormat($row['fecha'])."</span></td>
+                    <td><span class='badge badge-{$row[1]}'>{$row['hora']}</span></td>
                     <td>{$row['nom_equipo']}</td>
                     <td>{$row['dr_referencia']}</td>
                     <td>{$row['nombres']}</td>
@@ -1413,8 +1492,6 @@ Class almacenControlador extends almacenModelo {
 
         $_SESSION["almacen"]=$id_alm;
         $_SESSION["nom_almacen"]=$nombre_almacen;
-
-
     }
 
     public function logout_almacen(){

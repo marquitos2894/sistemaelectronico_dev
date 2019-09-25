@@ -235,7 +235,10 @@
           <h3 style="aling:center"><span class="badge badge-primary">CIA Minera Kolpa</span></h3>
           <?php elseif($_SESSION['unidad']==6):?>
           <h3 style="aling:center"><span class="badge badge-success">Taller/Chorrillos</span></h3>
+          <?php elseif($_SESSION['unidad']==28):?>
+          <h3 style="aling:center"><span class="badge badge-success">Compañia Minera Corona</span></h3>
           <?php endif;?>
+
           <ul class="navbar-nav ml-auto">
             <!-- Nav Item - Search Dropdown (Visible Only XS) -->
             <li class="nav-item dropdown no-arrow d-sm-none">
@@ -289,6 +292,17 @@
                   <div>
                     <div class="small text-gray-500" data-cuenta="2">Huancavelica</div>
                     <span class="font-weight" data-cuenta="2">Cia Minera Kolpa</span>
+                  </div>
+                </a>
+                <a class="dropdown-item d-flex align-items-center" href="#" data-cuenta="2">
+                  <div class="mr-3">
+                    <div class="icon-circle bg-primary" data-cuenta="28">
+                      <i class="fab fa-kickstarter-k text-white" data-cuenta="28"></i>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="small text-gray-500" data-cuenta="28">Cañete</div>
+                    <span class="font-weight" data-cuenta="28">Compañia Minera Corona</span>
                   </div>
                 </a>
                 <a class="dropdown-item d-flex align-items-center" href="#" data-cuenta="6">
