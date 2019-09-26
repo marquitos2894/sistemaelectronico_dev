@@ -11,8 +11,8 @@ function render(){
         let vista = document.querySelector('#vista').value
         let id_alm = document.querySelector('#id_alm').value
         let privilegio = document.querySelector('#privilegio').value
-
         
+        //array
         let codigo = document.querySelector('#codigo').value;
         let equipo = document.querySelector('#equipo').value;
         let ref = document.querySelector('#referencia').value;
@@ -53,11 +53,6 @@ render = new render();
 
 
     document.querySelector("#log_in_out").addEventListener("click",function(ev){
-
-        /*console.log(equipo);
-        console.log(ref);
-        console.log(fec_ini);
-        console.log(fec_fin);*/
 
         if(ev.target.id=='salida'){
             render.renderTablelog(1,'salida');
@@ -105,7 +100,6 @@ render = new render();
         document.querySelector('#btnFiltrar').disabled=vdisabled;
         document.querySelector('#codigo').disabled=vdisabled;
         
-
         if(document.querySelector('#customSwitch1').checked==false){
             let tipo = document.querySelector('#tipo_logalm').value
             render.renderTablelog(1,tipo);
