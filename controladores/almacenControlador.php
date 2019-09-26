@@ -364,91 +364,152 @@ Class almacenControlador extends almacenModelo {
 
     }*/
 
-    public function paginador_log_in_out($paginador,$registros,$privilegio,$buscador,$vista,$id_alm,$tipo,$array){
+
+
+    public function paginador_log_in_out($paginador,$registros,$privilegio,$buscador,$vista,$id_alm,$tipo,$filtros){
         $paginador=mainModel::limpiar_cadena($paginador);
         $registros=mainModel::limpiar_cadena($registros);
         $privilegio=mainModel::limpiar_cadena($privilegio);
         $buscador=mainModel::limpiar_cadena($buscador);
         $tipo=mainModel::limpiar_cadena($tipo);
-        $array=mainModel::limpiar_cadena($array);
+        $filtros=mainModel::limpiar_cadena($filtros);
         $tabla='';
         $paginador=(isset($paginador) && $paginador>0)?(int)$paginador:1; 
         $inicio=($paginador>0)?(($paginador*$registros)-$registros):0;
 
         $conexion = mainModel::conectar();
 
+        $filtros = explode(",",$filtros);
+        /*$codigoF= $filtros[0];
+        $equipoF= $filtros[1];
+        $referenciaF= $filtros[2];*/
+        /*$fecha_ini= $filtros[3];
+        $fecha_fin= $filtros[4];
+        $switch=$filtros[5];*/
+        $switch = $filtros[5];
+        
         if($tipo=='ambos' or $tipo==""){
-            if($buscador!=""){
+            if($switch=='false'){
+                if($buscador!=""){
+                    $datos=$conexion->query("SELECT SQL_CALC_FOUND_ROWS 'salida','danger',vs.id_vsalida as vale,ac.fk_idcomp,dvs.dv_descripcion as descripcion,dvs.dv_nparte1 as nparte1,
+                    DATE(vs.fecha) AS fecha ,TIME(vs.fecha) as hora,vs.nom_equipo,vs.dr_referencia,vs.nombres,
+                    CONCAT(u.Nombre,' ',u.Apellido) as usuario
+                    FROM almacen_componente ac
+                    INNER JOIN detalle_vale_salida dvs ON dvs.fk_id_ac = ac.id_ac
+                    INNER JOIN vale_salida vs ON vs.id_vsalida = dvs.fk_vsalida
+                    INNER JOIN usuario u ON u.id_usu = vs.fk_idusuario
+                    WHERE (dvs.dv_descripcion like '%$buscador%' or dvs.dv_nparte1 like '%$buscador%' or ac.fk_idcomp like '%$buscador%') AND
+                    vs.fk_idalm={$id_alm} AND vs.est = 1 
+                    UNION
+                    SELECT 'ingreso','success',vi.id_vingreso as vale,ac.fk_idcomp,dvi.dvi_descripcion as descripcion,dvi.dvi_nparte1 as nparte1,
+                    DATE(vi.fecha) AS fecha ,TIME(vi.fecha) as hora,dvi.dvi_nombre_equipo as nom_equipo,dvi.dr_referencia,vi.nombres,
+                    CONCAT(u.Nombre,' ',u.Apellido) as usuario
+                    FROM almacen_componente ac
+                    INNER JOIN detalle_vale_ingreso dvi ON dvi.fk_id_ac = ac.id_ac
+                    INNER JOIN vale_ingreso vi ON vi.id_vingreso = dvi.fk_id_vingreso
+                    INNER JOIN usuario u ON u.id_usu = vi.fk_idusuario
+                    WHERE (dvi.dvi_descripcion LIKE '%$buscador%' OR dvi.dvi_nparte1 LIKE '%$buscador%' OR ac.fk_idcomp like '%$buscador%') AND 
+                    vi.fk_idalm = {$id_alm} AND vi.est = 1
+                    ORDER BY fecha DESC, hora DESC  LIMIT {$inicio},{$registros}");
+                    
+                }else{
+                    $datos=$conexion->query("SELECT SQL_CALC_FOUND_ROWS 'salida','danger',vs.id_vsalida as vale,ac.fk_idcomp,dvs.dv_descripcion as descripcion,dvs.dv_nparte1 as nparte1,
+                    DATE(vs.fecha) AS fecha ,TIME(vs.fecha) as hora,vs.nom_equipo,vs.dr_referencia,vs.nombres,
+                    CONCAT(u.Nombre,' ',u.Apellido) as usuario
+                    FROM almacen_componente ac
+                    INNER JOIN detalle_vale_salida dvs ON dvs.fk_id_ac = ac.id_ac
+                    INNER JOIN vale_salida vs ON vs.id_vsalida = dvs.fk_vsalida
+                    INNER JOIN usuario u ON u.id_usu = vs.fk_idusuario
+                    WHERE vs.fk_idalm={$id_alm}  AND vs.est = 1 
+                    UNION
+                    SELECT 'ingreso','success',vi.id_vingreso as vale,ac.fk_idcomp,dvi.dvi_descripcion as descripcion ,dvi.dvi_nparte1 as nparte1,
+                    DATE(vi.fecha) AS fecha ,TIME(vi.fecha) as hora,dvi.dvi_nombre_equipo as nom_equipo,dvi.dr_referencia,vi.nombres,
+                    CONCAT(u.Nombre,' ',u.Apellido) as usuario
+                    FROM almacen_componente ac
+                    INNER JOIN detalle_vale_ingreso dvi ON dvi.fk_id_ac = ac.id_ac
+                    INNER JOIN vale_ingreso vi ON vi.id_vingreso = dvi.fk_id_vingreso
+                    INNER JOIN usuario u ON u.id_usu = vi.fk_idusuario
+                    WHERE vi.fk_idalm = {$id_alm}  AND vi.est = 1
+                    ORDER BY fecha DESC, hora DESC  LIMIT {$inicio},{$registros}");  
+                }
+            }else{
+                $condiciones = $this->condicionales($tipo,$filtros);    
                 $datos=$conexion->query("SELECT SQL_CALC_FOUND_ROWS 'salida','danger',vs.id_vsalida as vale,ac.fk_idcomp,dvs.dv_descripcion as descripcion,dvs.dv_nparte1 as nparte1,
                 DATE(vs.fecha) AS fecha ,TIME(vs.fecha) as hora,vs.nom_equipo,vs.dr_referencia,vs.nombres,
-               CONCAT(u.Nombre,' ',u.Apellido) as usuario
-               FROM almacen_componente ac
-               INNER JOIN detalle_vale_salida dvs ON dvs.fk_id_ac = ac.id_ac
-               INNER JOIN vale_salida vs ON vs.id_vsalida = dvs.fk_vsalida
-               INNER JOIN usuario u ON u.id_usu = vs.fk_idusuario
-                WHERE (dvs.dv_descripcion like '%$buscador%' or dvs.dv_nparte1 like '%$buscador%' or ac.fk_idcomp like '%$buscador%') AND
-                vs.fk_idalm={$id_alm} AND vs.est = 1 
+                CONCAT(u.Nombre,' ',u.Apellido) as usuario
+                FROM almacen_componente ac
+                INNER JOIN detalle_vale_salida dvs ON dvs.fk_id_ac = ac.id_ac
+                INNER JOIN vale_salida vs ON vs.id_vsalida = dvs.fk_vsalida
+                INNER JOIN usuario u ON u.id_usu = vs.fk_idusuario
+                WHERE vs.fk_idalm={$id_alm}  AND vs.est = 1 {$condiciones[1]}
                 UNION
-                SELECT 'ingreso','success',vi.id_vingreso as vale,ac.fk_idcomp,dvi.dvi_descripcion as descripcion,dvi.dvi_nparte1 as nparte1,
+                SELECT 'ingreso','success',vi.id_vingreso as vale,ac.fk_idcomp,dvi.dvi_descripcion as descripcion ,dvi.dvi_nparte1 as nparte1,
                 DATE(vi.fecha) AS fecha ,TIME(vi.fecha) as hora,dvi.dvi_nombre_equipo as nom_equipo,dvi.dr_referencia,vi.nombres,
                 CONCAT(u.Nombre,' ',u.Apellido) as usuario
                 FROM almacen_componente ac
                 INNER JOIN detalle_vale_ingreso dvi ON dvi.fk_id_ac = ac.id_ac
                 INNER JOIN vale_ingreso vi ON vi.id_vingreso = dvi.fk_id_vingreso
                 INNER JOIN usuario u ON u.id_usu = vi.fk_idusuario
-                WHERE (dvi.dvi_descripcion LIKE '%$buscador%' OR dvi.dvi_nparte1 LIKE '%$buscador%' OR ac.fk_idcomp like '%$buscador%') AND 
-                vi.fk_idalm = {$id_alm} AND vi.est = 1
-                ORDER BY fecha DESC, hora DESC  LIMIT {$inicio},{$registros}");
-                
-            }else{
-            $datos=$conexion->query("SELECT SQL_CALC_FOUND_ROWS 'salida','danger',vs.id_vsalida as vale,ac.fk_idcomp,dvs.dv_descripcion as descripcion,dvs.dv_nparte1 as nparte1,
-             DATE(vs.fecha) AS fecha ,TIME(vs.fecha) as hora,vs.nom_equipo,vs.dr_referencia,vs.nombres,
-            CONCAT(u.Nombre,' ',u.Apellido) as usuario
-            FROM almacen_componente ac
-            INNER JOIN detalle_vale_salida dvs ON dvs.fk_id_ac = ac.id_ac
-            INNER JOIN vale_salida vs ON vs.id_vsalida = dvs.fk_vsalida
-            INNER JOIN usuario u ON u.id_usu = vs.fk_idusuario
-            WHERE vs.fk_idalm={$id_alm}  AND vs.est = 1 
-            UNION
-            SELECT 'ingreso','success',vi.id_vingreso as vale,ac.fk_idcomp,dvi.dvi_descripcion as descripcion ,dvi.dvi_nparte1 as nparte1,
-            DATE(vi.fecha) AS fecha ,TIME(vi.fecha) as hora,dvi.dvi_nombre_equipo as nom_equipo,dvi.dr_referencia,vi.nombres,
-            CONCAT(u.Nombre,' ',u.Apellido) as usuario
-            FROM almacen_componente ac
-            INNER JOIN detalle_vale_ingreso dvi ON dvi.fk_id_ac = ac.id_ac
-            INNER JOIN vale_ingreso vi ON vi.id_vingreso = dvi.fk_id_vingreso
-            INNER JOIN usuario u ON u.id_usu = vi.fk_idusuario
-            WHERE vi.fk_idalm = {$id_alm}  AND vi.est = 1
-            ORDER BY fecha DESC, hora DESC  LIMIT {$inicio},{$registros}");           
+                WHERE vi.fk_idalm = {$id_alm}  AND vi.est = 1 {$condiciones[0]}
+                ORDER BY fecha DESC, hora DESC  LIMIT {$inicio},{$registros}");  
             }
+
+
         }
         if($tipo=='salida'){
-            if($buscador!=""){
+            if($switch=='false'){
+                if($buscador!=""){
+                    $datos=$conexion->query("SELECT SQL_CALC_FOUND_ROWS 'salida','danger',vs.id_vsalida as vale,ac.fk_idcomp,dvs.dv_descripcion as descripcion,dvs.dv_nparte1 as nparte1,
+                    DATE(vs.fecha) AS fecha ,TIME(vs.fecha) as hora,vs.nom_equipo,vs.dr_referencia,vs.nombres,
+                CONCAT(u.Nombre,' ',u.Apellido) as usuario
+                FROM almacen_componente ac
+                INNER JOIN detalle_vale_salida dvs ON dvs.fk_id_ac = ac.id_ac
+                INNER JOIN vale_salida vs ON vs.id_vsalida = dvs.fk_vsalida
+                INNER JOIN usuario u ON u.id_usu = vs.fk_idusuario
+                    WHERE (dvs.dv_descripcion like '%$buscador%' or dvs.dv_nparte1 like '%$buscador%' or ac.fk_idcomp like '%$buscador%') AND
+                    vs.fk_idalm={$id_alm} AND vs.est = 1 
+                    ORDER BY fecha DESC, hora DESC  LIMIT {$inicio},{$registros}");
+                    
+                }else{
                 $datos=$conexion->query("SELECT SQL_CALC_FOUND_ROWS 'salida','danger',vs.id_vsalida as vale,ac.fk_idcomp,dvs.dv_descripcion as descripcion,dvs.dv_nparte1 as nparte1,
-                DATE(vs.fecha) AS fecha ,TIME(vs.fecha) as hora,vs.nom_equipo,vs.dr_referencia,vs.nombres,
-               CONCAT(u.Nombre,' ',u.Apellido) as usuario
-               FROM almacen_componente ac
-               INNER JOIN detalle_vale_salida dvs ON dvs.fk_id_ac = ac.id_ac
-               INNER JOIN vale_salida vs ON vs.id_vsalida = dvs.fk_vsalida
-               INNER JOIN usuario u ON u.id_usu = vs.fk_idusuario
-                WHERE (dvs.dv_descripcion like '%$buscador%' or dvs.dv_nparte1 like '%$buscador%' or ac.fk_idcomp like '%$buscador%') AND
-                vs.fk_idalm={$id_alm} AND vs.est = 1 
+                DATE(vs.fecha) AS fecha ,TIME(vs.fecha) as hora,vs.nom_equipo as nom_equipo,vs.dr_referencia,vs.nombres,
+                CONCAT(u.Nombre,' ',u.Apellido) as usuario
+                FROM almacen_componente ac
+                INNER JOIN detalle_vale_salida dvs ON dvs.fk_id_ac = ac.id_ac
+                INNER JOIN vale_salida vs ON vs.id_vsalida = dvs.fk_vsalida
+                INNER JOIN usuario u ON u.id_usu = vs.fk_idusuario
+                WHERE vs.fk_idalm={$id_alm}  AND vs.est = 1 
                 ORDER BY fecha DESC, hora DESC  LIMIT {$inicio},{$registros}");
-                
+                }
             }else{
-            $datos=$conexion->query("SELECT SQL_CALC_FOUND_ROWS 'salida','danger',vs.id_vsalida as vale,ac.fk_idcomp,dvs.dv_descripcion as descripcion,dvs.dv_nparte1 as nparte1,
-            DATE(vs.fecha) AS fecha ,TIME(vs.fecha) as hora,vs.nom_equipo as nom_equipo,vs.dr_referencia,vs.nombres,
-            CONCAT(u.Nombre,' ',u.Apellido) as usuario
-            FROM almacen_componente ac
-            INNER JOIN detalle_vale_salida dvs ON dvs.fk_id_ac = ac.id_ac
-            INNER JOIN vale_salida vs ON vs.id_vsalida = dvs.fk_vsalida
-            INNER JOIN usuario u ON u.id_usu = vs.fk_idusuario
-            WHERE vs.fk_idalm={$id_alm}  AND vs.est = 1 
-            ORDER BY fecha DESC, hora DESC  LIMIT {$inicio},{$registros}");
+                $condiciones = $this->condicionales($tipo,$filtros); 
+                $datos=$conexion->query("SELECT SQL_CALC_FOUND_ROWS 'salida','danger',vs.id_vsalida as vale,ac.fk_idcomp,dvs.dv_descripcion as descripcion,dvs.dv_nparte1 as nparte1,
+                DATE(vs.fecha) AS fecha ,TIME(vs.fecha) as hora,vs.nom_equipo as nom_equipo,vs.dr_referencia,vs.nombres,
+                CONCAT(u.Nombre,' ',u.Apellido) as usuario
+                FROM almacen_componente ac
+                INNER JOIN detalle_vale_salida dvs ON dvs.fk_id_ac = ac.id_ac
+                INNER JOIN vale_salida vs ON vs.id_vsalida = dvs.fk_vsalida
+                INNER JOIN usuario u ON u.id_usu = vs.fk_idusuario
+                WHERE vs.fk_idalm={$id_alm}  AND vs.est = 1  {$condiciones[1]}
+                ORDER BY fecha DESC, hora DESC  LIMIT {$inicio},{$registros}"); 
             }           
         }
 
         if($tipo=='ingreso'){
-            if($buscador!=""){
+            if($switch=='false'){
+                if($buscador!=""){
+                    $datos=$conexion->query("SELECT SQL_CALC_FOUND_ROWS 'ingreso','success',vi.id_vingreso as vale,ac.fk_idcomp,dvi.dvi_descripcion as descripcion,dvi.dvi_nparte1 as nparte1,
+                    DATE(vi.fecha) AS fecha ,TIME(vi.fecha) as hora,dvi.dvi_nombre_equipo as nom_equipo,dvi.dr_referencia,vi.nombres,
+                    CONCAT(u.Nombre,' ',u.Apellido) as usuario
+                    FROM almacen_componente ac
+                    INNER JOIN detalle_vale_ingreso dvi ON dvi.fk_id_ac = ac.id_ac
+                    INNER JOIN vale_ingreso vi ON vi.id_vingreso = dvi.fk_id_vingreso
+                    INNER JOIN usuario u ON u.id_usu = vi.fk_idusuario
+                    WHERE (dvi.dvi_descripcion LIKE '%$buscador%' OR dvi.dvi_nparte1 LIKE '%$buscador%' OR ac.fk_idcomp like '%$buscador%') AND 
+                    vi.fk_idalm = {$id_alm} AND vi.est = 1
+                    ORDER BY fecha DESC, hora DESC  LIMIT {$inicio},{$registros}");
+                    
+                }else{
                 $datos=$conexion->query("SELECT SQL_CALC_FOUND_ROWS 'ingreso','success',vi.id_vingreso as vale,ac.fk_idcomp,dvi.dvi_descripcion as descripcion,dvi.dvi_nparte1 as nparte1,
                 DATE(vi.fecha) AS fecha ,TIME(vi.fecha) as hora,dvi.dvi_nombre_equipo as nom_equipo,dvi.dr_referencia,vi.nombres,
                 CONCAT(u.Nombre,' ',u.Apellido) as usuario
@@ -456,20 +517,20 @@ Class almacenControlador extends almacenModelo {
                 INNER JOIN detalle_vale_ingreso dvi ON dvi.fk_id_ac = ac.id_ac
                 INNER JOIN vale_ingreso vi ON vi.id_vingreso = dvi.fk_id_vingreso
                 INNER JOIN usuario u ON u.id_usu = vi.fk_idusuario
-                WHERE (dvi.dvi_descripcion LIKE '%$buscador%' OR dvi.dvi_nparte1 LIKE '%$buscador%' OR ac.fk_idcomp like '%$buscador%') AND 
-                vi.fk_idalm = {$id_alm} AND vi.est = 1
-                ORDER BY fecha DESC, hora DESC  LIMIT {$inicio},{$registros}");
-                
+                WHERE vi.fk_idalm = {$id_alm}  AND vi.est = 1
+                ORDER BY fecha DESC, hora DESC  LIMIT {$inicio},{$registros}");           
+                }
             }else{
-            $datos=$conexion->query("SELECT SQL_CALC_FOUND_ROWS 'ingreso','success',vi.id_vingreso as vale,ac.fk_idcomp,dvi.dvi_descripcion as descripcion,dvi.dvi_nparte1 as nparte1,
-            DATE(vi.fecha) AS fecha ,TIME(vi.fecha) as hora,dvi.dvi_nombre_equipo as nom_equipo,dvi.dr_referencia,vi.nombres,
-            CONCAT(u.Nombre,' ',u.Apellido) as usuario
-            FROM almacen_componente ac
-            INNER JOIN detalle_vale_ingreso dvi ON dvi.fk_id_ac = ac.id_ac
-            INNER JOIN vale_ingreso vi ON vi.id_vingreso = dvi.fk_id_vingreso
-            INNER JOIN usuario u ON u.id_usu = vi.fk_idusuario
-            WHERE vi.fk_idalm = {$id_alm}  AND vi.est = 1
-            ORDER BY fecha DESC, hora DESC  LIMIT {$inicio},{$registros}");           
+                $condiciones = $this->condicionales($tipo,$filtros); 
+                $datos=$conexion->query("SELECT SQL_CALC_FOUND_ROWS 'ingreso','success',vi.id_vingreso as vale,ac.fk_idcomp,dvi.dvi_descripcion as descripcion,dvi.dvi_nparte1 as nparte1,
+                DATE(vi.fecha) AS fecha ,TIME(vi.fecha) as hora,dvi.dvi_nombre_equipo as nom_equipo,dvi.dr_referencia,vi.nombres,
+                CONCAT(u.Nombre,' ',u.Apellido) as usuario
+                FROM almacen_componente ac
+                INNER JOIN detalle_vale_ingreso dvi ON dvi.fk_id_ac = ac.id_ac
+                INNER JOIN vale_ingreso vi ON vi.id_vingreso = dvi.fk_id_vingreso
+                INNER JOIN usuario u ON u.id_usu = vi.fk_idusuario
+                WHERE vi.fk_idalm = {$id_alm}  AND vi.est = 1 {$condiciones[0]}
+                ORDER BY fecha DESC, hora DESC  LIMIT {$inicio},{$registros}");  
             }
         }
 
@@ -1499,6 +1560,47 @@ Class almacenControlador extends almacenModelo {
         $_SESSION["nom_almacen"]="";
     }
     
+    //FUNCION PARA DELIBERAR LAS CONDICIONALES DE LAS CONSULTAS SEGUN FILTRO
+    public function condicionales($tipo,$filtros){
+        $codigoF= $filtros[0];
+        $equipoF= $filtros[1];
+        $referenciaF= $filtros[2];
+
+        if($codigoF != ''){
+            $cond_in = "AND (ac.fk_idcomp={$codigoF})";
+            $cond_out = "AND (ac.fk_idcomp={$codigoF})";
+            if($equipoF!=''){
+                $cond_in = "AND (ac.fk_idcomp={$codigoF} AND dvi.fk_id_equipo = {$equipoF})";
+                $cond_out = "AND (ac.fk_idcomp={$codigoF} AND vs.fk_idequipo = {$equipoF})";  
+            }
+            if($referenciaF!=''){
+                $cond_in = "AND (ac.fk_idcomp={$codigoF} AND dvi.dr_referencia='{$referenciaF}')";
+                $cond_out = "AND (ac.fk_idcomp={$codigoF} AND vs.dr_referencia = '{$referenciaF}')";  
+            }
+            if($equipoF!='' && $referenciaF!='' ){
+                $cond_in = "AND (ac.fk_idcomp={$codigoF} AND dvi.fk_id_equipo = {$equipoF} AND dvi.dr_referencia='{$referenciaF}')";
+                $cond_out = "AND (ac.fk_idcomp={$codigoF} AND vs.fk_idequipo = {$equipoF} AND vs.dr_referencia='{$referenciaF}')";  
+            }
+        }else if($equipoF!=''){
+            $cond_in = "AND (dvi.fk_id_equipo = {$equipoF})";
+            $cond_out = "AND (vs.fk_idequipo = {$equipoF})";
+            if($referenciaF !=''){
+                $cond_in = "AND (dvi.fk_id_equipo = {$equipoF} AND dvi.dr_referencia='{$referenciaF}')";
+                $cond_out = "AND (vs.fk_idequipo = {$equipoF} AND vs.dr_referencia = '{$referenciaF}')";  
+            }
+        }else if($referenciaF!=''){
+            $cond_in = "AND (dvi.dr_referencia='{$referenciaF}')";
+            $cond_out = "AND (vs.dr_referencia = '{$referenciaF}')";
+        }
+        else{
+            $cond_in='';
+            $cond_out='';
+        }
+
+        $condiciones=[$cond_in,$cond_out];
+        return $condiciones;
+
+    }
 
     public function combo_personal($val,$vis){
         $consulta = "select p.id_per, CONCAT(p.Nom_per,',',p.Ape_per,'-',p.Dni_per)
@@ -1516,6 +1618,7 @@ Class almacenControlador extends almacenModelo {
     public function select_combo($consulta,$val,$vis){
         return mainModel::ejecutar_combo($consulta,$val,$vis);
     }
+
     public function combo_DR($val,$vis){
         $consulta = "select * from datos_referencia WHERE id_dr !=1";
         return mainModel::ejecutar_combo($consulta,$val,$vis);

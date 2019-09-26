@@ -4,7 +4,7 @@
 function render(){
 
 
-    this.renderTablelog = async function(page,tipo,array){
+    this.renderTablelog = async function(page,tipo){
 
         let buscar = document.querySelector('#buscador_text').value;
         
@@ -12,6 +12,15 @@ function render(){
         let id_alm = document.querySelector('#id_alm').value
         let privilegio = document.querySelector('#privilegio').value
 
+        
+        let codigo = document.querySelector('#codigo').value;
+        let equipo = document.querySelector('#equipo').value;
+        let ref = document.querySelector('#referencia').value;
+        let fec_ini = document.querySelector('#fec_ini').value;
+        let fec_fin = document.querySelector('#fec_fin').value;
+        let filtro = document.querySelector('#customSwitch1').checked;
+
+        let array = [codigo,equipo,ref,fec_ini,fec_fin,filtro];
 
         const datos = new FormData();
         datos.append('buscadorlogajax',buscar);
@@ -38,21 +47,17 @@ render = new render();
 
     document.addEventListener("DOMContentLoaded", async function(){
         console.log("constructor");
-        let tipo = document.querySelector('#tipo_logalm').value
+        let tipo = document.querySelector('#tipo_logalm').value;
         render.renderTablelog(1,tipo);
     });
 
 
     document.querySelector("#log_in_out").addEventListener("click",function(ev){
-        let equipo = document.querySelector('#equipo').value;
-        let ref = document.querySelector('#referencia').value;
-        let fec_ini = document.querySelector('#fec_ini').value;
-        let fec_fin = document.querySelector('#fec_fin').value;
 
-        console.log(equipo);
+        /*console.log(equipo);
         console.log(ref);
         console.log(fec_ini);
-        console.log(fec_fin);
+        console.log(fec_fin);*/
 
         if(ev.target.id=='salida'){
             render.renderTablelog(1,'salida');
@@ -82,23 +87,31 @@ render = new render();
     });
 
     document.querySelector('#btnFiltrar').addEventListener("click", function(ev){
-        let equipo = document.querySelector('#equipo').value;
-        let ref = document.querySelector('#referencia').value;
-        let fec_ini = document.querySelector('#fec_ini').value;
-        let fec_fin = document.querySelector('#fec_fin').value;
 
-        console.log(equipo);
-        console.log(ref);
-        console.log(fec_ini);
-        console.log(fec_fin);
-
-        //let obj = {equipo: equipo,referencia:ref,fec_ini:fec_ini,fec_fin:fec_fin};
-        let array = [equipo,ref,fec_ini,fec_fin];
-        console.log(array);
         let tipo = document.querySelector('#tipo_logalm').value
-        render.renderTablelog(1,tipo,array);
+        render.renderTablelog(1,tipo);
 
     })
+
+    document.querySelector('#customSwitch1').addEventListener("change", function(ev){
+    
+        let vdisabled = document.querySelector('#customSwitch1').checked;
+        document.querySelector('#buscador_text').disabled=vdisabled;
+
+        vdisabled = (vdisabled==true)?vdisabled=false:vdisabled=true;
+        document.querySelector('#equipo').disabled=vdisabled;   
+        document.querySelector('#fec_ini').disabled=vdisabled;
+        document.querySelector('#fec_fin').disabled=vdisabled;
+        document.querySelector('#btnFiltrar').disabled=vdisabled;
+        document.querySelector('#codigo').disabled=vdisabled;
+        
+
+        if(document.querySelector('#customSwitch1').checked==false){
+            let tipo = document.querySelector('#tipo_logalm').value
+            render.renderTablelog(1,tipo);
+        }
+            
+    });
 
 
 })();

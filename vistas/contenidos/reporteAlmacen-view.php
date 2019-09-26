@@ -73,38 +73,47 @@
                     <div id="log_in_out">
                         <!-- Se mostrara el log de ingresos y salidas-->
                     </div>
+                    <div class="custom-control custom-switch">
+                        <input type="checkbox" class="custom-control-input" id="customSwitch1">
+                        <label class="custom-control-label" for="customSwitch1">Desactivar/Activar Filtros</label>
+                    </div>
+                    
                     <div class="form-row">
+                    <div class="form-group col-md-2">
+                            <label for="inputZip">codigo</label>
+                            <input type="text" class="form-control" id="codigo" disabled>
+                        </div>
                         <div class="form-group col-md-2">
                             <label for="inputCity">Equipo</label>
-                            <select id="equipo"  class="form-control">
-                                <option value='0' selected>Seleccione Equipo</option>
+                            <select id="equipo"  class="form-control" disabled>
+                                <option value='' selected>Seleccione Equipo</option>
                                 <?php echo $almCont->select_combo("SELECT e.Id_Equipo,eu.alias_equipounidad
                                     FROM equipos e
                                     INNER JOIN equipo_unidad eu ON eu.fk_idequipo = e.Id_Equipo
                                     WHERE (eu.fk_idunidad = 7 OR eu.fk_idunidad = {$_SESSION['unidad']} ) 
                                     AND eu.est_baja = 1 AND eu.est = 1 AND eu.fk_idequipo !=1",
-                                            1,1)?>
+                                            0,1)?>
                             </select>
                         </div>
                         <div class="form-group col-md-2">
                             <label for="inputState">Referencia</label>
                             <select id="referencia" class="chosen-select">
-                                <option value='0' selected>Choose Ref..</option>
+                                <option value='' selected>Choose Ref..</option>
                                 <?php echo $almCont->select_combo("SELECT * FROM datos_referencia",
                                             1,1)?>
                             </select>
                         </div>
                         <div class="form-group col-md-2">
                             <label for="inputZip">Fecha Inicio</label>
-                            <input type="date" class="form-control" id="fec_ini">
+                            <input type="date" class="form-control" id="fec_ini" disabled>
                         </div>
                         <div class="form-group col-md-2">
                             <label for="inputZip">Fecha Final</label>
-                            <input type="date" class="form-control" id="fec_fin">
+                            <input type="date" class="form-control" id="fec_fin" disabled>
                         </div>
                         <div class="form-group col-md-2">
                             <label for="inputZip">.</label>   
-                            <input type="button" id='btnFiltrar' value="Filtrar" class="form-control btn btn-warning"/>
+                            <input type="button" id='btnFiltrar' value="Filtrar" class="form-control btn btn-warning" disabled/>
                         </div>
                     </div>
                     <div class="RespuestaAjax"></div>
