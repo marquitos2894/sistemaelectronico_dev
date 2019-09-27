@@ -12,12 +12,12 @@
       }
       
 ?>
+
 <input type="hidden" value="<?php echo $paginador ?>" id="paginador"/>
 <input type="hidden" value="<?php echo $vista ?>" id="vista"/>
 <input type="hidden" value="<?php echo $_SESSION['privilegio_sbp'] ?>" id="privilegio"/>
 <input type="hidden" value="<?php echo $_SESSION['almacen'] ?>" id="id_alm"/>
-<input type="hidden" value="ambos" id="tipo_logalm"/>
-
+<input type="hidden" value="ambos" id="tipo_logalm"/>     
 
 <div class="container-fluid">
     <?php  include "vistas/modulos/nav-almacen.php";?> 
@@ -116,7 +116,11 @@
                             <input type="button" id='btnFiltrar' value="Filtrar" class="form-control btn btn-warning" disabled/>
                         </div>
                     </div>
-                    <div class="RespuestaAjax"></div>
+                    <form id='formReporte_log' method='POST' action='../PDFlogalmacen'>
+                        <input type='hidden' id='tipo_form' value='ambos' name='tipo_form'/>
+                        <input type='hidden' id='datos_form' name='datos_form'/>
+                        <input type='submit' value="reporte" class="btn btn-success"/>
+                    </form>
                 </div>
             </div>
             <!-- FIN -->

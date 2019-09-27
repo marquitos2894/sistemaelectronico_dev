@@ -383,11 +383,14 @@ Class almacenControlador extends almacenModelo {
         /*$codigoF= $filtros[0];
         $equipoF= $filtros[1];
         $referenciaF= $filtros[2];*/
-        /*$fecha_ini= $filtros[3];
+        $fecha_ini= $filtros[3];
         $fecha_fin= $filtros[4];
-        $switch=$filtros[5];*/
         $switch = $filtros[5];
-        
+
+        //SI VISTA ES PDF, se elimina el limit pero si la vista es html, se considera el limit para el paginado
+        //Solo validado para filtro ($switch==true)
+        $limit=(substr($vista,0,3)=='PDF')?$limit="":$limit="LIMIT {$inicio},{$registros}";
+
         if($tipo=='ambos' or $tipo==""){
             if($switch=='false'){
                 if($buscador!=""){
@@ -433,7 +436,7 @@ Class almacenControlador extends almacenModelo {
                     ORDER BY fecha DESC, hora DESC  LIMIT {$inicio},{$registros}");  
                 }
             }else{
-                $condiciones = $this->condicionales($tipo,$filtros);    
+                $condiciones = $this->condicionales($tipo,$filtros);                
                 $datos=$conexion->query("SELECT SQL_CALC_FOUND_ROWS 'salida','danger',vs.id_vsalida as vale,ac.fk_idcomp,dvs.dv_descripcion as descripcion,dvs.dv_nparte1 as nparte1,
                 DATE(vs.fecha) AS fecha ,TIME(vs.fecha) as hora,vs.nom_equipo,vs.dr_referencia,vs.nombres,
                 CONCAT(u.Nombre,' ',u.Apellido) as usuario
@@ -441,7 +444,7 @@ Class almacenControlador extends almacenModelo {
                 INNER JOIN detalle_vale_salida dvs ON dvs.fk_id_ac = ac.id_ac
                 INNER JOIN vale_salida vs ON vs.id_vsalida = dvs.fk_vsalida
                 INNER JOIN usuario u ON u.id_usu = vs.fk_idusuario
-                WHERE vs.fk_idalm={$id_alm}  AND vs.est = 1 {$condiciones[1]}
+                WHERE vs.fk_idalm={$id_alm}  AND vs.est = 1 {$condiciones[1]} AND date(fecha) between '{$fecha_ini}' and '{$fecha_fin}'
                 UNION
                 SELECT 'ingreso','success',vi.id_vingreso as vale,ac.fk_idcomp,dvi.dvi_descripcion as descripcion ,dvi.dvi_nparte1 as nparte1,
                 DATE(vi.fecha) AS fecha ,TIME(vi.fecha) as hora,dvi.dvi_nombre_equipo as nom_equipo,dvi.dr_referencia,vi.nombres,
@@ -450,8 +453,9 @@ Class almacenControlador extends almacenModelo {
                 INNER JOIN detalle_vale_ingreso dvi ON dvi.fk_id_ac = ac.id_ac
                 INNER JOIN vale_ingreso vi ON vi.id_vingreso = dvi.fk_id_vingreso
                 INNER JOIN usuario u ON u.id_usu = vi.fk_idusuario
-                WHERE vi.fk_idalm = {$id_alm}  AND vi.est = 1 {$condiciones[0]}
-                ORDER BY fecha DESC, hora DESC  LIMIT {$inicio},{$registros}");  
+                WHERE vi.fk_idalm = {$id_alm}  AND vi.est = 1 {$condiciones[0]} AND date(fecha) between '{$fecha_ini}' and '{$fecha_fin}'
+                ORDER BY fecha DESC, hora DESC  
+                {$limit}");  
             }
 
 
@@ -490,8 +494,9 @@ Class almacenControlador extends almacenModelo {
                 INNER JOIN detalle_vale_salida dvs ON dvs.fk_id_ac = ac.id_ac
                 INNER JOIN vale_salida vs ON vs.id_vsalida = dvs.fk_vsalida
                 INNER JOIN usuario u ON u.id_usu = vs.fk_idusuario
-                WHERE vs.fk_idalm={$id_alm}  AND vs.est = 1  {$condiciones[1]}
-                ORDER BY fecha DESC, hora DESC  LIMIT {$inicio},{$registros}"); 
+                WHERE vs.fk_idalm={$id_alm}  AND vs.est = 1  {$condiciones[1]} AND date(fecha) between '{$fecha_ini}' and '{$fecha_fin}'
+                ORDER BY fecha DESC, hora DESC  
+                {$limit}"); 
             }           
         }
 
@@ -529,8 +534,9 @@ Class almacenControlador extends almacenModelo {
                 INNER JOIN detalle_vale_ingreso dvi ON dvi.fk_id_ac = ac.id_ac
                 INNER JOIN vale_ingreso vi ON vi.id_vingreso = dvi.fk_id_vingreso
                 INNER JOIN usuario u ON u.id_usu = vi.fk_idusuario
-                WHERE vi.fk_idalm = {$id_alm}  AND vi.est = 1 {$condiciones[0]}
-                ORDER BY fecha DESC, hora DESC  LIMIT {$inicio},{$registros}");  
+                WHERE vi.fk_idalm = {$id_alm}  AND vi.est = 1 {$condiciones[0]} AND date(fecha) between '{$fecha_ini}' and '{$fecha_fin}'
+                ORDER BY fecha DESC, hora DESC  
+                {$limit}");  
             }
         }
 
@@ -604,7 +610,11 @@ Class almacenControlador extends almacenModelo {
         $tabla.='
             </tbody>
             </table></div>';
-
+        
+        if(substr($vista,0,3)=='PDF'){
+            return $tabla;
+        }
+        
         $tabla.= mainModel::paginador_ajax($total,$paginador,$Npaginas,$vista);
         return $tabla;
 

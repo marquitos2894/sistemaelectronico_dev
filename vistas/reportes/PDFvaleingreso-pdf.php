@@ -12,9 +12,9 @@ $html = "";
 //$id_alm=mainModel::decryption($url[2]);
 
 $id_vingreso=$url[1];
-$id_alm=$url[2];
+//$id_alm=$url[2];
 
-$html.= $almCont->reporte_valeingreso_simple_controlador($id_vingreso,$id_alm,"ticket",$_SESSION['privilegio_sbp']);
+$html.= $almCont->reporte_valeingreso_simple_controlador($id_vingreso,$_SESSION["almacen"],"ticket",$_SESSION['privilegio_sbp']);
 
 
 $mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 'format' =>[115,1000]]);

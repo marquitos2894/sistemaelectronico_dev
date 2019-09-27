@@ -40,7 +40,7 @@ class vistasModelo{
     }
 
     protected function obtener_reporte_modelo($reporte){
-        $lista_blanca=["PDFvalesalida","PDFvaleingreso"];
+        $lista_blanca=["PDFvalesalida","PDFvaleingreso","PDFlogalmacen"];
         if(in_array($reporte,$lista_blanca)){
 
             if(is_file("./vistas/reportes/{$reporte}-pdf.php")){

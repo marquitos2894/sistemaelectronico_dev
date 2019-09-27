@@ -73,6 +73,7 @@ render = new render();
             render.renderTablelog(ev.target.dataset.page,tipo);
         }
 
+        document.querySelector('#tipo_form').value = document.querySelector('#tipo_logalm').value;
     });
 
     document.querySelector('#buscador_text').addEventListener("keyup", async function(ev){
@@ -86,6 +87,18 @@ render = new render();
         let tipo = document.querySelector('#tipo_logalm').value
         render.renderTablelog(1,tipo);
 
+
+        // CREAR REPORTE
+        let codigo = document.querySelector('#codigo').value;
+        let equipo = document.querySelector('#equipo').value;
+        let ref = document.querySelector('#referencia').value;
+        let fec_ini = document.querySelector('#fec_ini').value;
+        let fec_fin = document.querySelector('#fec_fin').value;
+        let filtro = document.querySelector('#customSwitch1').checked;
+        let array = [codigo,equipo,ref,fec_ini,fec_fin,filtro];
+
+        document.querySelector('#datos_form').value=array;
+        document.querySelector('#tipo_form').value=tipo;
     })
 
     document.querySelector('#customSwitch1').addEventListener("change", function(ev){
