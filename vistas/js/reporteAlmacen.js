@@ -41,6 +41,29 @@ function render(){
         document.querySelector('#log_in_out').innerHTML = data;
 
     }
+
+    this.Alert = function (title,mensaje){
+        let template = `
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>${title} </strong>${mensaje}.
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        `;
+        document.querySelector("#alert").innerHTML = template;
+    }
+
+    this.fechaA = function(){
+        date = new Date();
+        y=date.getFullYear();
+        m=date.getMonth()+1;
+        d=date.getDate();
+        if(m<10){m='0'+m;}
+        if(d<10){d='0'+d;}
+        fecha = `${y}-${m}-${d}`;
+        return fecha;
+    }
 }
 
 render = new render();
@@ -49,6 +72,7 @@ render = new render();
         console.log("constructor");
         let tipo = document.querySelector('#tipo_logalm').value;
         render.renderTablelog(1,tipo);
+
     });
 
 
@@ -84,25 +108,38 @@ render = new render();
 
     document.querySelector('#btnFiltrar').addEventListener("click", function(ev){
 
-        let tipo = document.querySelector('#tipo_logalm').value
-        render.renderTablelog(1,tipo);
-
-
-        // CREAR REPORTE
-        let codigo = document.querySelector('#codigo').value;
-        let equipo = document.querySelector('#equipo').value;
-        let ref = document.querySelector('#referencia').value;
-        let fec_ini = document.querySelector('#fec_ini').value;
-        let fec_fin = document.querySelector('#fec_fin').value;
-        let filtro = document.querySelector('#customSwitch1').checked;
-        let array = [codigo,equipo,ref,fec_ini,fec_fin,filtro];
-
-        document.querySelector('#datos_form').value=array;
-        document.querySelector('#tipo_form').value=tipo;
+        let fec_ini=document.querySelector('#fec_ini').value
+        let fec_fin=document.querySelector('#fec_fin').value
+       
+        if(fec_ini>fec_fin){
+           render.Alert('Validacion','La fecha inicial no puede ser mayor a la fecha final');
+           document.querySelector('#btnreport').disabled=true;
+            ev.preventDefault();
+            
+        }else{
+            document.querySelector('#btnreport').disabled=false;
+            let tipo = document.querySelector('#tipo_logalm').value;
+            render.renderTablelog(1,tipo);
+            // CREAR REPORTE
+            let codigo = document.querySelector('#codigo').value;
+            let equipo = document.querySelector('#equipo').value;
+            let ref = document.querySelector('#referencia').value;
+            let fec_ini = document.querySelector('#fec_ini').value;
+            let fec_fin = document.querySelector('#fec_fin').value;
+            let filtro = document.querySelector('#customSwitch1').checked;
+            let array = [codigo,equipo,ref,fec_ini,fec_fin,filtro];
+    
+            document.querySelector('#datos_form').value=array;
+            document.querySelector('#tipo_form').value=tipo;
+        }
     })
 
     document.querySelector('#customSwitch1').addEventListener("change", function(ev){
-    
+   
+        document.querySelector('#fec_ini').value=render.fechaA();
+        document.querySelector('#fec_fin').value=render.fechaA();
+
+        
         let vdisabled = document.querySelector('#customSwitch1').checked;
         document.querySelector('#buscador_text').disabled=vdisabled;
 
@@ -112,10 +149,12 @@ render = new render();
         document.querySelector('#fec_fin').disabled=vdisabled;
         document.querySelector('#btnFiltrar').disabled=vdisabled;
         document.querySelector('#codigo').disabled=vdisabled;
-        
+       
         if(document.querySelector('#customSwitch1').checked==false){
-            let tipo = document.querySelector('#tipo_logalm').value
+            let tipo = document.querySelector('#tipo_logalm').value;
+            document.querySelector('#btnreport').disabled=true;
             render.renderTablelog(1,tipo);
+
         }
             
     });

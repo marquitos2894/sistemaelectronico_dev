@@ -6,6 +6,7 @@
       $paginador = $url[1];
       $vista=$url[0];
 
+
       $id_alm = $_SESSION["almacen"];
       if($_SESSION["almacen"]==0 ){
         echo "<script> window.location.href = '../almacen/'; </script>";
@@ -116,10 +117,11 @@
                             <input type="button" id='btnFiltrar' value="Filtrar" class="form-control btn btn-warning" disabled/>
                         </div>
                     </div>
+                    <div id='alert'></div>
                     <form id='formReporte_log' method='POST' action='../PDFlogalmacen'>
                         <input type='hidden' id='tipo_form' value='ambos' name='tipo_form'/>
                         <input type='hidden' id='datos_form' name='datos_form'/>
-                        <input type='submit' value="reporte" class="btn btn-success"/>
+                        <input type='submit' id='btnreport' formtarget="_blank" value="Generar reporte PDF" class="btn btn-primary" disabled/>
                     </form>
                 </div>
             </div>

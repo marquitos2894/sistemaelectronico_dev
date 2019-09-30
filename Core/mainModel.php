@@ -363,6 +363,18 @@
         protected function dateFormat($date){
             return date("d/m/Y", strtotime($date));
         }
+
+        protected function dateFormat2($tipo,$date){
+            if($tipo=='fecha'){
+            $date = new DateTime($date);
+            $date=$date->format('d-m-Y');
+            }else{
+            $date = new DateTime($date);
+            $date=$date->format('H:i:s');
+            }
+            return $date;
+        }
+        
     
     }
 

@@ -395,7 +395,7 @@ Class almacenControlador extends almacenModelo {
             if($switch=='false'){
                 if($buscador!=""){
                     $datos=$conexion->query("SELECT SQL_CALC_FOUND_ROWS 'salida','danger',vs.id_vsalida as vale,ac.fk_idcomp,dvs.dv_descripcion as descripcion,dvs.dv_nparte1 as nparte1,
-                    DATE(vs.fecha) AS fecha ,TIME(vs.fecha) as hora,vs.nom_equipo,vs.dr_referencia,vs.nombres,
+                    DATE(vs.fecha) AS fecha ,TIME(vs.fecha) as hora,vs.nom_equipo,vs.dr_referencia,vs.nombres,dvs.dv_entregado as cantidad,
                     CONCAT(u.Nombre,' ',u.Apellido) as usuario
                     FROM almacen_componente ac
                     INNER JOIN detalle_vale_salida dvs ON dvs.fk_id_ac = ac.id_ac
@@ -405,7 +405,7 @@ Class almacenControlador extends almacenModelo {
                     vs.fk_idalm={$id_alm} AND vs.est = 1 
                     UNION
                     SELECT 'ingreso','success',vi.id_vingreso as vale,ac.fk_idcomp,dvi.dvi_descripcion as descripcion,dvi.dvi_nparte1 as nparte1,
-                    DATE(vi.fecha) AS fecha ,TIME(vi.fecha) as hora,dvi.dvi_nombre_equipo as nom_equipo,dvi.dr_referencia,vi.nombres,
+                    DATE(vi.fecha) AS fecha ,TIME(vi.fecha) as hora,dvi.dvi_nombre_equipo as nom_equipo,dvi.dr_referencia,vi.nombres,dvi.dvi_ingreso as cantidad,
                     CONCAT(u.Nombre,' ',u.Apellido) as usuario
                     FROM almacen_componente ac
                     INNER JOIN detalle_vale_ingreso dvi ON dvi.fk_id_ac = ac.id_ac
@@ -417,7 +417,7 @@ Class almacenControlador extends almacenModelo {
                     
                 }else{
                     $datos=$conexion->query("SELECT SQL_CALC_FOUND_ROWS 'salida','danger',vs.id_vsalida as vale,ac.fk_idcomp,dvs.dv_descripcion as descripcion,dvs.dv_nparte1 as nparte1,
-                    DATE(vs.fecha) AS fecha ,TIME(vs.fecha) as hora,vs.nom_equipo,vs.dr_referencia,vs.nombres,
+                    DATE(vs.fecha) AS fecha ,TIME(vs.fecha) as hora,vs.nom_equipo,vs.dr_referencia,vs.nombres,dvs.dv_entregado as cantidad,
                     CONCAT(u.Nombre,' ',u.Apellido) as usuario
                     FROM almacen_componente ac
                     INNER JOIN detalle_vale_salida dvs ON dvs.fk_id_ac = ac.id_ac
@@ -426,7 +426,7 @@ Class almacenControlador extends almacenModelo {
                     WHERE vs.fk_idalm={$id_alm}  AND vs.est = 1 
                     UNION
                     SELECT 'ingreso','success',vi.id_vingreso as vale,ac.fk_idcomp,dvi.dvi_descripcion as descripcion ,dvi.dvi_nparte1 as nparte1,
-                    DATE(vi.fecha) AS fecha ,TIME(vi.fecha) as hora,dvi.dvi_nombre_equipo as nom_equipo,dvi.dr_referencia,vi.nombres,
+                    DATE(vi.fecha) AS fecha ,TIME(vi.fecha) as hora,dvi.dvi_nombre_equipo as nom_equipo,dvi.dr_referencia,vi.nombres,dvi.dvi_ingreso as cantidad,
                     CONCAT(u.Nombre,' ',u.Apellido) as usuario
                     FROM almacen_componente ac
                     INNER JOIN detalle_vale_ingreso dvi ON dvi.fk_id_ac = ac.id_ac
@@ -438,7 +438,7 @@ Class almacenControlador extends almacenModelo {
             }else{
                 $condiciones = $this->condicionales($tipo,$filtros);                
                 $datos=$conexion->query("SELECT SQL_CALC_FOUND_ROWS 'salida','danger',vs.id_vsalida as vale,ac.fk_idcomp,dvs.dv_descripcion as descripcion,dvs.dv_nparte1 as nparte1,
-                DATE(vs.fecha) AS fecha ,TIME(vs.fecha) as hora,vs.nom_equipo,vs.dr_referencia,vs.nombres,
+                DATE(vs.fecha) AS fecha ,TIME(vs.fecha) as hora,vs.nom_equipo,vs.dr_referencia,vs.nombres,dvs.dv_entregado as cantidad,
                 CONCAT(u.Nombre,' ',u.Apellido) as usuario
                 FROM almacen_componente ac
                 INNER JOIN detalle_vale_salida dvs ON dvs.fk_id_ac = ac.id_ac
@@ -447,7 +447,7 @@ Class almacenControlador extends almacenModelo {
                 WHERE vs.fk_idalm={$id_alm}  AND vs.est = 1 {$condiciones[1]} AND date(fecha) between '{$fecha_ini}' and '{$fecha_fin}'
                 UNION
                 SELECT 'ingreso','success',vi.id_vingreso as vale,ac.fk_idcomp,dvi.dvi_descripcion as descripcion ,dvi.dvi_nparte1 as nparte1,
-                DATE(vi.fecha) AS fecha ,TIME(vi.fecha) as hora,dvi.dvi_nombre_equipo as nom_equipo,dvi.dr_referencia,vi.nombres,
+                DATE(vi.fecha) AS fecha ,TIME(vi.fecha) as hora,dvi.dvi_nombre_equipo as nom_equipo,dvi.dr_referencia,vi.nombres,dvi.dvi_ingreso as cantidad,
                 CONCAT(u.Nombre,' ',u.Apellido) as usuario
                 FROM almacen_componente ac
                 INNER JOIN detalle_vale_ingreso dvi ON dvi.fk_id_ac = ac.id_ac
@@ -464,19 +464,19 @@ Class almacenControlador extends almacenModelo {
             if($switch=='false'){
                 if($buscador!=""){
                     $datos=$conexion->query("SELECT SQL_CALC_FOUND_ROWS 'salida','danger',vs.id_vsalida as vale,ac.fk_idcomp,dvs.dv_descripcion as descripcion,dvs.dv_nparte1 as nparte1,
-                    DATE(vs.fecha) AS fecha ,TIME(vs.fecha) as hora,vs.nom_equipo,vs.dr_referencia,vs.nombres,
+                    DATE(vs.fecha) AS fecha ,TIME(vs.fecha) as hora,vs.nom_equipo,vs.dr_referencia,vs.nombres,dvs.dv_entregado as cantidad,
                 CONCAT(u.Nombre,' ',u.Apellido) as usuario
                 FROM almacen_componente ac
                 INNER JOIN detalle_vale_salida dvs ON dvs.fk_id_ac = ac.id_ac
                 INNER JOIN vale_salida vs ON vs.id_vsalida = dvs.fk_vsalida
                 INNER JOIN usuario u ON u.id_usu = vs.fk_idusuario
-                    WHERE (dvs.dv_descripcion like '%$buscador%' or dvs.dv_nparte1 like '%$buscador%' or ac.fk_idcomp like '%$buscador%') AND
-                    vs.fk_idalm={$id_alm} AND vs.est = 1 
-                    ORDER BY fecha DESC, hora DESC  LIMIT {$inicio},{$registros}");
+                WHERE (dvs.dv_descripcion like '%$buscador%' or dvs.dv_nparte1 like '%$buscador%' or ac.fk_idcomp like '%$buscador%') AND
+                vs.fk_idalm={$id_alm} AND vs.est = 1 
+                ORDER BY fecha DESC, hora DESC  LIMIT {$inicio},{$registros}");
                     
                 }else{
                 $datos=$conexion->query("SELECT SQL_CALC_FOUND_ROWS 'salida','danger',vs.id_vsalida as vale,ac.fk_idcomp,dvs.dv_descripcion as descripcion,dvs.dv_nparte1 as nparte1,
-                DATE(vs.fecha) AS fecha ,TIME(vs.fecha) as hora,vs.nom_equipo as nom_equipo,vs.dr_referencia,vs.nombres,
+                DATE(vs.fecha) AS fecha ,TIME(vs.fecha) as hora,vs.nom_equipo as nom_equipo,vs.dr_referencia,vs.nombres,dvs.dv_entregado as cantidad,
                 CONCAT(u.Nombre,' ',u.Apellido) as usuario
                 FROM almacen_componente ac
                 INNER JOIN detalle_vale_salida dvs ON dvs.fk_id_ac = ac.id_ac
@@ -488,7 +488,7 @@ Class almacenControlador extends almacenModelo {
             }else{
                 $condiciones = $this->condicionales($tipo,$filtros); 
                 $datos=$conexion->query("SELECT SQL_CALC_FOUND_ROWS 'salida','danger',vs.id_vsalida as vale,ac.fk_idcomp,dvs.dv_descripcion as descripcion,dvs.dv_nparte1 as nparte1,
-                DATE(vs.fecha) AS fecha ,TIME(vs.fecha) as hora,vs.nom_equipo as nom_equipo,vs.dr_referencia,vs.nombres,
+                DATE(vs.fecha) AS fecha ,TIME(vs.fecha) as hora,vs.nom_equipo as nom_equipo,vs.dr_referencia,vs.nombres,dvs.dv_entregado as cantidad,
                 CONCAT(u.Nombre,' ',u.Apellido) as usuario
                 FROM almacen_componente ac
                 INNER JOIN detalle_vale_salida dvs ON dvs.fk_id_ac = ac.id_ac
@@ -504,7 +504,7 @@ Class almacenControlador extends almacenModelo {
             if($switch=='false'){
                 if($buscador!=""){
                     $datos=$conexion->query("SELECT SQL_CALC_FOUND_ROWS 'ingreso','success',vi.id_vingreso as vale,ac.fk_idcomp,dvi.dvi_descripcion as descripcion,dvi.dvi_nparte1 as nparte1,
-                    DATE(vi.fecha) AS fecha ,TIME(vi.fecha) as hora,dvi.dvi_nombre_equipo as nom_equipo,dvi.dr_referencia,vi.nombres,
+                    DATE(vi.fecha) AS fecha ,TIME(vi.fecha) as hora,dvi.dvi_nombre_equipo as nom_equipo,dvi.dr_referencia,vi.nombres,dvi.dvi_ingreso as cantidad,
                     CONCAT(u.Nombre,' ',u.Apellido) as usuario
                     FROM almacen_componente ac
                     INNER JOIN detalle_vale_ingreso dvi ON dvi.fk_id_ac = ac.id_ac
@@ -516,7 +516,7 @@ Class almacenControlador extends almacenModelo {
                     
                 }else{
                 $datos=$conexion->query("SELECT SQL_CALC_FOUND_ROWS 'ingreso','success',vi.id_vingreso as vale,ac.fk_idcomp,dvi.dvi_descripcion as descripcion,dvi.dvi_nparte1 as nparte1,
-                DATE(vi.fecha) AS fecha ,TIME(vi.fecha) as hora,dvi.dvi_nombre_equipo as nom_equipo,dvi.dr_referencia,vi.nombres,
+                DATE(vi.fecha) AS fecha ,TIME(vi.fecha) as hora,dvi.dvi_nombre_equipo as nom_equipo,dvi.dr_referencia,vi.nombres,dvi.dvi_ingreso as cantidad,
                 CONCAT(u.Nombre,' ',u.Apellido) as usuario
                 FROM almacen_componente ac
                 INNER JOIN detalle_vale_ingreso dvi ON dvi.fk_id_ac = ac.id_ac
@@ -528,7 +528,7 @@ Class almacenControlador extends almacenModelo {
             }else{
                 $condiciones = $this->condicionales($tipo,$filtros); 
                 $datos=$conexion->query("SELECT SQL_CALC_FOUND_ROWS 'ingreso','success',vi.id_vingreso as vale,ac.fk_idcomp,dvi.dvi_descripcion as descripcion,dvi.dvi_nparte1 as nparte1,
-                DATE(vi.fecha) AS fecha ,TIME(vi.fecha) as hora,dvi.dvi_nombre_equipo as nom_equipo,dvi.dr_referencia,vi.nombres,
+                DATE(vi.fecha) AS fecha ,TIME(vi.fecha) as hora,dvi.dvi_nombre_equipo as nom_equipo,dvi.dr_referencia,vi.nombres,dvi.dvi_ingreso as cantidad,
                 CONCAT(u.Nombre,' ',u.Apellido) as usuario
                 FROM almacen_componente ac
                 INNER JOIN detalle_vale_ingreso dvi ON dvi.fk_id_ac = ac.id_ac
@@ -558,15 +558,20 @@ Class almacenControlador extends almacenModelo {
             $activeI='active';
         }
 
+        if(substr($vista,0,3)!='PDF'){
+            $tabla.="
+            <head class='clearfix'>
+            <nav>
+                <ul class='pagination' id='list_log'>
+                    <li id='li_ambos' class='page-item {$activeA}'><a class='page-link' id='ambos' href='#list_log'>Ingreso/Salida</a></li>
+                    <li id='li_in' class='page-item {$activeI}'><a class='page-link' id='ingreso' href='#list_log'>Ingreso</a></li>
+                    <li id='li_out' class='page-item {$activeO}'><a class='page-link' id='salida' href='#list_log'>Salida</a></li>
+                </ul>
+            </nav>";
+        }
+
 
         $tabla.="
-        <nav>
-            <ul class='pagination pagination' id='list_log'>
-                <li id='li_ambos' class='page-item {$activeA}'><a class='page-link' id='ambos' href='#list_log'>Ingreso/Salida</a></li>
-                <li id='li_in' class='page-item {$activeI}'><a class='page-link' id='ingreso' href='#list_log'>Ingreso</a></li>
-                <li id='li_out' class='page-item {$activeO}'><a class='page-link' id='salida' href='#list_log'>Salida</a></li>
-            </ul>
-        </nav>
         <div class='table-responsive-sm'><table id='tblog' class='table'>
         <thead>
             <tr>
@@ -575,8 +580,9 @@ Class almacenControlador extends almacenModelo {
                 <th scope='col'>Codigo</th>
                 <th scope='col'>Descripcion</th>               
                 <th scope='col'>NParte</th>
-                <th scope='col'>fecha</th>
-                <th scope='col'>hora</th>
+                <th scope='col'>Cant</th>
+                <th scope='col'>Fecha</th>
+                <th scope='col'>Hora</th>
                 <th scope='col'>Equipo</th>
                 <th scope='col'>Referencia</th>
                 <th scope='col'>Personal</th>
@@ -594,13 +600,16 @@ Class almacenControlador extends almacenModelo {
                     <td>{$row['fk_idcomp']}</td>
                     <td>{$row['descripcion']}</td>                      
                     <td>{$row['nparte1']}</td>
+                    <td>{$row['cantidad']}</td>
                     <td><span class='badge badge-{$row[1]}'>".mainModel::dateFormat($row['fecha'])."</span></td>
                     <td><span class='badge badge-{$row[1]}'>{$row['hora']}</span></td>
                     <td>{$row['nom_equipo']}</td>
                     <td>{$row['dr_referencia']}</td>
                     <td>{$row['nombres']}</td>
                     <td>{$row['usuario']}</td>
-                </tr>";      
+                </tr>"; 
+                $equipo=$row['nom_equipo'];
+                $ref=$row['dr_referencia'];    
             }
         }else{
             $tabla.='
@@ -609,9 +618,23 @@ Class almacenControlador extends almacenModelo {
         
         $tabla.='
             </tbody>
-            </table></div>';
+            </table></div>
+            </head>';
         
         if(substr($vista,0,3)=='PDF'){
+            $equipo=($filtros[1]=='')?$equipo='':$equipo;
+            $ref=($filtros[2]=='')?$ref='':$ref;
+            $tabla.="
+            <h2>Valores de filtrado</h2>
+            <div id='project'>
+                <div><span>INTERVALO: </span> desde {$this->formato_fecha_hora("fecha",$fecha_ini)} hasta {$this->formato_fecha_hora("fecha",$fecha_fin)}</div>
+                <div><span>TIPO : </span>{$tipo} </div>
+                <div><span>CODIGO : </span> {$filtros[0]}</div>
+                <div><span>EQUIPO : </span> {$equipo}</div>
+                <div><span>#REFERENCIA : </span> {$ref}</div>
+                
+            </div>";
+            
             return $tabla;
         }
         
@@ -1634,6 +1657,9 @@ Class almacenControlador extends almacenModelo {
         return mainModel::ejecutar_combo($consulta,$val,$vis);
     }
 
+    public function formato_fecha_hora($tipo,$date){
+        return mainModel::dateFormat2($tipo,$date);
+    }
     
 }   
 
