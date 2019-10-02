@@ -26,9 +26,9 @@ class vistasModelo{
                 }
 
             }elseif($vistas=="login"){
-                $contenido="login";
+                $contenido="./vistas/contenidos/inicio-view.php";
             }elseif($vistas=="index"){
-                $contenido="login";
+                $contenido="./vistas/contenidos/inicio-view.phpo";
             }else{  
                 $contenido="404";
             }

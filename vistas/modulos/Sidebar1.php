@@ -168,7 +168,7 @@
           <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">paginas</h6>
             <a class="collapse-item" href="#">Guia remision</a>
-            <a class="collapse-item" href="<?php echo SERVERURL;?>emptranslist/">Empresa de transporte</a>
+            <a class="collapse-item" href="#">Empresa de transporte</a>
             <div class="collapse-divider"></div>
             
 
@@ -296,8 +296,8 @@
                 </a>
                 <a class="dropdown-item d-flex align-items-center" href="#" data-cuenta="2">
                   <div class="mr-3">
-                    <div class="icon-circle bg-primary" data-cuenta="28">
-                      <i class="fab fa-kickstarter-k text-white" data-cuenta="28"></i>
+                    <div class="icon-circle bg-secondary" data-cuenta="28">
+                      <i class="fab fa-cuttlefish" data-cuenta="28"></i>
                     </div>
                   </div>
                   <div>
@@ -308,7 +308,6 @@
                 <a class="dropdown-item d-flex align-items-center" href="#" data-cuenta="6">
                   <div class="mr-3">
                     <div class="icon-circle bg-success" data-cuenta="6">
-                    
                       <i class="fab fa-tumblr text-white" data-cuenta="6"></i>
                     </div>
                   </div>

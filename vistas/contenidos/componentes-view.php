@@ -33,65 +33,9 @@ if(isset($_POST["eliminar_busqueda"])){
           <a class="nav-link" href="<?php echo SERVERURL;?>componentesBaja/">Componentes dados de baja</a>
       </li>
   </ul><br>
-    <!--div class="row">
-      <form class="col s12">
-        <div class="row">
-          <div class="input-field col s6">
-            <input id="myInput" type="text">
-            <label for="myInputt">Buscar</label>
-          </div>
-        </div>
-      </form>
-    </div-->
-  
-        <!--table class="table table-striped" >
-            <thead>
-                <tr>
-                    <th scope="col">Cod interno</th>
-                    <th scope="col">descripcion</th>
-                    <th scope="col">nparte</th>
-                    <th scope="col">nparte2</th>
-                    <th scope="col">nparte3</th>
-                    <th scope="col">Marca</th>
-                    <th scope="col">Acciones</th>
-                </tr>
-            </thead>
-            <tbody id="myTableComp" >
 
-            </tbody>
-        </table-->
-    <!--div id="DT">
-      <table id="DTComponentes" class="display" style="width:100%">
-        <thead>
-            <tr>
-                <th>Codigo</th>
-                <th>Descripcion</th>
-                <th>Nparte</th>
-                <th>Nparte 2</th>
-                <th>Nparte 3</th>
-                <th>Marca</th>
-                <th>U.M</th>
-                <th>Control Stock</th>
-                <th>Acciones</th>
-
-            </tr>
-        </thead>
-        <tfoot>
-            <tr>
-                <th>Codigo</th>
-                <th>Descripcion</th>
-                <th>Nparte</th>
-                <th>Nparte 2</th>
-                <th>Nparte 3</th>
-                <th>Marca</th>
-                <th>U.M</th>
-                <th>Control Stock</th>
-                <th>Acciones</th>
-            </tr>
-        </tfoot>
-      </table>
-        
-    </div-->
+  <h3 class="d-inline-block" tabindex="0" data-toggle="tooltip" title="Componentes globales, que rige a todas las unidades por medio de un codigo asignado a cada producto"><span class='badge badge-secondary'>Componentes globales</span></h2>
+  <br>
   <form action="" method="POST">
     <div class="input-group mb-3">
       <div class="input-group-prepend">
@@ -100,11 +44,11 @@ if(isset($_POST["eliminar_busqueda"])){
       <input type="text" name="buscador_comp" class="form-control" placeholder="Buscar Componente" aria-label="Buscar componente" aria-describedby="button-addon1">
     </div>
   </form>
-
+  
 
   <?php   if(!isset($_SESSION['session_'.$vista]) && empty($_SESSION['session_'.$vista])): ?>
 
-    <?php  echo $compCont->paginador_componentes($paginador,50,$_SESSION['privilegio_sbp'],"",$vista);  ?>
+    <?php  echo $compCont->paginador_componentes($paginador,10,$_SESSION['privilegio_sbp'],"",$vista);  ?>
 
   <?php else: ?>
       <h3><small class='text-muted'>Su ultima busqueda fue : </small>"<?php echo $_SESSION['session_'.$vista]?>"</h3>

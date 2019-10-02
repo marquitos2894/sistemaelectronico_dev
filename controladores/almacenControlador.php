@@ -365,7 +365,6 @@ Class almacenControlador extends almacenModelo {
     }*/
 
 
-
     public function paginador_log_in_out($paginador,$registros,$privilegio,$buscador,$vista,$id_alm,$tipo,$filtros){
         $paginador=mainModel::limpiar_cadena($paginador);
         $registros=mainModel::limpiar_cadena($registros);
