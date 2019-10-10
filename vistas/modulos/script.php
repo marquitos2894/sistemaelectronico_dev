@@ -30,6 +30,10 @@
   <!-- Page level custom scripts -->
   <script src="<?php echo SERVERURL?>vistas/js/demo/datatables-demo.js"></script>
 
+  <!-- Barcoder js -->
+  <script src="<?php echo SERVERURL?>vistas/vendor/JsBarcode/JsBarcode.all.min.js"></script>
+  
+
 
 
 

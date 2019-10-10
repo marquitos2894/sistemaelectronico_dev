@@ -1,8 +1,3 @@
-   <?php //session_start(['name'=>'SBP']); 
-
-   ?>
-
-
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
   <script src="<?php echo SERVERURL?>vistas/vendor/jquery/jquery.min.js"></script>
 
@@ -13,13 +8,8 @@
 
   <!-- Custom styles for this template-->
   <link href="<?php echo SERVERURL?>vistas/css/sb-admin-2.min.css" rel="stylesheet">
-
   <?php  include "vistas/modulos/Estilos.php"; ?>
-
   <?php  include "vistas/modulos/logoutscript.php"; ?>
-
-
-
 
   <?php   
           $peticionAjax=false;

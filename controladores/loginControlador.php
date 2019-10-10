@@ -62,8 +62,6 @@ class loginControlador extends loginModelo{
             "Token_S"=>$_SESSION['token_sbp'],
             "Token"=>$token
         ];
-
-
         return loginModelo::cerrar_sesion_modelo($datos);
     }
 

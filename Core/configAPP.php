@@ -1,5 +1,4 @@
 <?php 
-
 define('SERVER','localhost');
 define('DB','ordencompra_pruebas');
 define('USER','root');

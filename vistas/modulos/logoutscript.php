@@ -1,5 +1,4 @@
 <script>
-
 $(document).ready(function(){
  $('#btnlogout').on('click',function(e){
         e.preventDefault();
@@ -32,8 +31,6 @@ $(document).ready(function(){
             })
         }
         })
-
-
  });
 });
 

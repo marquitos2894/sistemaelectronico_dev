@@ -19,8 +19,6 @@ class loginModelo extends mainModel{
 
     protected function cerrar_sesion_modelo($datos){
 
-
-
         if($datos['Usuario']!="" && $datos['Token_S']==$datos['Token']){
             session_unset();
             session_destroy();
@@ -28,9 +26,6 @@ class loginModelo extends mainModel{
         }else{
             $respuesta = "false";
         }
-
-
-
         return $respuesta;
     }
 
