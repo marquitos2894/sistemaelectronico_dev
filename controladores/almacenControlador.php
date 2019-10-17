@@ -1137,7 +1137,7 @@ Class almacenControlador extends almacenModelo {
         $d_stock = 0;
         $d_u_nom[] = $_POST["d_u_nom"];
         $d_u_sec[] = $_POST["d_u_sec"];
-        $d_id_equipo[] = $_POST["d_id_equipo"];
+        $d_fk_idflota[] = $_POST["d_id_equipo"];
         $d_referencia[] = $_POST["d_referencia"];
 
 
@@ -1145,11 +1145,10 @@ Class almacenControlador extends almacenModelo {
 
         if($validarPrivilegios){
 
-            $validar=almacenModelo::save_registro_almacen_modelo($id_comp,$d_u_nom,$d_nserie,$d_descripcion,$d_u_sec,$d_id_equipo,$d_referencia,$id_alm,$d_stock);
+            $validar=almacenModelo::save_registro_almacen_modelo($id_comp,$d_u_nom,$d_nserie,$d_descripcion,$d_u_sec,$d_fk_idflota,$d_referencia,$id_alm,$d_stock);
             $val_registro=($validar[0]!='')?$val_registro=$validar[0]->rowCount():$val_registro=0;
 
             if($val_registro==0){
-
                 foreach($validar[1] as $i){
                     $mensaje ="El item: | {$i['id_comp']} | {$i['descripcion']} | NS: {$i['nserie']} | ya se encuentra registrado en su almacen, no puede repetirse, Verificar!";
                     $datos = [
@@ -1187,7 +1186,7 @@ Class almacenControlador extends almacenModelo {
                     $alerta=[
                         "alerta"=>"simple",
                         "Titulo"=>"Ocurrio un error inesperado",
-                        "Texto"=>"No hemos podido registrar el componente seleccionado",
+                        "Texto"=>"No hemos podido ingresar al almacen el/los componente seleccionado(s)",
                         "Tipo"=>"error"
                     ];
                     

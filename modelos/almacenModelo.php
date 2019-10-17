@@ -132,7 +132,7 @@ class almacenModelo extends mainModel{
     }
 
 
-    protected function save_registro_almacen_modelo($id_comp,$d_u_nom,$d_nserie,$d_descripcion,$d_u_sec,$d_id_equipo,$d_referencia,$id_alm,$d_stock){
+    protected function save_registro_almacen_modelo($id_comp,$d_u_nom,$d_nserie,$d_descripcion,$d_u_sec,$d_fk_idflota,$d_referencia,$id_alm,$d_stock){
         $conex = mainModel::conectar();
         $i=0;
         $mensaje=[];
@@ -157,13 +157,13 @@ class almacenModelo extends mainModel{
                     "nserie"=>$d_nserie[0][$i]
                 ];
             }else{
-                $sql = $conex->prepare("CALL i_registroalmacen(:id_alm,:id_comp,:d_stock,:d_u_nom,:d_u_sec,:d_id_equipo,:d_referencia)");
+                $sql = $conex->prepare("CALL i_registroalmacen(:id_alm,:id_comp,:d_stock,:d_u_nom,:d_u_sec,:d_fk_idflota,:d_referencia)");
                 $sql->bindParam(":id_alm",$id_alm);
                 $sql->bindParam(":id_comp",$id_comp[0][$i]);
                 $sql->bindParam(":d_stock",$d_stock);
                 $sql->bindParam(":d_u_nom",$d_u_nom[0][$i]);
                 $sql->bindParam(":d_u_sec",$d_u_sec[0][$i]);
-                $sql->bindParam(":d_id_equipo",$d_id_equipo[0][$i]);
+                $sql->bindParam(":d_fk_idflota",$d_fk_idflota[0][$i]);
                 $sql->bindParam(":d_referencia",$d_referencia[0][$i]);
                 $sql->execute();
                
