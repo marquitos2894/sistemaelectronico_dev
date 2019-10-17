@@ -2,3 +2,4 @@
 <link rel="stylesheet" href="<?php echo SERVERURL?>vistas/css/chosen/chosen.css"/>
 <link href="<?php echo SERVERURL?>vistas/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
 
+  

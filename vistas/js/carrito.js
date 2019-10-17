@@ -11,22 +11,21 @@
                     localStorage.setItem('carritoS','[]');
                 }
 
-                    let id_almacen = $('#id_alm_vs').value;
-                    const datos = new FormData();
-                    datos.append('id_alm_consulta', id_almacen);
-                    let response = await fetch('../ajax/almacenAjax.php',{
-                        method : 'POST',
-                        body :  datos
-                    });
-                    let data = await response.json();
-                                        
-                    await localStorage.setItem('BDproductos',JSON.stringify(data)); 
-                    this.getBDproductos = await JSON.parse(localStorage.getItem('BDproductos')); 
-              
-                    this.getCarritoS = JSON.parse(localStorage.getItem("carritoS"));
-                    await view.renderCarritoS();            
-                    
-                    await this.numrowsCarrito();
+                let id_almacen = $('#id_alm_vs').value;
+                const datos = new FormData();
+                datos.append('id_alm_consulta', id_almacen);
+                let response = await fetch('../ajax/almacenAjax.php',{
+                    method : 'POST',
+                    body :  datos
+                });
+                let data = await response.json();
+                                    
+                await localStorage.setItem('BDproductos',JSON.stringify(data)); 
+                this.getBDproductos = await JSON.parse(localStorage.getItem('BDproductos')); 
+            
+                this.getCarritoS = JSON.parse(localStorage.getItem("carritoS"));
+                await view.renderCarritoS();            
+                await this.numrowsCarrito();
         }
 
         this.agregarItemCarritoS = function(item,valor){

@@ -108,7 +108,7 @@ Class almacenControlador extends almacenModelo {
             "id_ac"=>$id_ac,
             "u_nombre"=>$u_nombre,
             "u_seccion"=>$u_seccion,
-            "fk_idequipo"=>$equipo,
+            "fk_idflota"=>$equipo,
             "Referencia"=>$referencia,
             "cs_inicial"=>$cs_inicial,
             "control_stock"=>$control_stock,
@@ -658,28 +658,26 @@ Class almacenControlador extends almacenModelo {
         $est_baja=($vista=="componentes")?$est_baja=1:$est_baja=0;
         if($buscador!=""){
             $datos=$conexion->query("SELECT SQL_CALC_FOUND_ROWS ac.id_ac,c.id_comp,c.descripcion,c.nparte1,c.nparte2,c.nparte3,
-            um.abreviado,ac.stock,ac.fk_idalm,ac.u_nombre,ac.u_seccion,e.Nombre_Equipo,e.Id_Equipo,
+            um.abreviado,ac.stock,ac.fk_idalm,ac.u_nombre,ac.u_seccion,eu.id_equipounidad,
             eu.alias_equipounidad,ac.Referencia,ac.control_stock,c.nserie,ca.nombre,ca.color,c.medida,c.est_baja,c.est
-              FROM componentes c
-              INNER JOIN almacen_componente ac ON ac.fk_idcomp = c.id_comp 
-              INNER JOIN equipos e  ON e.Id_Equipo = ac.fk_Id_Equipo
-              INNER JOIN unidad_medida um ON um.id_unidad_med = c.fk_idunidad_med
-              INNER JOIN equipo_unidad eu ON eu.fk_idequipo = e.Id_Equipo
-              INNER JOIN categoriacomp ca ON ca.id_categoria  = c.fk_idcategoria 
+            FROM componentes c
+            INNER JOIN almacen_componente ac ON ac.fk_idcomp = c.id_comp 
+            INNER JOIN unidad_medida um ON um.id_unidad_med = c.fk_idunidad_med
+            INNER JOIN equipo_unidad eu ON eu.fk_idequipo = ac.fk_idflota
+            INNER JOIN categoriacomp ca ON ca.id_categoria  = c.fk_idcategoria
             WHERE ( c.id_comp like '%$buscador%' or c.descripcion  like '%$buscador%' or c.nparte1 like '%$buscador%' or 
-            c.nparte2 like '%$buscador%' or c.nparte3 like '%$buscador%' or e.Nombre_Equipo like '%$buscador%' or ac.Referencia like '%$buscador%'
+            c.nparte2 like '%$buscador%' or c.nparte3 like '%$buscador%' or eu.alias_equipounidad like '%$buscador%' or ac.Referencia like '%$buscador%'
             or c.nserie like '%$buscador%' or c.medida like '%$buscador%' or ca.nombre like '%$buscador%'  ) AND ac.est=1
             AND ac.fk_idalm={$id_alm} LIMIT {$inicio},{$registros} ");
             
         }else{
         $datos=$conexion->query("SELECT SQL_CALC_FOUND_ROWS ac.id_ac,c.id_comp,c.descripcion,c.nparte1,c.nparte2,c.nparte3,
-        um.abreviado,ac.stock,ac.fk_idalm,ac.u_nombre,ac.u_seccion,e.Nombre_Equipo,e.Id_Equipo,
+        um.abreviado,ac.stock,ac.fk_idalm,ac.u_nombre,ac.u_seccion,eu.id_equipounidad,
         eu.alias_equipounidad,ac.Referencia,ac.control_stock,c.nserie,ca.nombre,ca.color,c.medida,c.est_baja,c.est
         FROM componentes c
         INNER JOIN almacen_componente ac ON ac.fk_idcomp = c.id_comp 
-        INNER JOIN equipos e  ON e.Id_Equipo = ac.fk_Id_Equipo
         INNER JOIN unidad_medida um ON um.id_unidad_med = c.fk_idunidad_med
-        INNER JOIN equipo_unidad eu ON eu.fk_idequipo = e.Id_Equipo
+        INNER JOIN equipo_unidad eu ON eu.fk_idequipo = ac.fk_idflota
         INNER JOIN categoriacomp ca ON ca.id_categoria  = c.fk_idcategoria 
         WHERE ac.est = 1 and ac.fk_idalm = {$id_alm}  LIMIT {$inicio},{$registros}");           
         }
@@ -852,17 +850,16 @@ Class almacenControlador extends almacenModelo {
     public function save_vsalida_controlador(){
         $SERVERURL=SERVERURL;
 
-        
         $fk_idusuario = mainModel::limpiar_cadena($_POST["usuario"]);
         $fk_idpersonal = mainModel::limpiar_cadena($_POST["personal"]);
         $turno = mainModel::limpiar_cadena($_POST["turno"]);
-        $fk_idequipo=mainModel::limpiar_cadena($_POST["codequipo"]);
+        $fk_idflota=mainModel::limpiar_cadena($_POST["codequipo"]);
         $horometro=($_POST["horometro"]=="")?$horometro=0:mainModel::limpiar_cadena($_POST["horometro"]);
         $comentario=mainModel::limpiar_cadena($_POST["comentario"]);   
         $id_alm= mainModel::limpiar_cadena($_POST["id_alm_vs"]);
         $objDateTime = new DateTime('NOW');
         $fecha=$objDateTime->format('Y-m-d H:i:s');
-        $nom_equipo=mainModel::ejecutar_consulta_simple("select e.nombre_equipo from equipos e where id_equipo = {$fk_idequipo} ")['nombre_equipo'];
+        $nom_equipo=mainModel::ejecutar_consulta_simple("SELECT eu.alias_equipounidad FROM equipo_unidad eu WHERE eu.id_equipounidad  = {$fk_idflota } ")['alias_equipounidad'];
         $datospersonal = mainModel::ejecutar_consulta_simple("select  concat(p.nom_per,',',p.Ape_per) as nombres,p.dni_per from personal p where id_per = {$fk_idpersonal} ");
         $nombre_per = $datospersonal['nombres'];
         $dni_per = $datospersonal['dni_per'];
@@ -885,7 +882,7 @@ Class almacenControlador extends almacenModelo {
             "fk_idusuario"=>$fk_idusuario,
             "fk_idpersonal"=>$fk_idpersonal,
             "turno"=>$turno,
-            "fk_idequipo"=>$fk_idequipo,
+            "fk_idflota"=>$fk_idflota,
             "horometro"=>$horometro,
             "comentario"=>$comentario,
             "fecha"=>$fecha,
@@ -896,7 +893,7 @@ Class almacenControlador extends almacenModelo {
             "dr_referencia"=>$datos_referencia
         ];
 
-        var_dump($datos);
+     
 
         $validarPrivilegios=mainModel::privilegios_transact($privilegio);
 
@@ -1028,7 +1025,7 @@ Class almacenControlador extends almacenModelo {
         $dvi_nparte1[]=$_POST["dv_nparte1"];
         $dvi_stock[]=$_POST["dv_stock"];
         $dvi_ingreso[]=$_POST["dv_ingreso"];
-        $dvi_fkid_equipo[]=$_POST["dv_id_equipo"];
+        $dvi_fkidflota[]=$_POST["dv_id_equipo"];
         $dvi_nom_equipo[]=$_POST["dv_nom_equipo"];
         $dvi_referencia[]=$_POST["dv_referencia"];
 
@@ -1061,7 +1058,7 @@ Class almacenControlador extends almacenModelo {
 
             if($validar==$id_vingreso){
 
-                $ingreso=almacenModelo::save_dvingreso_modelo($id_vingreso,$dvi_id_ac,$dvi_descripcion,$dvi_nparte1,$dvi_stock,$dvi_ingreso,$dvi_nom_equipo,$dvi_fkid_equipo,$id_alm,$dvi_referencia);
+                $ingreso=almacenModelo::save_dvingreso_modelo($id_vingreso,$dvi_id_ac,$dvi_descripcion,$dvi_nparte1,$dvi_stock,$dvi_ingreso,$dvi_nom_equipo,$dvi_fkidflota,$id_alm,$dvi_referencia);
                 if($id_vingreso!=0){
                     if($ingreso->rowCount()>0){
                         $alerta=[
@@ -1602,23 +1599,23 @@ Class almacenControlador extends almacenModelo {
             $cond_in = "AND (ac.fk_idcomp={$codigoF})";
             $cond_out = "AND (ac.fk_idcomp={$codigoF})";
             if($equipoF!=''){
-                $cond_in = "AND (ac.fk_idcomp={$codigoF} AND dvi.fk_id_equipo = {$equipoF})";
-                $cond_out = "AND (ac.fk_idcomp={$codigoF} AND vs.fk_idequipo = {$equipoF})";  
+                $cond_in = "AND (ac.fk_idcomp={$codigoF} AND dvi.fk_idflota = {$equipoF})";
+                $cond_out = "AND (ac.fk_idcomp={$codigoF} AND vs.fk_idflota = {$equipoF})";  
             }
             if($referenciaF!=''){
                 $cond_in = "AND (ac.fk_idcomp={$codigoF} AND dvi.dr_referencia='{$referenciaF}')";
                 $cond_out = "AND (ac.fk_idcomp={$codigoF} AND vs.dr_referencia = '{$referenciaF}')";  
             }
             if($equipoF!='' && $referenciaF!='' ){
-                $cond_in = "AND (ac.fk_idcomp={$codigoF} AND dvi.fk_id_equipo = {$equipoF} AND dvi.dr_referencia='{$referenciaF}')";
-                $cond_out = "AND (ac.fk_idcomp={$codigoF} AND vs.fk_idequipo = {$equipoF} AND vs.dr_referencia='{$referenciaF}')";  
+                $cond_in = "AND (ac.fk_idcomp={$codigoF} AND dvi.fk_idflota = {$equipoF} AND dvi.dr_referencia='{$referenciaF}')";
+                $cond_out = "AND (ac.fk_idcomp={$codigoF} AND vs.fk_idflota = {$equipoF} AND vs.dr_referencia='{$referenciaF}')";  
             }
         }else if($equipoF!=''){
-            $cond_in = "AND (dvi.fk_id_equipo = {$equipoF})";
-            $cond_out = "AND (vs.fk_idequipo = {$equipoF})";
+            $cond_in = "AND (dvi.fk_idflota = {$equipoF})";
+            $cond_out = "AND (vs.fk_idflota = {$equipoF})";
             if($referenciaF !=''){
-                $cond_in = "AND (dvi.fk_id_equipo = {$equipoF} AND dvi.dr_referencia='{$referenciaF}')";
-                $cond_out = "AND (vs.fk_idequipo = {$equipoF} AND vs.dr_referencia = '{$referenciaF}')";  
+                $cond_in = "AND (dvi.fk_idflota = {$equipoF} AND dvi.dr_referencia='{$referenciaF}')";
+                $cond_out = "AND (vs.fk_idflota = {$equipoF} AND vs.dr_referencia = '{$referenciaF}')";  
             }
         }else if($referenciaF!=''){
             $cond_in = "AND (dvi.dr_referencia='{$referenciaF}')";

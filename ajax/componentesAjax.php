@@ -23,9 +23,8 @@ if(isset($_POST["comp_gen"])){
 }
 
 if(isset($_POST["idunidad_compgen"])){
-    echo $compCont->select_combo("SELECT e.Id_Equipo,eu.alias_equipounidad
-    FROM equipos e
-    INNER JOIN equipo_unidad eu ON eu.fk_idequipo = e.Id_Equipo
+    echo $compCont->select_combo("SELECT eu.id_equipounidad,eu.alias_equipounidad
+    FROM equipo_unidad eu
     WHERE (eu.fk_idunidad = 7 OR eu.fk_idunidad = {$_POST["idunidad_compgen"]} ) 
     AND eu.est_baja = 1 AND eu.est = 1 AND eu.fk_idequipo !=1 ",0,1);
 }

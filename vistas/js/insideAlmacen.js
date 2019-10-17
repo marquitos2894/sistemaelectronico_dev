@@ -13,16 +13,16 @@
                     body: datos
             });
             let data = await response.json();
-           
+            console.log(data);
             const datosEquipo = new FormData();
-            datosEquipo.append('id_equipo_insideAlm',data[0].Id_Equipo);
+            datosEquipo.append('id_equipo_insideAlm',data[0].id_equipounidad); //FLOTA
             datosEquipo.append('id_unidad_insideAlm',id_unidad);
             let responseEquipo = await fetch('../ajax/almacenAjax.php',{
                 method : 'POST',
                 body : datosEquipo
             });
             let dataEquipo = await responseEquipo.text();
-            console.log(data[0].Referencia);
+            
            
                      //referencia
                      const datosDR = new FormData();
@@ -67,7 +67,7 @@
                <div class="form-group col-md-6">
                     <label for="inputEmail4">Equipo</label>
                     <select id='chosen-select' data-placeholder='Seleccione Equipo' name="equipo" class="chosen-select">
-                        <option value="${data[0].Id_Equipo}">${data[0].alias_equipounidad}</option>
+                        <option value="${data[0].id_equipounidad}">${data[0].alias_equipounidad}</option>
                         ${dataEquipo}
                     </select>
                </div>

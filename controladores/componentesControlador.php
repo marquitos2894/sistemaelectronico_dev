@@ -509,7 +509,7 @@ Class componentesControlador extends componentesModelo {
                 }
 
                 echo mainModel::localstorage_reiniciar($localStorage);
-                
+                return mainModel::sweet_alert($alerta);
             }
         }else{
             $alerta=[

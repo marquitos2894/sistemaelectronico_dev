@@ -212,7 +212,7 @@
 
             //equipos
             const datos = new FormData();
-            datos.append('idunidad_compgen','true');
+            datos.append('idunidad_compgen',id_unidad);
             let response = await fetch('../ajax/componentesAjax.php',{
                 method : 'POST',
                 body : datos

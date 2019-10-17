@@ -69,13 +69,13 @@
  
     document.addEventListener("DOMContentLoaded",  function(){
        //await render.renderComponentes();
+        
     })
 
 
 
     document.querySelector('#table_componente').addEventListener("click", async function(ev){
       
-
         if(ev.target.id == 'DeleteItem'){
             document.querySelector('#frmDeleteComp').submit();
         }

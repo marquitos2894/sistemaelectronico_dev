@@ -18,12 +18,11 @@
       
       echo $almCont->obtener_consulta_json_controlador("SELECT ac.id_ac,c.id_comp,c.descripcion,c.nparte1,
       c.nparte2,c.nparte3,um.id_unidad_med,um.abreviado,ac.stock,ac.fk_idalm,ac.u_nombre,ac.u_seccion,
-      eu.alias_equipounidad,e.Nombre_Equipo,e.Id_Equipo,ac.Referencia,c.nserie
+      eu.alias_equipounidad,eu.alias_equipounidad,eu.id_equipounidad,ac.Referencia,c.nserie
       FROM componentes c
       INNER JOIN almacen_componente ac ON ac.fk_idcomp = c.id_comp 
-      INNER JOIN equipos e  ON e.Id_Equipo = ac.fk_Id_Equipo
       INNER JOIN unidad_medida um ON um.id_unidad_med = c.fk_idunidad_med
-      INNER JOIN equipo_unidad eu ON eu.fk_idequipo = e.Id_Equipo
+      INNER JOIN equipo_unidad eu ON eu.fk_idequipo = ac.fk_idflota
       WHERE ac.fk_idalm = {$_POST["id_alm_consulta"]}");
    }
 
@@ -56,13 +55,12 @@
 
    if(isset($_POST["id_ac"])){
       echo $almCont->obtener_consulta_json_controlador("SELECT ac.id_ac,c.id_comp,c.descripcion,c.nparte1,c.nparte2,c.nparte3,
-      um.abreviado,ac.stock,ac.fk_idalm,ac.u_nombre,ac.u_seccion,e.Nombre_Equipo,e.Id_Equipo,
+      um.abreviado,ac.stock,ac.fk_idalm,ac.u_nombre,ac.u_seccion,eu.id_equipounidad,
       eu.alias_equipounidad,ac.Referencia,ac.control_stock,c.nserie
         FROM componentes c
         INNER JOIN almacen_componente ac ON ac.fk_idcomp = c.id_comp 
-        INNER JOIN equipos e  ON e.Id_Equipo = ac.fk_Id_Equipo
         INNER JOIN unidad_medida um ON um.id_unidad_med = c.fk_idunidad_med
-        INNER JOIN equipo_unidad eu ON eu.fk_idequipo = e.Id_Equipo
+        INNER JOIN equipo_unidad eu ON eu.fk_idequipo = ac.fk_idflota
       WHERE ac.est = 1 and ac.id_ac = {$_POST["id_ac"]}");
 
    }
@@ -97,9 +95,8 @@
     }
 
     if(isset($_POST["id_equipo_insideAlm"]) && isset($_POST["id_unidad_insideAlm"]) ){
-      echo $equiCont->select_combo("SELECT e.Id_Equipo,eu.alias_equipounidad
-      FROM equipos e
-      INNER JOIN equipo_unidad eu ON eu.fk_idequipo = e.Id_Equipo
+      echo $equiCont->select_combo("SELECT eu.id_equipounidad,eu.alias_equipounidad
+      FROM equipo_unidad eu
       WHERE (eu.fk_idunidad = 7 OR eu.fk_idunidad = {$_POST["id_unidad_insideAlm"]} ) 
       AND eu.est_baja = 1 AND eu.est = 1 AND eu.fk_idequipo !={$_POST["id_equipo_insideAlm"]}
       ",0,1);

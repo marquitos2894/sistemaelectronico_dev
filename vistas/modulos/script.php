@@ -1,4 +1,6 @@
-  <script src="<?php echo SERVERURL?>vistas/vendor/jquery/jquery.min.js"></script>
+  
+
+  <!--script src="<?php echo SERVERURL?>vistas/vendor/jquery/jquery.min.js"></script-->
   <script src="<?php echo SERVERURL?>vistas/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
   <!-- Core plugin JavaScript-->
@@ -30,8 +32,7 @@
   <!-- Page level custom scripts -->
   <script src="<?php echo SERVERURL?>vistas/js/demo/datatables-demo.js"></script>
 
-  <!-- Barcoder js -->
-  <script src="<?php echo SERVERURL?>vistas/vendor/JsBarcode/JsBarcode.all.min.js"></script>
+
   
 
 

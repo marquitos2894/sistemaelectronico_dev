@@ -1,6 +1,11 @@
+ 
+ 
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
-  <script src="<?php echo SERVERURL?>vistas/vendor/jquery/jquery.min.js"></script>
 
+  <script src="<?php echo SERVERURL?>vistas/vendor/jquery/jquery.min.js"></script>
+  
+<!-- Barcoder js -->
+<script src="<?php echo SERVERURL?>vistas/vendor/JsBarcode/JsBarcode.all.min.js"></script>
 
   <!-- Custom fonts for this template-->
   <link href="<?php echo SERVERURL?>vistas/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">

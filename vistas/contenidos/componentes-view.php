@@ -94,4 +94,5 @@ if(isset($_POST["eliminar_busqueda"])){
 
 <script src="../vistas/js/componentes.js"></script>
 
-
+<img id="barcode1"/>
+		<script>JsBarcode("#barcode1", "Hi!");</script>
