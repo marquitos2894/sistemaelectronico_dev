@@ -164,6 +164,7 @@
                     </tr>
                 </thead><tbody>`;
                 let j = 1;
+                console.log(carrito.getCarritoIn);
                 for(i of carrito.getCarritoIn){
                   template +=`
                     <tr class="alert alert-success">
@@ -186,7 +187,7 @@
                         <input type="hidden" name="dv_nparte1[]" value="${i.nparte1}">
                         <input type="hidden" name="dv_stock[]" value="${i.stock}">
                         <input type="hidden" name="dv_ingreso[]" value="${i.cantidad}">
-                        <input type="hidden" name="dv_id_equipo[]" value="${i.Id_Equipo}">
+                        <input type="hidden" name="dv_id_equipo[]" value="${i.id_equipounidad}">
                         <input type="hidden" name="dv_nom_equipo[]" value="${i.alias_equipounidad}">
                         <input type="hidden" name="dv_referencia[]" value="${i.Referencia}">
                         <input type="hidden" name="dv_unombre[]" value="${i.u_nombre}">

@@ -401,7 +401,7 @@ Class almacenControlador extends almacenModelo {
                     INNER JOIN vale_salida vs ON vs.id_vsalida = dvs.fk_vsalida
                     INNER JOIN usuario u ON u.id_usu = vs.fk_idusuario
                     WHERE (dvs.dv_descripcion like '%$buscador%' or dvs.dv_nparte1 like '%$buscador%' or ac.fk_idcomp like '%$buscador%') AND
-                    vs.fk_idalm={$id_alm} AND vs.est = 1 
+                    vs.fk_idalm={$id_alm} AND dvs.fk_id_almacen={$id_alm}  AND  vs.est = 1 
                     UNION
                     SELECT 'ingreso','success',vi.id_vingreso as vale,ac.fk_idcomp,dvi.dvi_descripcion as descripcion,dvi.dvi_nparte1 as nparte1,
                     DATE(vi.fecha) AS fecha ,TIME(vi.fecha) as hora,dvi.dvi_nombre_equipo as nom_equipo,dvi.dr_referencia,vi.nombres,dvi.dvi_ingreso as cantidad,
@@ -411,7 +411,7 @@ Class almacenControlador extends almacenModelo {
                     INNER JOIN vale_ingreso vi ON vi.id_vingreso = dvi.fk_id_vingreso
                     INNER JOIN usuario u ON u.id_usu = vi.fk_idusuario
                     WHERE (dvi.dvi_descripcion LIKE '%$buscador%' OR dvi.dvi_nparte1 LIKE '%$buscador%' OR ac.fk_idcomp like '%$buscador%') AND 
-                    vi.fk_idalm = {$id_alm} AND vi.est = 1
+                    vi.fk_idalm = {$id_alm} AND dvi.fk_id_almacen={$id_alm} AND vi.est = 1
                     ORDER BY fecha DESC, hora DESC  LIMIT {$inicio},{$registros}");
                     
                 }else{
@@ -422,7 +422,7 @@ Class almacenControlador extends almacenModelo {
                     INNER JOIN detalle_vale_salida dvs ON dvs.fk_id_ac = ac.id_ac
                     INNER JOIN vale_salida vs ON vs.id_vsalida = dvs.fk_vsalida
                     INNER JOIN usuario u ON u.id_usu = vs.fk_idusuario
-                    WHERE vs.fk_idalm={$id_alm}  AND vs.est = 1 
+                    WHERE vs.fk_idalm={$id_alm} AND dvs.fk_id_almacen={$id_alm} AND vs.est = 1 
                     UNION
                     SELECT 'ingreso','success',vi.id_vingreso as vale,ac.fk_idcomp,dvi.dvi_descripcion as descripcion ,dvi.dvi_nparte1 as nparte1,
                     DATE(vi.fecha) AS fecha ,TIME(vi.fecha) as hora,dvi.dvi_nombre_equipo as nom_equipo,dvi.dr_referencia,vi.nombres,dvi.dvi_ingreso as cantidad,
@@ -431,7 +431,7 @@ Class almacenControlador extends almacenModelo {
                     INNER JOIN detalle_vale_ingreso dvi ON dvi.fk_id_ac = ac.id_ac
                     INNER JOIN vale_ingreso vi ON vi.id_vingreso = dvi.fk_id_vingreso
                     INNER JOIN usuario u ON u.id_usu = vi.fk_idusuario
-                    WHERE vi.fk_idalm = {$id_alm}  AND vi.est = 1
+                    WHERE vi.fk_idalm = {$id_alm} AND dvi.fk_id_almacen={$id_alm} AND vi.est = 1
                     ORDER BY fecha DESC, hora DESC  LIMIT {$inicio},{$registros}");  
                 }
             }else{
@@ -443,7 +443,7 @@ Class almacenControlador extends almacenModelo {
                 INNER JOIN detalle_vale_salida dvs ON dvs.fk_id_ac = ac.id_ac
                 INNER JOIN vale_salida vs ON vs.id_vsalida = dvs.fk_vsalida
                 INNER JOIN usuario u ON u.id_usu = vs.fk_idusuario
-                WHERE vs.fk_idalm={$id_alm}  AND vs.est = 1 {$condiciones[1]} AND date(fecha) between '{$fecha_ini}' and '{$fecha_fin}'
+                WHERE vs.fk_idalm={$id_alm} AND dvs.fk_id_almacen={$id_alm}  AND vs.est = 1 {$condiciones[1]} AND date(fecha) between '{$fecha_ini}' and '{$fecha_fin}'
                 UNION
                 SELECT 'ingreso','success',vi.id_vingreso as vale,ac.fk_idcomp,dvi.dvi_descripcion as descripcion ,dvi.dvi_nparte1 as nparte1,
                 DATE(vi.fecha) AS fecha ,TIME(vi.fecha) as hora,dvi.dvi_nombre_equipo as nom_equipo,dvi.dr_referencia,vi.nombres,dvi.dvi_ingreso as cantidad,
@@ -452,7 +452,7 @@ Class almacenControlador extends almacenModelo {
                 INNER JOIN detalle_vale_ingreso dvi ON dvi.fk_id_ac = ac.id_ac
                 INNER JOIN vale_ingreso vi ON vi.id_vingreso = dvi.fk_id_vingreso
                 INNER JOIN usuario u ON u.id_usu = vi.fk_idusuario
-                WHERE vi.fk_idalm = {$id_alm}  AND vi.est = 1 {$condiciones[0]} AND date(fecha) between '{$fecha_ini}' and '{$fecha_fin}'
+                WHERE vi.fk_idalm = {$id_alm} AND dvi.fk_id_almacen={$id_alm} AND vi.est = 1 {$condiciones[0]} AND date(fecha) between '{$fecha_ini}' and '{$fecha_fin}'
                 ORDER BY fecha DESC, hora DESC  
                 {$limit}");  
             }
@@ -470,7 +470,7 @@ Class almacenControlador extends almacenModelo {
                 INNER JOIN vale_salida vs ON vs.id_vsalida = dvs.fk_vsalida
                 INNER JOIN usuario u ON u.id_usu = vs.fk_idusuario
                 WHERE (dvs.dv_descripcion like '%$buscador%' or dvs.dv_nparte1 like '%$buscador%' or ac.fk_idcomp like '%$buscador%') AND
-                vs.fk_idalm={$id_alm} AND vs.est = 1 
+                vs.fk_idalm={$id_alm} AND dvs.fk_id_almacen={$id_alm} AND vs.est = 1 
                 ORDER BY fecha DESC, hora DESC  LIMIT {$inicio},{$registros}");
                     
                 }else{
@@ -481,7 +481,7 @@ Class almacenControlador extends almacenModelo {
                 INNER JOIN detalle_vale_salida dvs ON dvs.fk_id_ac = ac.id_ac
                 INNER JOIN vale_salida vs ON vs.id_vsalida = dvs.fk_vsalida
                 INNER JOIN usuario u ON u.id_usu = vs.fk_idusuario
-                WHERE vs.fk_idalm={$id_alm}  AND vs.est = 1 
+                WHERE vs.fk_idalm={$id_alm} AND dvs.fk_id_almacen={$id_alm}  AND vs.est = 1 
                 ORDER BY fecha DESC, hora DESC  LIMIT {$inicio},{$registros}");
                 }
             }else{
@@ -493,7 +493,7 @@ Class almacenControlador extends almacenModelo {
                 INNER JOIN detalle_vale_salida dvs ON dvs.fk_id_ac = ac.id_ac
                 INNER JOIN vale_salida vs ON vs.id_vsalida = dvs.fk_vsalida
                 INNER JOIN usuario u ON u.id_usu = vs.fk_idusuario
-                WHERE vs.fk_idalm={$id_alm}  AND vs.est = 1  {$condiciones[1]} AND date(fecha) between '{$fecha_ini}' and '{$fecha_fin}'
+                WHERE vs.fk_idalm={$id_alm} AND dvs.fk_id_almacen={$id_alm} AND vs.est = 1  {$condiciones[1]} AND date(fecha) between '{$fecha_ini}' and '{$fecha_fin}'
                 ORDER BY fecha DESC, hora DESC  
                 {$limit}"); 
             }           
@@ -510,7 +510,7 @@ Class almacenControlador extends almacenModelo {
                     INNER JOIN vale_ingreso vi ON vi.id_vingreso = dvi.fk_id_vingreso
                     INNER JOIN usuario u ON u.id_usu = vi.fk_idusuario
                     WHERE (dvi.dvi_descripcion LIKE '%$buscador%' OR dvi.dvi_nparte1 LIKE '%$buscador%' OR ac.fk_idcomp like '%$buscador%') AND 
-                    vi.fk_idalm = {$id_alm} AND vi.est = 1
+                    vi.fk_idalm = {$id_alm} AND dvi.fk_id_almacen={$id_alm} AND vi.est = 1
                     ORDER BY fecha DESC, hora DESC  LIMIT {$inicio},{$registros}");
                     
                 }else{
@@ -521,7 +521,7 @@ Class almacenControlador extends almacenModelo {
                 INNER JOIN detalle_vale_ingreso dvi ON dvi.fk_id_ac = ac.id_ac
                 INNER JOIN vale_ingreso vi ON vi.id_vingreso = dvi.fk_id_vingreso
                 INNER JOIN usuario u ON u.id_usu = vi.fk_idusuario
-                WHERE vi.fk_idalm = {$id_alm}  AND vi.est = 1
+                WHERE vi.fk_idalm = {$id_alm} AND dvi.fk_id_almacen={$id_alm}  AND vi.est = 1
                 ORDER BY fecha DESC, hora DESC  LIMIT {$inicio},{$registros}");           
                 }
             }else{
@@ -533,7 +533,7 @@ Class almacenControlador extends almacenModelo {
                 INNER JOIN detalle_vale_ingreso dvi ON dvi.fk_id_ac = ac.id_ac
                 INNER JOIN vale_ingreso vi ON vi.id_vingreso = dvi.fk_id_vingreso
                 INNER JOIN usuario u ON u.id_usu = vi.fk_idusuario
-                WHERE vi.fk_idalm = {$id_alm}  AND vi.est = 1 {$condiciones[0]} AND date(fecha) between '{$fecha_ini}' and '{$fecha_fin}'
+                WHERE vi.fk_idalm = {$id_alm} AND dvi.fk_id_almacen={$id_alm}  AND vi.est = 1 {$condiciones[0]} AND date(fecha) between '{$fecha_ini}' and '{$fecha_fin}'
                 ORDER BY fecha DESC, hora DESC  
                 {$limit}");  
             }
