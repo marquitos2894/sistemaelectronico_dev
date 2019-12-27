@@ -132,9 +132,11 @@ class almacenModelo extends mainModel{
     }
 
 
-    protected function save_registro_almacen_modelo($id_comp,$d_u_nom,$d_nserie,$d_descripcion,$d_u_sec,$d_fk_idflota,$d_referencia,$id_alm,$d_stock){
+    protected function save_registro_almacen_modelo($id_comp,$d_u_nom,$d_nserie,$d_descripcion,$d_u_sec,$d_fk_idflota,$d_referencia,$id_alm,$d_stock,$d_cant,$t_reg){
         $conex = mainModel::conectar();
+        //$conex->beginTransaction();
         $i=0;
+        $id=[];
         $mensaje=[];
         $sql="";
         foreach($id_comp[0] as $valor){
@@ -160,18 +162,32 @@ class almacenModelo extends mainModel{
                 $sql = $conex->prepare("CALL i_registroalmacen(:id_alm,:id_comp,:d_stock,:d_u_nom,:d_u_sec,:d_fk_idflota,:d_referencia)");
                 $sql->bindParam(":id_alm",$id_alm);
                 $sql->bindParam(":id_comp",$id_comp[0][$i]);
-                $sql->bindParam(":d_stock",$d_stock);
+
+                if($t_reg==1){
+                    $sql->bindParam(":d_stock",$d_stock);
+                }else{
+                    $sql->bindParam(":d_stock",$d_cant[0][$i]);
+                }
+                
                 $sql->bindParam(":d_u_nom",$d_u_nom[0][$i]);
                 $sql->bindParam(":d_u_sec",$d_u_sec[0][$i]);
                 $sql->bindParam(":d_fk_idflota",$d_fk_idflota[0][$i]);
                 $sql->bindParam(":d_referencia",$d_referencia[0][$i]);
-                $sql->execute();
-               
+
+                if($sql->execute()){
+                    $sql = $sql->fetchAll();
+                    $statement = $conex->prepare("SELECT LAST_INSERT_ID() AS id");
+                    $statement->execute();       
+                    $result = $statement->fetch(PDO::FETCH_ASSOC);
+                    array_push($id,$result["id"]);
+                }else{
+                    $sql = "";
+                }
+        
             }
             $i++;
         }
-
-        $array = [$sql,$mensaje];
+        $array = [$statement,$mensaje,$id];
         return $array;
     }
 

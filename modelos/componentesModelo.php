@@ -12,6 +12,7 @@ Class componentesModelo extends mainModel {
 
     protected function save_componentenes_modelo($datos){
         $conex  = mainModel::conectar();
+        $conex->beginTransaction();
         $sql=$conex->prepare("CALL i_componentesnew(:descripcion,:nparte1,:nparte2,:nparte3,:marca,:id_unidad_med,:nserie,:medida,:categoria)");
         $sql->bindParam(":descripcion",$datos["descripcion"]);
         $sql->bindParam(":nparte1",$datos["nparte1"]);
@@ -22,7 +23,19 @@ Class componentesModelo extends mainModel {
         $sql->bindParam(":categoria",$datos["categoria"]);
         $sql->bindParam(":medida",$datos["medida"]);
         $sql->bindParam(":id_unidad_med",$datos["id_unidad_med"]);
-        $sql->execute();
+        
+        if($sql->execute()){
+            $statement = $conex->prepare("SELECT LAST_INSERT_ID() AS id");
+            $statement->execute();       
+            $result = $statement->fetch(PDO::FETCH_ASSOC);
+            $id = $result["id"];
+            $conex->commit();
+            
+            //return $id;
+        }else{
+            $conex->rollback();
+        }
+        
         return $sql;    
     }
 

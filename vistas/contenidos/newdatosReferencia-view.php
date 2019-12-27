@@ -24,7 +24,7 @@
                 <div class="form-row">
                     <div class="form-group col-sm-6 text-primary">
                         <label for="inputAddress">Referencia</label>
-                        <input type="text" name="referencia_dr_nuevo" class="form-control " id="inputAddress" placeholder="Nombre del componente" required>
+                        <input type="text" name="referencia_dr_nuevo" class="form-control " id="inputAddress" placeholder="Nombre del componente" maxlength="35" required>
                     </div>
                 </div>
                 <div class="progress" style="height:1px;">
@@ -34,7 +34,7 @@
                 <div class="form-row">
                     <div class="form-group col-sm-4">
                         <label for="inputEmail4">Descripcion</label>
-                        <textarea  name="descripcion_dr_nuevo" value=""  class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>   
+                        <textarea  name="descripcion_dr_nuevo" value=""  class="form-control" id="exampleFormControlTextarea1" rows="3" maxlength="80"></textarea>   
                     </div>
                 </div>
             </div>

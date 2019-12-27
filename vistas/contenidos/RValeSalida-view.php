@@ -76,6 +76,7 @@
                 <div id="productosCarrito">
                                 <!-- item de local storage para salida del almacen-->
                 </div>
+                <div id="alert2"></div>
                 <h4><p style="text-align:center;" ><a  href="#" id="varciarCarrito">Vaciar carrito</a></p></h4> 
                 <input type="hidden" name="usuario" value="<?php echo $_SESSION['id_sbp'];?>"/>
                 <div class="card">
@@ -139,7 +140,7 @@
                                                 </div>
                                                 <div class="form-group col-10"> 
                                                     <label for="inputEmail4">Horometro</label>                              
-                                                    <input type="number" name="horometro" class="form-control"  placeholder="Horometro">
+                                                    <input type="number" name="horometro" class="form-control"  placeholder="Horometro" max="999999">
                                                 </div>
                                                 <div class="form-group col-10"> 
                                                     <label for="inputEmail4">Datos referencia</label>                              
@@ -157,12 +158,12 @@
                             </div>
                             <div class="form-group">
                                     <label for="exampleFormControlTextarea1">Comentario de salida de los repuestos</label>
-                                    <textarea  name="comentario" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                                    <textarea  name="comentario" class="form-control" id="exampleFormControlTextarea1" rows="3" maxlength="80"></textarea>
                             </div>
                             <input type="hidden"  name="privilegio_sbp_vs" value="<?php echo $_SESSION['privilegio_sbp']?>"/>
                             <input type="hidden"  name="vale" value="valesalida"/>
                             <input type="hidden"  name="id_alm_vs" id="id_alm_vs" value="<?php echo $id_alm ?>"/>
-                            <div id="alert"></div>
+                            <div id="alert1"></div>
                             <button type="submit" id="btnvale" class="btn btn-danger btn-lg btn-block" disabled='true' >Emitir Vale de salida</button>
                         </div>
                     </div>

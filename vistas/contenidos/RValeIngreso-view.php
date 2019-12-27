@@ -70,9 +70,23 @@
                 <div id="productosCarrito">
                                 <!-- item de local storage para salida del almacen-->
                 </div>
+                <div id="alert2"></div>
                 <h4><p style="text-align:center;" ><a  href="#" id="varciarCarrito">Vaciar carrito</a></p></h4>
+
+                <div class="jumbotron jumbotron-fluid">
+                    <h3>Productos recibidos</h3>
+                    <hr class="my-4">
+                    <div class="container">
+                        
+                        <div id="productosCarrito2">
+                                    <!-- item de local storage para salida del almacen-->
+                        </div>
+                    </div>
+                </div>
+          
+                <h4><p style="text-align:center;" ><a  href="#" id="varciarCarrito2">Eliminar productos</a></p></h4>
                 
-                <input type="hidden" name="usuario" value="<?php echo $_SESSION['id_sbp'];?>"/>
+                <input type="hidden" name="usuario" value="<?php echo $_SESSION['id_sbp'];?>" />
  
                 <div class="card">
                     <div class="card-header" id="headingTwo">
@@ -104,7 +118,7 @@
                                                 </div>
                                                 <div class="form-group col-10"> 
                                                     <label for="inputEmail4">Ref. Documento</label>                              
-                                                    <input type="text" name="ref_documento" class="form-control"  placeholder="Referencia documento">
+                                                    <input type="text" name="ref_documento" class="form-control"  placeholder="Referencia documento" maxlength="18">
                                                 </div>
                                             </div>
                                             <footer class="blockquote-footer">Someone famous in <cite title="Source Title">Source Title</cite></footer>
@@ -140,12 +154,12 @@
                             </div>
                             <div class="form-group">
                                     <label for="exampleFormControlTextarea1">Comentario de salida de los repuestos</label>
-                                    <textarea  name="comentario" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                                    <textarea  name="comentario" class="form-control" id="exampleFormControlTextarea1" rows="3" maxlength="80"></textarea>
                             </div>
                             <input type="hidden" value="valeingreso" name="vale"/>
                             <input type="hidden" name="privilegio_in" value="<?php echo $_SESSION['privilegio_sbp'] ?>" />
                             <input type="hidden"  name="id_alm_vi" id="id_alm_vi" value="<?php echo $id_alm ?>"/>
-                            <div id="alert"></div>
+                            <div id="alert1"></div>
                             <button type="submit" id="btnvale" class="btn btn-success btn-lg btn-block" disabled='true'>Emitir Vale de Ingreso</button>
                         </div>
                     </div>

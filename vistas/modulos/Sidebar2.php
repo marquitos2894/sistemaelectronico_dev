@@ -1,11 +1,11 @@
-</div>
+
       <!-- End of Main Content -->
 
       <!-- Footer -->
       <footer class="sticky-footer bg-white">
         <div class="container my-auto">
           <div class="copyright text-center my-auto">
-            <span>Copyright &copy; contratistas mineros y civiles del Peru SAC | 2019</span>
+            <span>Copyright &copy; contratistas mineros y civiles del Peru SAC | 2020</span>
           </div>
         </div>
       </footer>

@@ -150,7 +150,7 @@
             document.querySelector('#catalogo').innerHTML = data;
         }
         
-        this.Alert = function (title,mensaje){
+        this.Alert = function (title,mensaje,div){
             let template = `
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                 <strong>${title}</strong>${mensaje}.
@@ -159,7 +159,7 @@
                 </button>
             </div>
             `;
-            document.querySelector("#alert").innerHTML = template;
+            document.querySelector("#"+div).innerHTML = template;
         }
     }
 
@@ -255,7 +255,12 @@
         if(ev.target.id=="addItem"){
         console.log(ev.target);                    
         cant=document.getElementById("salida"+ev.target.dataset.producto).value;
-        carrito.agregarItemCarritoS(ev.target.dataset.producto,cant);
+        if(cant>0 || cant==""){
+            carrito.agregarItemCarritoS(ev.target.dataset.producto,cant);
+        }else{
+            render.Alert("Campo restringido: ","cantidad mayor a cero, verificar !","alert2");  
+        }
+       
         view.renderCarritoS();
         carrito.numrowsCarrito();   
         }   
@@ -277,8 +282,10 @@
         let personal = $("#personal").value;
         if(personal.length==0){
             ev.preventDefault();
-            render.Alert("(*) Campo obligatorio: ","Seleccione la persona que solicita el repuesto");     
-        } 
+            render.Alert("(*) Campo obligatorio: ","Seleccione la persona que solicita el repuesto","alert1");     
+        }
+        
+        
      
     });
 

@@ -126,17 +126,17 @@
                 <input type="hidden" name="categoria_inicial" id="categoria_inicial" value="${data[0].id_categoria}">
                 <div class="form-group">
                     <label for="inputAddress">Descripcion</label>
-                    <input type="text" value="${data[0].descripcion}" name="descripcion_formEdit"  id="descripcion"  class="form-control" placeholder="Descripcion">
+                    <input type="text" value="${data[0].descripcion}" name="descripcion_formEdit"  id="descripcion"  class="form-control" placeholder="Descripcion" maxlength="50">
                 </div>
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         <label for="inputEmail4">Nparte1</label>
-                        <input type="text" value="${data[0].nparte1}" name="nparte1" id="nparte1"  class="form-control"  placeholder="Nparte 1">
+                        <input type="text" value="${data[0].nparte1}" name="nparte1" id="nparte1"  class="form-control"  placeholder="Nparte 1" maxlength="14" >
                         <input type="hidden" value="${data[0].nparte1}" name="nparte1_respaldo">
                     </div>
                     <div class="form-group col-md-6">
                         <label for="inputPassword4">Nparte2</label>
-                        <input type="text" value="${data[0].nparte2}" name="nparte2" id="nparte2"  class="form-control" placeholder="Nparte 2" >
+                        <input type="text" value="${data[0].nparte2}" name="nparte2" id="nparte2"  class="form-control" placeholder="Nparte 2" maxlength="14" >
                         <input type="hidden" value="${data[0].nparte2}" name="nparte2_respaldo">
                     </div>
                     <div style="display:none" class="form-group col-md-4">
@@ -147,7 +147,7 @@
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         <label for="inputEmail4">Nserie</label>
-                        <input type="text" value="${data[0].nserie}" name="nserie" id="nserie" class="form-control"   placeholder="N° Serie">
+                        <input type="text" value="${data[0].nserie}" name="nserie" id="nserie" class="form-control"   placeholder="N° Serie" maxlength="25" >
                         <input type="hidden" value="${data[0].nserie}" name="nserie_respaldo">
                     </div>
                 </div>
@@ -155,7 +155,7 @@
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         <label for="inputEmail4">Marca</label>
-                        <input type="text" value="${data[0].marca}" name="marca" id="marca" class="form-control"   placeholder="Marca">
+                        <input type="text" value="${data[0].marca}" name="marca" id="marca" class="form-control"   placeholder="Marca" maxlength="18">
                     </div>
                     <div class="form-group col-md-6">
                         <label for="inputPassword4">Unidad Medida</label>
@@ -194,7 +194,7 @@
                         template +=` 
                         <div style="display:none" id="medida_simple" class="form-group col-md-6">
                             <label for="inputEmail4">Medida</label>
-                            <input type="text" name="medida_simple_edit" class="form-control" value="" id="inputEmail4" placeholder="Medida">
+                            <input type="text" name="medida_simple_edit" class="form-control" value="" id="inputEmail4" placeholder="Medida" maxlength="15">
                         </div>`;
                     }else{
                         template +=` 
@@ -208,7 +208,7 @@
                         template +=` 
                         <div style="display:true" id="medida_simple" class="form-group col-md-6">
                             <label for="inputEmail4">Medida</label>
-                            <input type="text" name="medida_simple_edit" class="form-control" value="${data[0].medida}" id="inputEmail4" placeholder="Medida">
+                            <input type="text" name="medida_simple_edit" class="form-control" value="${data[0].medida}" id="inputEmail4" placeholder="Medida" maxlength="15">
                         </div>`;
                     }
        

@@ -25,11 +25,11 @@
                 <input type="hidden" value="${data[0].id_unidad_med}" name="id_um_formEdit" />
                 <div class="form-group">
                     <label for="inputAddress">Descripcion</label>
-                    <input type="text" value="${data[0].descripcion}" name="descripcion_formEdit"   class="form-control" placeholder="Descripcion">
+                    <input type="text" value="${data[0].descripcion}" name="descripcion_formEdit"   class="form-control" placeholder="Descripcion" maxlength="15">
                 </div>
                 <div class="form-group">
                     <label for="inputAddress">Abreviado</label>
-                    <input type="text" value="${data[0].abreviado}" name="abrev_formEdit"  class="form-control" placeholder="Descripcion">
+                    <input type="text" value="${data[0].abreviado}" name="abrev_formEdit"  class="form-control" placeholder="Abreviado" maxlength="10">
                 </div>              
             `;
          document.querySelector('#modal-body').innerHTML=template;   

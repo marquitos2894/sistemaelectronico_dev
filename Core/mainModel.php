@@ -9,7 +9,9 @@
 
         protected function conectar(){
             try{
-            $gbd = new PDO(SGBD,USER,PASS,array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"));
+                
+            $gbd = new PDO(SGBD,USER,PASS,array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8",PDO::ATTR_EMULATE_PREPARES,TRUE));
+
             }catch(PDOException $e){
                 
             }
@@ -181,15 +183,15 @@
         }
 
 
-       /* protected function agregar_emptrans($datos){
+       /*protected function agregar_emptrans($datos){
             $sql = self::conectar->prepare("insert into emptransporte (razonsocial,ruc) values (:razonsocial,:ruc)")
             $sql->bindParam(":razonsocial",$datos["razonsocial"]);
             $sql->bindParam(":ruc",$datos["ruc"]);
             $sql->execute();
             return $sql;
         }*/
-        /*
-        protected function eliminar_emptrans($codigo){
+        
+        /*protected function eliminar_emptrans($codigo){
             $sql = self::conectar->prepare("delete from emptransporte where id_emptrans = :codigo");
             $sql->bindParam(":codigo",$codigo);
             $sql->execute();
@@ -333,6 +335,24 @@
                   })
                 </script>
                 ";
+            }else if($datos["alerta"]=="redire"){
+                $alerta ="
+                <script>
+                Swal.fire({
+                    title: '{$datos['Titulo']}',
+                    text: '{$datos['Texto']}',
+                    type: '{$datos['Tipo']}',
+                    showCancelButton: true,     
+                    confirmButtonText: 'Aceptar',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.value) {
+                     
+                        window.location.replace('".SERVERURL."{$datos['vista']}/');
+                      }
+                    });
+                </script>";
+                
             }
 
             
@@ -359,6 +379,40 @@
                 </script>";
             }  
         }
+
+        protected function localstorage_set($localstorage,$datos){
+            $i=0;
+            $ls=[];
+            $ls2=[];
+            foreach($datos["id_comp"][0] as $valor){
+                    $ls = [
+                           "id_comp"=>$datos["id_comp"][0][$i],
+                           "d_descripcion"=>$datos["d_descripcion"][0][$i],
+                           "d_nparte"=>$datos["d_nparte"][0][$i],
+                           "d_stock"=>$datos["d_stock"],
+                           "d_nserie"=>$datos["d_nserie"][0][$i],
+                           "d_cant"=>$datos["d_cant"][0][$i],
+                           "d_u_nom"=>$datos["d_u_nom"][0][$i],
+                           "d_u_sec"=>$datos["d_u_sec"][0][$i],
+                           "d_fk_idflota"=>$datos["d_fk_idflota"][0][$i],
+                           "d_nom_equipo"=>$datos["d_nom_equipo"][0][$i],
+                           "d_referencia"=>$datos["d_referencia"][0][$i],
+                           "d_id_ac"=>$datos["d_id_ac"][$i],  
+                    ];
+                    array_push($ls2,$ls);
+                    $i++;
+            }
+            
+            $ls2;
+            $json = json_encode($ls2); 
+            echo $set=  
+            "<script>
+                localStorage.setItem('$localstorage','$json');
+                console.log('$json');
+            </script>";
+           
+        }
+
 
         protected function dateFormat($date){
             return date("d/m/Y", strtotime($date));

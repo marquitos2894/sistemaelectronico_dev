@@ -18,7 +18,7 @@
         <div class="sidebar-brand-icon rotate-n-15">
           <i class="fas fa-laugh-wink"></i>
         </div>
-        <div class="sidebar-brand-text mx-3">Conmciv<sup>1.3</sup></div>
+        <div class="sidebar-brand-text mx-3">Conmciv<sup>1.4</sup></div>
       </a>
 
       <!-- Divider -->
@@ -315,5 +315,5 @@
 
           </ul>
         </nav>
-        
         <!-- End of Topbar -->
+      </div>

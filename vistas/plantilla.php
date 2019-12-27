@@ -1,5 +1,3 @@
- 
- 
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
 
   <script src="<?php echo SERVERURL?>vistas/vendor/jquery/jquery.min.js"></script>

@@ -5,7 +5,7 @@ $compCont = new componentesControlador();
 
 ?>
 
-<div class="container-fluid">
+<div class="container-fluid" id="container_comp">
     <ul class="nav nav-tabs">
         <li class="nav-item">
             <a class="nav-link" href="<?php echo SERVERURL;?>componentes/"><i class="fas fa-dolly-flatbed"></i> Componentes</a>
@@ -27,7 +27,7 @@ $compCont = new componentesControlador();
                 <div class="form-row">
                     <div class="form-group col-sm-6 text-primary">
                         <label for="inputAddress">Descripcion</label>
-                        <input type="text" name="descripcion" class="form-control " id="inputAddress" placeholder="Nombre del componente" required>
+                        <input type="text" name="descripcion" class="form-control " id="inputAddress" placeholder="Nombre del componente" maxlength="50" required>
                     </div>
                 </div>
                 <div class="progress" style="height:1px;">
@@ -36,11 +36,11 @@ $compCont = new componentesControlador();
                 <div class="form-row">
                     <div class="form-group col-sm-4">
                     <label for="inputEmail4">Nparte</label>
-                    <input type="text" name="nparte1" class="form-control" id="inputEmail4" placeholder="Nparte">
+                    <input type="text" name="nparte1" class="form-control" id="inputEmail4" placeholder="Nparte" maxlength="14">
                     </div>
                     <div class="form-group col-sm-4">
                     <label for="inputPassword4">Nparte 2</label>
-                    <input type="text" name="nparte2" class="form-control" id="inputPassword4" placeholder="Nparte 2">
+                    <input type="text" name="nparte2" class="form-control" id="inputPassword4" placeholder="Nparte 2" maxlength="14">
                     </div>
                     <div  style="display:none" class="form-group col-sm-4">
                     <label for="inputPassword4">Nparte 3</label>
@@ -53,7 +53,7 @@ $compCont = new componentesControlador();
                 <div class="form-row">
                     <div class="form-group col-sm-4">
                         <label for="inputEmail4">N° Serie</label>
-                        <input type="text" name="nserie" class="form-control" id="inputEmail4" placeholder="N° de serie">
+                        <input type="text" name="nserie" class="form-control" id="inputEmail4" placeholder="N° de serie" maxlength="25">
                     </div>
                 </div>
 
@@ -64,7 +64,7 @@ $compCont = new componentesControlador();
                 <div class="form-row">
                     <div class="form-group col-sm-4">
                         <label for="inputEmail4">Marca</label>
-                        <input type="text" name="marca" class="form-control" id="inputEmail4" placeholder="Marca">
+                        <input type="text" name="marca" class="form-control" id="inputEmail4" placeholder="Marca" maxlength="18">
                     </div>
                     <div class="form-group col-sm-4">
                         <label for="inputEmail4">Unidad de medida</label>

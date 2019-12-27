@@ -15,10 +15,10 @@ $id_vsalida=$url[1];
 
 $html.= $almCont->reporte_valesalida_simple_controlador($id_vsalida,$_SESSION["almacen"],"ticket",$_SESSION['privilegio_sbp']);
 
-
 $mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 'format' =>[115,1000]]);
 
 $css = file_get_contents(SERVERURL."vistas/css/valesalida.css");
+
 $mpdf->WriteHTML($css,1);
 
 ?>

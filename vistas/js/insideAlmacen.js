@@ -23,7 +23,7 @@
             });
             let dataEquipo = await responseEquipo.text();
             
-           
+        
                      //referencia
                      const datosDR = new FormData();
                      datosDR.append('dataReferencia',data[0].Referencia);

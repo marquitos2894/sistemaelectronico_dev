@@ -13,7 +13,7 @@
         console.log(document.querySelector('#cbocategoria').value);
         let template = ` 
         <label for="inputEmail4">Medida</label>
-        <input type="text" name="medida_simple" class="form-control" id="inputEmail4" placeholder="Medida">`;
+        <input type="text" name="medida_simple" class="form-control" id="inputEmail4" placeholder="Medida" maxlength="15">`;
         //valor inicial en BD 2=>neumaticos
         if(document.querySelector('#cbocategoria').value==2){
             template = ``;

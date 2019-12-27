@@ -13,6 +13,9 @@ require_once  './vendor/autoload.php' ;
 
 require_once $vistaReport;
 
+//MARCA DE AGUA
+/*$mpdf->SetWatermarkText('ANULADO');
+$mpdf->showWatermarkText = true;*/
 
 $mpdf->WriteHTML($html); 
 $mpdf->Output();

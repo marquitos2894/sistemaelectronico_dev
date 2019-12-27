@@ -845,8 +845,6 @@ Class almacenControlador extends almacenModelo {
         return $tabla;
     }
 
-
-    
     public function save_vsalida_controlador(){
         $SERVERURL=SERVERURL;
 
@@ -938,11 +936,12 @@ Class almacenControlador extends almacenModelo {
                         $localStorage = [
                             "BDcomp_gen",
                             "BDproductos",
-                            "carritoGen",
                             "carritoIn",
+                            "carritoIn2",
                             "carritoS"
                         ];
-    
+                        
+                        echo "<script>document.querySelector('#btnvale').disabled = true;</script>";
                         echo mainModel::localstorage_reiniciar($localStorage);
                         echo mainModel::bootstrap_alert($datos);
                         //echo "<script>setTimeout('document.location.reload()',10000)</script>";
@@ -995,9 +994,7 @@ Class almacenControlador extends almacenModelo {
     public function save_vingreso_controlador(){
 
         $fk_idusuario = mainModel::limpiar_cadena($_POST["usuario"]);
-        
         $turno = mainModel::limpiar_cadena($_POST["turno"]);
-        
         $ref_documento=mainModel::limpiar_cadena($_POST["ref_documento"]);
         $comentario=mainModel::limpiar_cadena($_POST["comentario"]);
         $id_alm= mainModel::limpiar_cadena($_POST["id_alm_vi"]);
@@ -1074,11 +1071,12 @@ Class almacenControlador extends almacenModelo {
                         $localStorage = [
                             "BDcomp_gen",
                             "BDproductos",
-                            "carritoGen",
                             "carritoIn",
+                            "carritoIn2",
                             "carritoS"
                         ];
-
+                        
+                        echo "<script>document.querySelector('#btnvale').disabled = true;</script>";
                         echo mainModel::localstorage_reiniciar($localStorage);
                         echo mainModel::bootstrap_alert($datos);
                     }else {
@@ -1129,23 +1127,33 @@ Class almacenControlador extends almacenModelo {
         $d_id_equipo = mainModel::limpiar_cadena($_POST["d_id_equipo"]);
         $d_referencia = mainModel::limpiar_cadena($_POST["d_referencia"]);*/
         
+        //datos #1
         $id_alm= mainModel::limpiar_cadena($_POST["id_alm_frmIA"]);
         $privilegio= mainModel::limpiar_cadena($_POST["privilegio_sbp_ia"]);
+        $t_reg = mainModel::limpiar_cadena($_POST["t_reg"]);
         $id_comp[] = $_POST["id_comp"];
+        $d_nparte1[] = $_POST["d_nparte1"];
         $d_nserie[] = $_POST["d_nserie"];
         $d_descripcion[] = $_POST["d_descripcion"];
         $d_stock = 0;
+        $d_cant[]=$_POST["d_cant"];
         $d_u_nom[] = $_POST["d_u_nom"];
         $d_u_sec[] = $_POST["d_u_sec"];
         $d_fk_idflota[] = $_POST["d_id_equipo"];
+        $d_nom_equipo[] = $_POST["d_nom_equipo"];
         $d_referencia[] = $_POST["d_referencia"];
+        
+        
+
+        // se reemplazara por lo datos 1, se reduce a un solo array datos.
+        //datos #2
 
 
         $validarPrivilegios=mainModel::privilegios_transact($privilegio);
 
         if($validarPrivilegios){
 
-            $validar=almacenModelo::save_registro_almacen_modelo($id_comp,$d_u_nom,$d_nserie,$d_descripcion,$d_u_sec,$d_fk_idflota,$d_referencia,$id_alm,$d_stock);
+            $validar=almacenModelo::save_registro_almacen_modelo($id_comp,$d_u_nom,$d_nserie,$d_descripcion,$d_u_sec,$d_fk_idflota,$d_referencia,$id_alm,$d_stock,$d_cant,$t_reg);
             $val_registro=($validar[0]!='')?$val_registro=$validar[0]->rowCount():$val_registro=0;
 
             if($val_registro==0){
@@ -1160,19 +1168,63 @@ Class almacenControlador extends almacenModelo {
 
             }else{
                 if($validar[0]->rowCount()>0){
-                    $alerta=[
-                        "alerta"=>"recargar",
-                        "Titulo"=>"Componentes registrados",
-                        "Texto"=>"Registrados en su almacen",
-                        "Tipo"=>"success"
-                        
-                    ];
+
+                    $newdatos = array(
+                        "id_alm"=>$id_alm,
+                        "id_comp"=>$id_comp,
+                        "d_nparte"=>$d_nparte1,
+                        "d_nserie"=>$d_nserie,
+                        "d_descripcion"=>$d_descripcion,
+                        "d_u_nom"=>$d_u_nom,
+                        "d_u_sec"=>$d_u_sec,
+                        "d_fk_idflota"=>$d_fk_idflota,
+                        "d_nom_equipo"=>$d_nom_equipo,
+                        "d_referencia"=>$d_referencia,
+                        "d_stock"=>$d_stock,
+                        "d_cant"=>$d_cant,
+                        "d_id_ac"=>$validar[2]
+                    );    
+
                     
                     $localStorage = [
                         "carritoGen",
                     ];
                     echo mainModel::localstorage_reiniciar($localStorage);
+  
+                    //Seteamos en el nuevo localstorage los datos enviados de ingreso almacen
+                    if($t_reg==1){
+                        echo mainModel::localstorage_set("carritoIn2",$newdatos);
 
+                        $alerta=[
+                            "alerta"=>"redire",
+                            "Titulo"=>"productos registrados y enviados",
+                            "Texto"=>"los productos se enviaron al modulo de vale ingreso",
+                            "Tipo"=>"success",
+                            "vista"=>"RValeIngreso",
+                            "tiempo"=>2000
+                        ];
+                    }elseif($t_reg==0) {
+                        $alerta=[
+                            "alerta"=>"recargar",
+                            "Titulo"=>"Productos registrados",
+                            "Texto"=>"los productos se registraron en su almacen",
+                            "Tipo"=>"success"
+                            
+                        ];
+                  
+                    }else{
+                        $alerta=[
+                            "alerta"=>"recargar",
+                            "Titulo"=>"Productos registrados, sin tipo de registro",
+                            "Texto"=>"Reporte el error al desarrollador",
+                            "Tipo"=>"danger"
+                            
+                        ];
+                    }
+                    
+                    
+     
+                    
                     foreach($validar[1] as $i){
                         $mensaje ="El item: | {$i['id_comp']} | {$i['descripcion']} | NS: {$i['nserie']} | ya se encuentra registrado en su almacen, no puede repetirse";
                         $datos = [
@@ -1181,6 +1233,8 @@ Class almacenControlador extends almacenModelo {
                         ];
                         echo mainModel::bootstrap_alert($datos);
                     }
+
+                    
         
                 }else{
                     $alerta=[
@@ -1260,7 +1314,7 @@ Class almacenControlador extends almacenModelo {
         $conexion = mainModel::conectar();
         if($formato == "ticket"){
             $resp = $conexion->prepare("SELECT vs.id_vsalida, vs.nombres,vs.d_identidad,DATE(vs.fecha) AS fecha,TIME(vs.fecha) AS hora,vs.turno,vs.nom_equipo,
-            vs.horometro,vs.comentario,a.Alias,u.Nombre,u.Apellido,vs.dr_referencia
+            vs.horometro,vs.comentario,a.Alias,u.Nombre,u.Apellido,vs.dr_referencia,vs.est
             FROM vale_salida vs
             INNER JOIN almacen a ON 
             a.id_alm = vs.fk_idalm
@@ -1283,6 +1337,11 @@ Class almacenControlador extends almacenModelo {
             $resp_dv=$resp_dv->fetchAll();
 
             foreach($resp as $row){
+                if($row['est']==0){
+                    $mensaje="VALE ANULADO";
+                }else{
+                    $mensaje="";
+                }
                 $template .="
             <html>
                 <head>
@@ -1338,26 +1397,33 @@ Class almacenControlador extends almacenModelo {
                         <br>Solicitante: {$row["nombres"]}</p>
                         <p class='centrado'>Atendido por: {$row["Nombre"]},{$row["Apellido"]}</p>
                     </div>
+                    <h1>{$mensaje}</h1>
                 </body>
             </html>";
             }
         }else if($formato=="vista_simple"){
 
             $resp = $conexion->prepare("SELECT vs.id_vsalida, vs.nombres,vs.d_identidad,DATE(vs.fecha) AS fecha,TIME(vs.fecha) AS hora,vs.turno,
-            vs.nom_equipo,vs.horometro,vs.comentario,a.Alias,u.Nombre,u.Apellido
+            vs.nom_equipo,vs.horometro,vs.comentario,a.Alias,u.Nombre,u.Apellido,vs.est
             FROM vale_salida vs
             INNER JOIN almacen a ON 
             a.id_alm = vs.fk_idalm
             INNER JOIN usuario u ON
             u.id_usu = vs.fk_idusuario              
-            WHERE fk_idalm = {$idalm} AND vs.est=1 ORDER BY vs.id_vsalida DESC ");
+            WHERE fk_idalm = {$idalm} ORDER BY vs.id_vsalida DESC ");
             $resp->execute();
             $resp=$resp->fetchAll();
             $contador=1;
             foreach($resp as $row){
-
+                
+                if($row['est']==0){
+                    $color="table-danger";
+                }else{
+                    $color="";
+                }
+                
                 $template .="
-                <tr>
+                <tr class='{$color}'>
                     <td>{$contador}</td>
                     <td>{$row['id_vsalida']}</td>
                     <td>". mainModel::dateFormat($row['fecha']) ."</td>
@@ -1395,7 +1461,7 @@ Class almacenControlador extends almacenModelo {
 
         if($formato == "ticket"){
             $resp = $conexion->prepare("SELECT vi.id_vingreso, DATE(vi.fecha) AS fecha ,TIME(vi.fecha) as hora,vi.turno,vi.ref_documento,vi.ref_nrodocumento,
-            vi.nombres,u.Nombre,u.Apellido,a.Alias,vi.comentario
+            vi.nombres,u.Nombre,u.Apellido,a.Alias,vi.comentario,vi.est
             FROM vale_ingreso vi
             INNER JOIN almacen a ON 
             a.id_alm = vi.fk_idalm
@@ -1418,6 +1484,12 @@ Class almacenControlador extends almacenModelo {
             $resp_dv=$resp_dv->fetchAll();
            
             foreach($resp as $row){
+                if($row['est']==0){
+                    $mensaje="VALE ANULADO";
+                }else{
+                    $mensaje="";
+                }
+
                 $template .="
             <html>
                 <head>
@@ -1470,28 +1542,34 @@ Class almacenControlador extends almacenModelo {
                         <hr/>
                         <br>Personal que lo ingresa :{$row["nombres"]}</p>
                         
-                        <p class='centrado' >Registrado por: {$row["Nombre"]}, {$row["Apellido"]}</p>
-                        
-                       
+                        <p class='centrado' >Registrado por: {$row["Nombre"]}, {$row["Apellido"]}</p> 
                     </div>
+                    <h1>{$mensaje}</h1>
                 </body>
             </html>";
             }
         }else if($formato=="vista_simple"){
             $resp = $conexion->prepare("SELECT vi.id_vingreso, DATE(vi.fecha) AS fecha ,TIME(vi.fecha) as hora,vi.ref_documento,vi.ref_nrodocumento,
-            vi.nombres,u.Nombre,u.Apellido
+            vi.nombres,u.Nombre,u.Apellido,vi.est
             FROM vale_ingreso vi
             INNER JOIN almacen a ON 
             a.id_alm = vi.fk_idalm
             INNER JOIN usuario u ON
             u.id_usu = vi.fk_idusuario             
-            WHERE  fk_idalm = {$idalm} AND vi.est=1 ORDER BY vi.id_vingreso DESC");
+            WHERE  fk_idalm = {$idalm} ORDER BY vi.id_vingreso DESC");
             $resp->execute();
             $resp=$resp->fetchAll();
             $contador=1;
             foreach($resp as $row){
+
+                if($row['est']==0){
+                    $color="table-danger";
+                }else{
+                    $color="";
+                }
+
                 $template .=" 
-                <tr>
+                <tr class='{$color}'>
                     <td>{$contador}</td>
                     <td>{$row['id_vingreso']}</td>
                     <td>". mainModel::dateFormat($row['fecha']) ."</td>

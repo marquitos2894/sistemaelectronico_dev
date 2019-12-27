@@ -32,11 +32,11 @@
                 <input type="hidden" value="${data[0].id_dr}" name="id_dr_formEdit" />
                 <div class="form-group">
                     <label for="inputAddress">Descripcion</label>
-                    <input type="text" value="${data[0].dato_referencia}" name="dato_referencia_formEdit"  id="descripcion"  class="form-control" placeholder="Descripcion">
+                    <input type="text" value="${data[0].dato_referencia}" name="dato_referencia_formEdit"  id="descripcion"  class="form-control" placeholder="Descripcion" maxlength="35">
                 </div>
                 <div class="form-group">
                     <label for="inputAddress">Descripcion</label>
-                    <textarea  name="descripcion_dr_formEdit" value="${data[0].descripcion_dr}"  class="form-control" id="exampleFormControlTextarea1" rows="3">${data[0].descripcion_dr}</textarea>
+                    <textarea  name="descripcion_dr_formEdit" value="${data[0].descripcion_dr}"  class="form-control" id="exampleFormControlTextarea1" rows="3" maxlength="80">${data[0].descripcion_dr}</textarea>
                 </div>
                 
                         

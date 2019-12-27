@@ -27,7 +27,7 @@ $vista=$url[0];
                 <div class="form-row">
                     <div class="form-group col-sm-6 text-primary">
                         <label for="inputAddress">Unidad de medida</label>
-                        <input type="text" name="descripcion_um" class="form-control " id="inputAddress" placeholder="Unidad de medida :">
+                        <input type="text" name="descripcion_um" class="form-control " id="inputAddress" placeholder="Unidad de medida :" maxlength="15">
                     </div>
                 </div>
                 <div class="progress" style="height:1px;">
@@ -36,7 +36,7 @@ $vista=$url[0];
                 <div class="form-row">
                     <div class="form-group col-sm-6 text-primary">
                         <label for="inputAddress">Abreviado</label>
-                        <input type="text" name="abreviado_um" class="form-control " id="inputAddress" placeholder="Abeviado, ejemplo : galones = gln">
+                        <input type="text" name="abreviado_um" class="form-control " id="inputAddress" placeholder="Abeviado, ejemplo : galones = gln" maxlength="10">
                     </div>
                 </div>
             </div>
