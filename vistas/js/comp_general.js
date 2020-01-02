@@ -276,12 +276,13 @@
             let buscar = document.querySelector('#buscador_comp_text').value;
             let vista = document.querySelector('#vista').value
             let privilegio = document.querySelector('#privilegio').value
-    
+            let id_alm = document.querySelector('#id_alm').value
             const datos = new FormData();
             datos.append('buscarcompajax',buscar);
             datos.append('paginadorajax',page);
             datos.append('vistaajax',vista);
             datos.append('privilegioajax',privilegio);
+            datos.append('fk_idalmajax',id_alm)
 
             let response = await fetch('../ajax/componentesAjax.php',{
                 method : 'POST',

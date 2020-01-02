@@ -89,7 +89,7 @@ Class componentesControlador extends componentesModelo {
      
     }*/
 
-    public function paginador_componentes($paginador,$registros,$privilegio,$buscador,$vista){
+    public function paginador_componentes($paginador,$registros,$privilegio,$buscador,$vista,$almacen){
 
         $paginador=mainModel::limpiar_cadena($paginador);
         $registros=mainModel::limpiar_cadena($registros);
@@ -110,7 +110,7 @@ Class componentesControlador extends componentesModelo {
             INNER JOIN unidad_medida um ON um.id_unidad_med = c.fk_idunidad_med
             INNER JOIN categoriacomp ca ON ca.id_categoria  = c.fk_idcategoria
             WHERE ( c.id_comp  like '%$buscador%' or c.descripcion  like '%$buscador%' or c.nparte1 like '%$buscador%' or 
-            c.nparte2 like '%$buscador%' or c.nparte3 like '%$buscador%' or c.nserie like '%$buscador%' or 
+            c.nparte2 like '%$buscador%' or c.nserie like '%$buscador%' or 
             c.medida like '%$buscador%'  or ca.nombre like '%$buscador%' ) AND est_baja = {$est_baja}
             AND c.est=1 LIMIT {$inicio},{$registros} ");
             
@@ -205,7 +205,6 @@ Class componentesControlador extends componentesModelo {
             <tbody id='table_componente' >";
             if($total>=1 && $paginador<=$Npaginas)
             {
-            
                 foreach($datos as $row){
                     $tabla .="
                 <tr>
@@ -267,11 +266,54 @@ Class componentesControlador extends componentesModelo {
 
             $tabla.='
             </tbody></table></div>';
-            $tabla.= mainModel::paginador($total,$paginador,$Npaginas,$vista);
-        }
 
+            $tabla.= mainModel::paginador($total,$paginador,$Npaginas,$vista);
+            
+        }
+        $tabla.= $this->validar_existe_almacen($buscador,$almacen);
         
         return $tabla;
+    }
+
+    public function validar_existe_almacen($buscador,$almacen){
+        $buscador=mainModel::limpiar_cadena($buscador);
+        $almacen=mainModel::limpiar_cadena($almacen);
+        $html="";
+        $conexion = mainModel::conectar();
+
+        $stmn=$conexion->query("SELECT SQL_CALC_FOUND_ROWS ac.id_ac,c.descripcion,ac.stock,
+        ac.u_nombre,ac.u_seccion,ac.Referencia
+        FROM almacen_componente ac
+        INNER JOIN componentes c
+        ON c.id_comp = ac.fk_idcomp
+        WHERE c.id_comp  = '{$buscador}' or c.descripcion  = '{$buscador}'
+        AND ac.fk_idalm = 4 AND ac.est = 1
+        ");
+        $result = $stmn->fetchAll();
+        $total = $conexion->query("SELECT FOUND_ROWS()");
+        $total = (int)$total->fetchColumn();
+         
+        if($buscador==""){
+            $html.="";
+        }
+        elseif($total>=1 && $total<=20){
+            $html.="<div class='alert alert-danger alert-dismissible fade show' role='alert'>
+            <strong> Producto <h7 class='text-muted'>'{$buscador}' </h7> ya esta registrado en su almacen! </strong>Puede agregarlo con otra ubicacion o referencia.
+            <button type='button' class='close' data-dismiss='alert' aria-label='Close'>
+              <span aria-hidden='true'>&times;</span>
+            </button>
+          </div>";
+          
+        }elseif($total==0){
+            $html.="<div class='alert alert-warning alert-dismissible fade show' role='alert'>
+            <strong>No existe en su almacen!</strong>El producto no estan registrado en su almacen.
+            <button type='button' class='close' data-dismiss='alert' aria-label='Close'>
+              <span aria-hidden='true'>&times;</span>
+            </button>
+          </div>";
+        }
+
+        return $html;
     }
 
     public function paginador_datosRerencia($paginador,$registros,$privilegio,$buscador,$vista){

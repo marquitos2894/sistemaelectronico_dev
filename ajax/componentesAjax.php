@@ -49,7 +49,7 @@ if(isset($_POST["medida_neumatico"])){
 //VISTA INGRESO ALMACEN
 
 if(isset($_POST["buscarcompajax"])){
-  echo $compCont->paginador_componentes($_POST["paginadorajax"],10,$_POST["privilegioajax"],$_POST["buscarcompajax"],$_POST["vistaajax"]);
+  echo $compCont->paginador_componentes($_POST["paginadorajax"],10,$_POST["privilegioajax"],$_POST["buscarcompajax"],$_POST["vistaajax"],$_POST['fk_idalmajax']);
 }
 
 
