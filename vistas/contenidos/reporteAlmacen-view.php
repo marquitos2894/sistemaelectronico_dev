@@ -13,7 +13,7 @@
       }
       
 ?>
-
+<input type="hidden" id="session_idunidad" value="<?php echo $_SESSION['unidad'] ?>" />
 <input type="hidden" value="<?php echo $paginador ?>" id="paginador"/>
 <input type="hidden" value="<?php echo $vista ?>" id="vista"/>
 <input type="hidden" value="<?php echo $_SESSION['privilegio_sbp'] ?>" id="privilegio"/>
@@ -99,9 +99,9 @@
                         <div class="form-group col-md-2">
                             <label for="inputState">Referencia</label>
                             <select id="referencia" class="chosen-select">
-                                <option value='' selected>Choose Ref..</option>
-                                <?php echo $almCont->select_combo("SELECT * FROM datos_referencia",
-                                            1,1)?>
+                                <option value='' selected>Buscar Ref..</option>
+                                <option value="#Sin especificar">#Sin especificar</option>
+                                                        <?php echo $almCont->combo_DR(1,1)?>
                             </select>
                         </div>
                         <div class="form-group col-md-2">

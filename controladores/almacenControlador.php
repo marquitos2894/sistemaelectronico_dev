@@ -857,7 +857,7 @@ Class almacenControlador extends almacenModelo {
         $id_alm= mainModel::limpiar_cadena($_POST["id_alm_vs"]);
         $objDateTime = new DateTime('NOW');
         $fecha=$objDateTime->format('Y-m-d H:i:s');
-        $nom_equipo=mainModel::ejecutar_consulta_simple("SELECT eu.alias_equipounidad FROM equipo_unidad eu WHERE eu.id_equipounidad  = {$fk_idflota } ")['alias_equipounidad'];
+        $nom_equipo=mainModel::ejecutar_consulta_simple("SELECT eu.alias_equipounidad FROM equipo_unidad eu WHERE eu.id_equipounidad  = {$fk_idflota} ")['alias_equipounidad'];
         $datospersonal = mainModel::ejecutar_consulta_simple("select  concat(p.nom_per,',',p.Ape_per) as nombres,p.dni_per from personal p where id_per = {$fk_idpersonal} ");
         $nombre_per = $datospersonal['nombres'];
         $dni_per = $datospersonal['dni_per'];
@@ -1142,6 +1142,7 @@ Class almacenControlador extends almacenModelo {
         $d_fk_idflota[] = $_POST["d_id_equipo"];
         $d_nom_equipo[] = $_POST["d_nom_equipo"];
         $d_referencia[] = $_POST["d_referencia"];
+        
         
         
 
@@ -1726,7 +1727,7 @@ Class almacenControlador extends almacenModelo {
     }
 
     public function combo_DR($val,$vis){
-        $consulta = "select * from datos_referencia WHERE id_dr !=1";
+        $consulta = "SELECT * FROM datos_referencia WHERE id_dr !=1 AND fk_idunidad = {$_SESSION['unidad']}";
         return mainModel::ejecutar_combo($consulta,$val,$vis);
     }
 

@@ -139,6 +139,7 @@ class almacenModelo extends mainModel{
         $id=[];
         $mensaje=[];
         $sql="";
+        $statement="";
         foreach($id_comp[0] as $valor){
             
             $validar_duplicado=0;
@@ -148,8 +149,9 @@ class almacenModelo extends mainModel{
                 INNER JOIN componentes c
                 ON ac.fk_idcomp = c.id_comp
                 WHERE ac.fk_idcomp = '{$id_comp[0][$i]}' AND c.nserie = '{$d_nserie[0][$i]}' AND ac.fk_idalm = {$id_alm} AND ac.est =1 ");
- 
+
                 $validar_duplicado= $validar_duplicado->rowCount();
+                $d_cant[0][$i]=1;
             }
            
             if($validar_duplicado>0){
@@ -182,6 +184,7 @@ class almacenModelo extends mainModel{
                     array_push($id,$result["id"]);
                 }else{
                     $sql = "";
+                    $statement="";
                 }
         
             }

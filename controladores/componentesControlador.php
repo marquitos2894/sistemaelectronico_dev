@@ -100,7 +100,7 @@ Class componentesControlador extends componentesModelo {
         $inicio=($paginador>0)?(($paginador*$registros)-$registros):0;
 
         $conexion = mainModel::conectar();
-        $est_baja=($vista=="componentes" or $vista=="ingresoAlmacen" )?$est_baja=1:$est_baja=0;
+        $est_baja=($vista=="componentes" or $vista=="ingresoAlmacen" or $vista=="emitirOC" )?$est_baja=1:$est_baja=0;
 
 
         if($buscador!=""){
@@ -178,7 +178,86 @@ Class componentesControlador extends componentesModelo {
             $tabla.='
             </tbody></table></div>';
             $tabla.= mainModel::paginador_ajax($total,$paginador,$Npaginas,$vista);
-        }else{
+        }
+        elseif($vista=="emitirOC"){
+
+            $tabla.="
+            <button type='button' class='btn btn-primary'>
+                Total de productos <span class='badge badge-light'>{$total}</span>
+            </button>
+            <div class='table-responsive'><table class='table'>
+            <thead>
+                <tr>
+                    <th scope='col'>#</th>
+                    <th scope='col'>Codigo</th>
+                    <th scope='col'>Descripcion</th>               
+                    <th scope='col'>NPartes</th>
+                    <th scope='col'>Medida</th>
+                    <th scope='col'>Marca</th>
+                    <th scope='col'>Cant</th>
+                    <th scope='col'>Precio</th>
+                    <th scope='col'>Add</th>
+            </thead>
+            <tbody>";
+            if($total>=1 && $paginador<=$Npaginas)
+            {   
+                $contador=$inicio+1;
+                foreach($datos as $row){
+                    $tabla .="
+                        <tr>
+                            
+                            <td>{$contador}</td>
+                            <td>{$row['id_comp']}</td>
+                            <td>{$row['descripcion']} <span class='badge badge-{$row['color']}'>{$row['nombre']}</span></td> 
+                            <td>{$row['nparte1']}|{$row['nparte2']}</td>
+                            <td>{$row['medida']}</td>
+                            <td>{$row['marca']}</td>
+                            <td><input type='number' class='form-control' id='cant{$row['id_comp']}' /></td>
+                            <td><input type='number' class='form-control' id='precio{$row['id_comp']}' /></td>
+                            <td><a href='#' class='card-footer-item' id='addItem'  data-producto='{$row['id_comp']}' >+</a></td>
+                        </tr>
+                    ";
+                    $contador++;
+                }
+            }else{
+                $tabla.='<tr><td colspan="8"> No existen registros</td></tr>';
+            }
+
+            $tabla.="
+                
+        
+            </tbody></table>
+            </div>
+            <div class='form-row'>
+
+                <div class='form-group col-md-3'>
+                    <label>Descripcion</label>
+                    <input type='text' class='form-control' id='desc' />
+                </div>
+                <div class='form-group col-md-2'>
+                    <label>Nparte</label>
+                    <input type='text' class='form-control' id='nparte'/>
+                </div>
+                <div class='form-group col-md-2'>
+                    <label>Nparte2</label>
+                    <input type='text' class='form-control' id='nparte2'/>
+                </div>
+                <div class='form-group col-md-2'>
+                    <label>Cantidad</label>
+                    <input type='number' class='form-control' id='cant'/>
+                </div>
+                <div class='form-group col-md-2'>
+                    <label>Precio</label>
+                    <input type='number' class='form-control' id='precio'/>
+                </div>
+                <div class='form-group col-md-1'>
+                    <label>Add</label>
+                    <a href='#' class='card-footer-item' id='addItem2' >+</a>
+                </div>
+            </div>";
+            $tabla.= mainModel::paginador_ajax($total,$paginador,$Npaginas,$vista);
+        }
+        else{
             $tabla.="
             <button type='button' class='btn btn-primary'>
                 Total de productos <span class='badge badge-light'>{$total}</span>
@@ -286,8 +365,9 @@ Class componentesControlador extends componentesModelo {
         FROM almacen_componente ac
         INNER JOIN componentes c
         ON c.id_comp = ac.fk_idcomp
-        WHERE c.id_comp  = '{$buscador}' or c.descripcion  = '{$buscador}'
-        AND ac.fk_idalm = 4 AND ac.est = 1
+        WHERE (c.id_comp  = '{$buscador}' or c.descripcion  = '{$buscador}'
+        or c.nparte1 = '{$buscador}' or c.nparte2 = '{$buscador}')
+        AND ac.fk_idalm = '{$almacen}' AND ac.est = 1
         ");
         $result = $stmn->fetchAll();
         $total = $conexion->query("SELECT FOUND_ROWS()");
@@ -316,7 +396,7 @@ Class componentesControlador extends componentesModelo {
         return $html;
     }
 
-    public function paginador_datosRerencia($paginador,$registros,$privilegio,$buscador,$vista){
+    public function paginador_datosRerencia($paginador,$registros,$privilegio,$buscador,$vista,$unidad){
 
         $paginador=mainModel::limpiar_cadena($paginador);
         $registros=mainModel::limpiar_cadena($registros);
@@ -332,11 +412,12 @@ Class componentesControlador extends componentesModelo {
             $datos=$conexion->query("SELECT SQL_CALC_FOUND_ROWS *
                                     FROM datos_referencia dr 
                                     WHERE ( dr.dato_referencia  like '%$buscador%' or dr.descripcion_dr like '%$buscador%' ) 
+                                    AND fk_idunidad = {$unidad}
                                     LIMIT {$inicio},{$registros} ");
             
         }else{
             $datos=$conexion->query("SELECT SQL_CALC_FOUND_ROWS *
-                                    FROM datos_referencia LIMIT {$inicio},{$registros}");           
+                                    FROM datos_referencia WHERE fk_idunidad = {$unidad} LIMIT {$inicio},{$registros}");           
         }
         //$datos->execute();
         $datos = $datos->fetchAll();
@@ -441,9 +522,9 @@ Class componentesControlador extends componentesModelo {
             if($val_question=="false" or $val_question=="next"){
 
                 if($nparte1 !='' or $nparte2 !='' or $nparte3 != '' or $nserie != '' ){
-                    $validarNP1 = mainModel::ejecutar_consulta_validar("SELECT * FROM componentes WHERE (nparte1 = '{$nparte1}' OR nparte2 = '{$nparte1}' OR nparte3 = '{$nparte1}' ) AND est = 1");
-                    $validarNP2 = mainModel::ejecutar_consulta_validar("SELECT * FROM componentes WHERE (nparte1 = '{$nparte2}' OR nparte2 = '{$nparte2}' OR nparte3 = '{$nparte2}' ) AND est = 1");
-                    $validarNP3 = mainModel::ejecutar_consulta_validar("SELECT * FROM componentes WHERE (nparte1 = '{$nparte3}' OR nparte2 = '{$nparte3}' OR nparte3 = '{$nparte3}' ) AND est = 1");
+                    $validarNP1 = mainModel::ejecutar_consulta_validar("SELECT * FROM componentes WHERE (nparte1 = '{$nparte1}' OR nparte2 = '{$nparte1}' OR nparte3 = '{$nparte1}' ) AND est_baja=1 AND est = 1");
+                    $validarNP2 = mainModel::ejecutar_consulta_validar("SELECT * FROM componentes WHERE (nparte1 = '{$nparte2}' OR nparte2 = '{$nparte2}' OR nparte3 = '{$nparte2}' ) AND est_baja=1 AND est = 1");
+                    $validarNP3 = mainModel::ejecutar_consulta_validar("SELECT * FROM componentes WHERE (nparte1 = '{$nparte3}' OR nparte2 = '{$nparte3}' OR nparte3 = '{$nparte3}' ) AND est_baja=1 AND est = 1");
                     $validarNS = mainModel::ejecutar_consulta_validar("SELECT * FROM componentes WHERE nserie = '{$nserie}' AND est = 1");
                     
                     //VALIDO SI ES VACIO, SI NO LO ES SE REALIZA UN COUNT DE LA CONSULTA

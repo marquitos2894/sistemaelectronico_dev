@@ -3,7 +3,7 @@
 
 function Render(){
 
-    this.Alert = function (title,mensaje){
+    this.Alert = function (title,mensaje,div){
         let template = `
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
             <strong>${title}</strong>${mensaje}.
@@ -12,7 +12,7 @@ function Render(){
             </button>
         </div>
         `;
-        document.querySelector("#alert").innerHTML = template;
+        document.querySelector("#"+div).innerHTML = template;
     }
 }
 
@@ -25,7 +25,7 @@ document.querySelector("#btnsave").addEventListener("click",function(ev){
 
     if(cargo==""){
         ev.preventDefault();
-        render.Alert("(*) Campo obligatorio: ","Seleccione cargo"); 
+        render.Alert("(*) Campo obligatorio: ","Seleccione cargo","mesanje"); 
     }
 
 })

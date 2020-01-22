@@ -21,9 +21,9 @@
                 localStorage.setItem("BDcomp_gen","[]");
             }
             
-            $valor='true'
+            valor='true'
             datos = new FormData();
-            datos.append('comp_gen',$valor);
+            datos.append('comp_gen',valor);
             let response = await fetch('../ajax/componentesAjax.php',{
                 method: 'POST',
                 body : datos
@@ -91,6 +91,11 @@
                         datoN[key] = c[key];                        
                     }
 
+                    if(datoN.nserie!=""){
+                        render.Alert("Producto repetido: ",datoN.descripcion+" N/S:"+datoN.nserie,"alert_modal");
+                        ev.preventDefault();
+                        return;
+                    }
                     /*datoN.id_comp = c.id_comp;
                     datoN.descripcion = c.descripcion;
                     datoN.est = c.est;
@@ -106,16 +111,14 @@
                     datoN.nserie = c.nserie;*/
                     // console.log(this.carrito);
 
-
-
                     datoN.nolinea = max;
                     datoN.u_nom = u_nom;
                     datoN.u_sec = u_sec;
                     datoN.id_equipo = id_equi;
                     datoN.nom_equipo = nom_equipo; 
                     datoN.referencia = referencia;
-                    datoN.cant =cant;
-                    
+                    datoN.cant=cant;
+                    datoN.cant=(datoN.nserie!="")?datoN.cant = 1:datoN.cant = cant;
         
                     this.carrito.push(datoN);
                     console.log(this.carrito);
@@ -133,7 +136,10 @@
             dato.id_equipo = id_equi;
             dato.nom_equipo = nom_equipo; 
             dato.referencia = referencia;
-            dato.cant = cant;
+
+            //Validamos si un producto tiene nserie. 
+            //Todo producto con nseria es unico no puede haber mas de 1uu
+            dato.cant=(dato.nserie!="")?dato.cant = 1:dato.cant = cant;
 
             var datoX = dato;
             this.carrito.push(datoX);
@@ -364,6 +370,7 @@
             //referencia
             const datosDR = new FormData();
             datosDR.append('dataReferencia','true');
+            datosDR.append('idunidad_ref',id_unidad);
             let responseDR = await fetch('../ajax/componentesAjax.php',{
                 method : 'POST',
                 body : datosDR

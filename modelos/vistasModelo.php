@@ -6,7 +6,7 @@ class vistasModelo{
         $lista_blanca=["emptrans","inicio","emptranslist","usuariolist","usuario","perfil","personal","personallist","componentes",
                         "RValeSalida","RValeIngreso","newcomponente","ingresoAlmacen","almacen","insideAlmacen","unidadmedlist",
                         "newunidadmed","reporteAlmacen","datosReferencia","newdatosReferencia","equipos","newequipos","miFlota"
-                        ,"miFlotaBaja","componentesBaja","NoAccessVista"];
+                        ,"miFlotaBaja","componentesBaja","NoAccessVista","emitirOC"];
              
         if(isset($_SESSION['nombre_sbp'])){
             //echo $_SESSION['RvistasUsuario'];

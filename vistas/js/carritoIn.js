@@ -62,10 +62,15 @@
                 if(i.id_ac == item){
                      console.log(cant);
                     if(cant == ""){
-                     i.cantidad = parseFloat(i.cantidad)+1;
+                        i.cantidad = parseFloat(i.cantidad)+1;
                     }else{
                         i.cantidad = cant;
                     }
+
+                    if(i.nserie!=""){
+                        i.cantidad=1;
+                    }
+                    console.log(this.getCarritoIn);
                      localStorage.setItem("carritoIn",JSON.stringify(this.getCarritoIn)); 
                      return;
                 }
@@ -75,6 +80,10 @@
                 datos.cantidad = 1;
             }else{
             datos.cantidad = cant;
+            }
+
+            if(datos.nserie!=""){
+                datos.cantidad = 1;
             }
 
             this.getCarritoIn.push(datos);

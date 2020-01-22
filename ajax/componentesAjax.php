@@ -14,7 +14,7 @@ if(isset($_POST["descripcion_formEdit"]) && isset($_POST["nparte1"])){
 }
 
 if(isset($_POST["dataReferencia"])){
-  echo $compCont->select_combo("SELECT * FROM datos_referencia WHERE id_dr != 1 ",1,1);
+echo $compCont->select_combo("SELECT * FROM datos_referencia WHERE id_dr != 1 AND fk_idunidad = {$_POST["idunidad_ref"]}",1,1);
 }
 
 if(isset($_POST["comp_gen"])){

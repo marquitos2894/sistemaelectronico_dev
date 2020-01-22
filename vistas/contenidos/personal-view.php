@@ -32,7 +32,7 @@
                   <div class="form-row">
                       <div class="form-group col-md-4">
                         <label for="inputCity">DNI</label>
-                        <input type="text" name="dni_per_in" value="" class="form-control" id="inputCity">
+                        <input type="text" name="dni_per_in" placeholder="DNI:0, en caso no lo tenga al momento" class="form-control" id="inputCity" required>
                       </div>
                       <div class="form-group col-md-4">
                         <label for="inputCity">Brevete</label>
@@ -45,7 +45,7 @@
                   </div>
                   <div class="form-group">
                       <label for="inputAddress">Direccion</label>
-                      <input type="text" name="direccion_in" value="" class="form-control" id="inputAddress" placeholder="1234 Main St">
+                      <input type="text" name="direccion_in" value="" class="form-control" id="inputAddress" placeholder="Av. jr. ca.">
                   </div>
                   <div class="form-row">
                       <div class="form-group col-md-4">
@@ -87,12 +87,12 @@
                   <div class="form-row">
                     <div class="form-group col-md-6">
                       <label for="inputEmail4">Email</label>
-                      <input type="email" name="correo_per_in" value="" class="form-control" id="inputEmail4" placeholder="Email">
+                      <input type="email" name="correo_per_in" value="" class="form-control" id="inputEmail4" placeholder="@Email">
                     </div>
                   </div>
           </div>
           <input type="hidden"  name="privilegio_sbp" value="<?php echo $_SESSION['privilegio_sbp']?>"/>
-          <div id='alert'></div>
+          <div id='mesanje'></div>
           <button type="submit" id="btnsave" class="btn btn-success btn-lg btn-block">Guardar</button>
           <div class="RespuestaAjax"></div>
         </form>

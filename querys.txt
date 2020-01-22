@@ -66,3 +66,32 @@ create table medida_neumaticos
 id_medidaneumatico int primary key auto_increment,
 descripcion varchar(20)
 )
+
+
+/******* query *****************/
+
+-- CAMBIAR REFERENCIAS
+SELECT * FROM almacen_componente ac where ac.Referencia like '%#Overhaul%'; 
+update almacen_componente ac SET 
+ac.Referencia = '#Sin especificar'
+where ac.Referencia like '%#Overhaul%';
+
+-- UNIR PRODUCTOS
+
+SELECT ac.fk_idcomp
+FROM almacen_componente ac WHERE ac.fk_idalm=7 and ac.fk_idcomp  
+IN 
+(
+SELECT ac1.fk_idcomp FROM almacen_componente ac1
+GROUP BY ac1.fk_idcomp HAVING count(ac1.fk_idcomp)>3
+)
+ORDER BY ac.fk_idcomp
+
+
+
+SELECT ac1.fk_idcomp FROM almacen_componente ac1
+GROUP BY ac1.fk_idcomp HAVING count(ac1.fk_idcomp)>3;
+
+SELECT * FROM almacen_componente ac 
+GROUP BY ac.fk_idcomp
+HAVING count(ac.fk_idcomp)>3;

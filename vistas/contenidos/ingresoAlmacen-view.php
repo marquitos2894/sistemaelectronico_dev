@@ -17,7 +17,7 @@
     <input type="hidden" value="<?php echo $vista ?>" id="vista"/>
     <input type="hidden" value="<?php echo $_SESSION['privilegio_sbp'] ?>" id="privilegio"/>
     <input type="hidden" value="<?php echo $_SESSION['almacen'] ?>" id="id_alm"/>
-    <input type="hidden" id="session_idunidad" value="<?php echo $_SESSION['unidad'] ?>" />
+    
 
 <div class="container-fluid">
 

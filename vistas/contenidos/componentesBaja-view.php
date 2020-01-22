@@ -104,7 +104,7 @@ if(isset($_POST["eliminar_busqueda"])){
 
   <?php   if(!isset($_SESSION['session_'.$vista]) && empty($_SESSION['session_'.$vista])): ?>
 
-    <?php  echo $compCont->paginador_componentes($paginador,10,$_SESSION['privilegio_sbp'],"",$vista);  ?>
+    <?php  echo $compCont->paginador_componentes($paginador,10,$_SESSION['privilegio_sbp'],"",$vista,"");  ?>
 
   <?php else: ?>
       <h3><small class='text-muted'>Su ultima busqueda fue : </small>"<?php echo $_SESSION['session_'.$vista]?>"</h3>
@@ -116,7 +116,7 @@ if(isset($_POST["eliminar_busqueda"])){
       <input type="hidden" name="eliminar_busqueda" >
     </div>
   </form>
-    <?php  echo $compCont->paginador_componentes($paginador,10,$_SESSION['privilegio_sbp'],$_SESSION['session_'.$vista],$vista);  ?>
+    <?php  echo $compCont->paginador_componentes($paginador,10,$_SESSION['privilegio_sbp'],$_SESSION['session_'.$vista],$vista,"");  ?>
     
   <?php endif; ?>
     <!-- Modal -->

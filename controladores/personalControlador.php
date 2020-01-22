@@ -104,7 +104,8 @@ class personalControlador extends personalModelo {
                 <th scope='col'>#</th>
                 <th scope='col'>Nombres</th>               
                 <th scope='col'>Apellidos</th>
-                <th scope='col'>Cargo</th>";
+                <th scope='col'>Cargo</th>
+                <th scope='col'>DNI/Doc.Iden</th>";
                 if($privilegio==0 or $privilegio==1){
             $tabla.="
                 <th colspan='2' scope='col'>Acciones</th>";
@@ -122,7 +123,8 @@ class personalControlador extends personalModelo {
                             <td>{$i}</td>
                             <td>{$row['Nom_per']}</td>                      
                             <td>{$row['Ape_per']}</td>
-                            <td>{$row['cargo']}</td>";    
+                            <td>{$row['cargo']}</td>
+                            <td>{$row['Dni_per']}</td>";    
 
                 if($privilegio==0 or $privilegio==1){
                     $tabla .="<td><a style='font-size: 1.5em;'  class='fas fa-edit' href='{$row['id_per']}' id='EditItem' data-item='{$row['id_per']}' data-toggle='modal' data-target='#ModalEdit'></a> </td>";
@@ -195,7 +197,7 @@ class personalControlador extends personalModelo {
 
         if($validarPrivilegios){
 
-            $validar = ($dni_per=="")?$validar=0:$validar=mainModel::ejecutar_consulta_validar("SELECT * FROM personal WHERE Dni_per = '{$dni_per}' AND est = 1")->rowCount();
+            $validar = ($dni_per=="")?$validar=0:$validar=mainModel::ejecutar_consulta_validar("SELECT * FROM personal WHERE Dni_per = '{$dni_per}' AND Dni_per != '0' AND idunidad={$unidad} AND est = 1")->rowCount();
 
             if($validar>0){
 

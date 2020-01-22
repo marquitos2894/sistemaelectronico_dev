@@ -3,7 +3,7 @@
     function Render(){
 
         this.renderEdit= async function(id_ac,id_alm,id_unidad){
-
+            
         try{
             
             let datos = new FormData();
@@ -26,8 +26,9 @@
         
                      //referencia
                      const datosDR = new FormData();
-                     datosDR.append('dataReferencia',data[0].Referencia);
-                     let responseDR = await fetch('../ajax/almacenAjax.php',{
+                     datosDR.append('dataReferencia','true');
+                     datosDR.append('idunidad_ref',id_unidad);
+                     let responseDR = await fetch('../ajax/componentesAjax.php',{
                          method : 'POST',
                          body : datosDR
                      });

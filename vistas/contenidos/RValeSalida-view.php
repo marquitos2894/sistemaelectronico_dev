@@ -130,7 +130,7 @@
                                                     <label for="inputEmail4">Cod. Equipo</label>                              
                                                     <select name="codequipo" class="chosen-select" >
                                                         <option value="1">SIN EQUIPO</option>
-                                                        <?php echo $almCont->select_combo("SELECT e.Id_Equipo,eu.alias_equipounidad
+                                                        <?php echo $almCont->select_combo("SELECT eu.id_equipounidad,eu.alias_equipounidad
                                                             FROM equipos e
                                                             INNER JOIN equipo_unidad eu ON eu.fk_idequipo = e.Id_Equipo
                                                             WHERE (eu.fk_idunidad = 7 OR eu.fk_idunidad = {$_SESSION['unidad']} ) 

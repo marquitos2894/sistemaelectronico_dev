@@ -5,8 +5,9 @@ $compCont = new componentesControlador();
 $url = explode("/",$_GET["views"]);
 $paginador = $url[1];
 $vista=$url[0];
+$unidad = $_SESSION['unidad'];
 
-$reload = "<script>window.location.replace('".SERVERURL."{$vista}/');</script>";
+//$reload = "<script>window.location.replace('".SERVERURL."{$vista}/');</script>";
 
 
 if(isset($_POST['buscador_comp'])){
@@ -43,7 +44,7 @@ if(isset($_POST["eliminar_busqueda"])){
 
   <?php   if(!isset($_SESSION['session_'.$vista]) && empty($_SESSION['session_'.$vista])): ?>
 
-    <?php  echo $compCont->paginador_datosRerencia($paginador,10,$_SESSION['privilegio_sbp'],"",$vista);  ?>
+    <?php  echo $compCont->paginador_datosRerencia($paginador,10,$_SESSION['privilegio_sbp'],"",$vista,$unidad);  ?>
 
   <?php else: ?>
       <h3><small class='text-muted'>Su ultima busqueda fue : </small>"<?php echo $_SESSION['session_'.$vista]?>"</h3>
@@ -55,7 +56,7 @@ if(isset($_POST["eliminar_busqueda"])){
       <input type="hidden" name="eliminar_busqueda" >
     </div>
   </form>
-    <?php  echo $compCont->paginador_datosRerencia($paginador,10,$_SESSION['privilegio_sbp'],$_SESSION['session_'.$vista],$vista);  ?>
+    <?php  echo $compCont->paginador_datosRerencia($paginador,10,$_SESSION['privilegio_sbp'],$_SESSION['session_'.$vista],$vista,$unidad);  ?>
     
   <?php endif; ?>
     <!-- Modal -->

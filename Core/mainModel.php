@@ -173,6 +173,7 @@
         protected function validar_paginador($buscador,$vista,$eliminar_buscador){
             $reload = "<script>window.location.replace('".SERVERURL."{$vista}/');</script>";
             if(isset($buscador) && $buscador !=""){
+                //se crea una sesion con la palabra de busqueda
                 $_SESSION['session_'.$vista] = $buscador;
                 return $reload;
             }
