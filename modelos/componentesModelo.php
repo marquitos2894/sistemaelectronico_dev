@@ -85,9 +85,10 @@ Class componentesModelo extends mainModel {
 
     protected function save_datoreferencia_modelo($datos){
         $conex = mainModel::conectar();
-        $sql=$conex->prepare("call i_dato_referencia(:dato_referencia,:descripcion_dr)");
+        $sql=$conex->prepare("call i_dato_referencia(:dato_referencia,:descripcion_dr,:fk_idunidad)");
         $sql->bindParam(":dato_referencia",$datos["dato_referencia"]);
         $sql->bindParam(":descripcion_dr",$datos["descripcion_dr"]);
+        $sql->bindParam(":fk_idunidad",$datos["fk_idunidad"]);
         $sql->execute();
         return $sql;
     }

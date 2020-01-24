@@ -872,12 +872,13 @@ Class componentesControlador extends componentesModelo {
         $datos_referencia = mainModel::limpiar_cadena($_POST["referencia_dr_nuevo"]);
         $descripcion_dr = mainModel::limpiar_cadena($_POST["descripcion_dr_nuevo"]);
         $privilegio = mainModel::limpiar_cadena($_POST["privilegio_sbp"]);
-
+        $unidad_ref = mainModel::limpiar_cadena($_POST["unidad_ref"]);
         $datos_referencia=(substr($datos_referencia,0,1)=="#")?$datos_referencia:"#".$datos_referencia;
         
         $datos = [
             "dato_referencia"=>$datos_referencia,
-            "descripcion_dr"=>$descripcion_dr
+            "descripcion_dr"=>$descripcion_dr,
+            "fk_idunidad"=>$unidad_ref
         ];
 
         $validarPrivilegios=mainModel::privilegios_transact($privilegio);
