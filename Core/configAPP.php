@@ -2,7 +2,7 @@
 
 define('SERVER','localhost');
 define('DB','ordencompra_pruebas');
-define('USER','root');
+define('USER','roots');
 define('PASS','marquitosxD');
 //define('PASS','');
 define('SGBD','mysql:host='.SERVER.";dbname=".DB);
