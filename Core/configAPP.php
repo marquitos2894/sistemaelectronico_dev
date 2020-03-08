@@ -1,7 +1,8 @@
 <?php 
-define('SERVER','appconmiciv.com');
-define('DB','appconmi_bdappconmiciv_p');
-define('USER','appconmi_admin');
+
+define('SERVER','localhost');
+define('DB','ordencompra_pruebas');
+define('USER','root');
 define('PASS','marquitosxD');
 //define('PASS','');
 define('SGBD','mysql:host='.SERVER.";dbname=".DB);
