@@ -578,11 +578,12 @@ Class componentesControlador extends componentesModelo {
 
                     if($validar->rowCount()>0){
                         $alerta=[
-                            "alerta"=>"recargar",
+                            "alerta"=>"simple_ajax",
                             "Titulo"=>"Datos guardados",
                             "Texto"=>"Los siguientes datos han sido guardados",
                             "Tipo"=>"success"
                         ];
+                       
                         $localStorage = [
                             "BDcomp_gen",
                             "BDproductos",

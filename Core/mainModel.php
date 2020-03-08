@@ -25,6 +25,13 @@
             return $respuesta;
         }
 
+        protected function ejecutar_consulta_lista($consulta){
+            $respuesta = self::conectar()->prepare($consulta);
+            $respuesta->execute();
+            $respuesta=$respuesta->fetchAll();
+            return $respuesta;
+        }
+
         protected function ejecutar_consulta_validar($consulta){
             $respuesta = self::conectar()->prepare($consulta);
             $respuesta->execute();
@@ -291,6 +298,29 @@
                 }).then((result) => {
                     if (result.value) {
                         location.reload();
+                      }else{
+                        location.reload();
+                      }
+                    });
+                </script>";
+                
+            }
+            else if($datos["alerta"]=="simple_ajax"){
+                $alerta ="
+                <script>
+            
+                Swal.fire({
+                    title: '{$datos['Titulo']}',
+                    text: '{$datos['Texto']}',
+                    type: '{$datos['Tipo']}',
+                    showCancelButton: true,     
+                    confirmButtonText: 'Aceptar',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.value) {
+                        //location.reload();
+                      }else{
+                        //location.reload();
                       }
                     });
                 </script>";
@@ -356,8 +386,6 @@
                 
             }
 
-            
-
             return $alerta;
         }
 
@@ -414,7 +442,6 @@
            
         }
 
-
         protected function dateFormat($date){
             return date("d/m/Y", strtotime($date));
         }
@@ -428,6 +455,21 @@
             $date=$date->format('H:i:s');
             }
             return $date;
+        }
+
+        protected function badge_color($tipo){
+            if($tipo=='ingreso'){
+                $badge='success';
+            }else if($tipo=='salida'){
+                $badge='danger';
+            }else if($tipo=='anulado-salida'){
+                $badge='warning';
+            }else if($tipo=='anulado-ingreso'){
+                $badge='primary';
+            }else if($tipo=='nuevo_registro'){
+                $badge='dark';
+            }
+            return $badge;
         }
         
     

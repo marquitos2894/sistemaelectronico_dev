@@ -68,6 +68,7 @@ Class componentesModelo extends mainModel {
     
     protected function darBaja_componente_modelo($id_comp){
         $conex = mainModel::conectar();
+        //dar baja globlar = est_global
         $sql=$conex->prepare("call darBaja_global_componente(:id_comp)");
         $sql->bindParam(":id_comp",$id_comp);
         $sql->execute();
@@ -76,6 +77,7 @@ Class componentesModelo extends mainModel {
 
     protected function delete_componente_modelo($id_comp){
         $conex = mainModel::conectar();
+        //CAMBIO campo est = lo elimina el producto
         $sql=$conex->prepare("call del_global_componente(:id_comp)");
         $sql->bindParam(":id_comp",$id_comp);
         $sql->execute();

@@ -49,7 +49,7 @@
       echo "<script>localStorage.setItem('carritoIn','[]');</script>";
    } 
 
-   if(isset($_POST["id_comp"]) && isset($_POST["d_id_equipo"]) ){
+   if(isset($_POST["id_comp"]) && isset($_POST["d_id_equipo"]) &&  isset($_POST["d_fk_usuario"]) ){
       echo $almCont->save_registro_almacen_controlador();
    }
 
@@ -65,6 +65,8 @@
 
    }
 
+   
+
    if(isset($_POST["id_comp_cs"]) && isset($_POST["id_alm_cs"]) ){
       echo $almCont->obtener_consulta_json_controlador("SELECT cs.id_cs,cs.fk_idcomp,cs.fk_idalm,cs.stock,cs.stock_min,cs.stock_max
       FROM control_stock cs
@@ -75,7 +77,13 @@
    //VISTA RVALESALIDA;RVALE INGRESO; INSIDE ALMACEN
 
    if(isset($_POST["buscarcompajax"]) && isset($_POST["almacenajax"]) ){
-      echo $almCont->paginador_componentes_almacen($_POST["paginadorajax"],10,$_POST["privilegioajax"],$_POST["buscarcompajax"],$_POST["vistaajax"],$_POST["almacenajax"],$_POST["tipoajax"]);
+      echo $almCont->paginador_componentes_almacen($_POST["paginadorajax"],5,$_POST["privilegioajax"],$_POST["buscarcompajax"],$_POST["vistaajax"],$_POST["almacenajax"],$_POST["tipoajax"]);
+   }
+   
+   //VISTA DE KARDEX.PHP
+   if(isset($_POST["buscarcompajax_kardex"]) && isset($_POST["almacenajax_kardex"]) ){
+      echo $almCont->paginador_kardex($_POST["paginadorajax_kardex"],10,$_POST["privilegioajax_kardex"],$_POST["buscarcompajax_kardex"],
+      $_POST["vistaajax_kardex"],$_POST["almacenajax_kardex"],$_POST["unidadajax_kardex"],$_POST["fecha_ini_kardex"],$_POST["fecha_fin_kardex"]);
    }
 
    
@@ -104,16 +112,21 @@
     
 
    //VISTA REPOTEALMACEN
-   
+      //ANULAR VALE SALIDA
    if(isset($_POST["id_vsalida_anular"])){
       echo $almCont->anular_vsalida_controlador();
     }
 
+   //ANULAR VALE INGRESO
     if(isset($_POST["id_vingreso_anular"])){
       echo $almCont->anular_vingreso_controlador();
     }
 
- 
+ //CONSULTAR STOCK
+ if(isset($_POST['id_ac_consultastock'])){
+    echo $almCont->obtener_consulta_json_controlador("SELECT ac.id_ac,ac.fk_idcomp,ac.stock
+    FROM almacen_componente ac where id_ac = {$_POST['id_ac_consultastock']}");
+ }
    
 
 ?>

@@ -160,6 +160,7 @@
             })
             let data = await response.text();
             //console.log(data);
+  
     
             document.querySelector('#catalogo').innerHTML = data;
         }

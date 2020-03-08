@@ -131,7 +131,11 @@
             
             <!--a class="collapse-item" href="<?php //echo SERVERURL;?>NuevoAlmacen/">Nuevo Almacen</a -->
             <a class="collapse-item" href="<?php echo SERVERURL;?>almacen/">Almacen</a>
+            <a class="collapse-item" href="<?php echo SERVERURL;?>almacen/">Vale salida</a>
+            <a class="collapse-item" href="<?php echo SERVERURL;?>almacen/">Vale ingreso</a>
             <h6 class="collapse-header">Reportes</h6>
+            <a class="collapse-item" href="<?php echo SERVERURL;?>almacen/">Kardex</a>
+            <a class="collapse-item" href="<?php echo SERVERURL;?>almacen/">Vales</a>
             <!--a class="collapse-item" href="<?php echo SERVERURL;?>almacen/">Reportes</a-->
           </div>
         </div>

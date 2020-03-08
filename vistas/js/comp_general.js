@@ -1,5 +1,11 @@
 (function(){
-  
+     
+    var id_almacen = document.querySelector('#id_alm').value;
+    var id_usuario = document.querySelector('#id_usuario').value;
+
+    var ls_carritoin2 = "carritoIn2"+"-"+id_usuario+"-"+id_almacen;
+    var ls_carritoGen = "carritoGen"+"-"+id_usuario+"-"+id_almacen;
+    
     function $1(selector){
         return document.querySelector(selector);
     }
@@ -8,13 +14,12 @@
 
         this.constructor = async function(){
 
-            if(!localStorage.getItem("carritoGen")){
-                localStorage.setItem("carritoGen","[]");  
-                
+            if(!localStorage.getItem(ls_carritoGen)){
+                localStorage.setItem(ls_carritoGen,"[]");  
             }
 
-            if(!localStorage.getItem("carritoIn2")){
-                localStorage.setItem("carritoIn2","[]");  
+            if(!localStorage.getItem(ls_carritoin2)){
+                localStorage.setItem(ls_carritoin2,"[]");  
             }
 
             if(!localStorage.getItem("BDcomp_gen")){
@@ -33,7 +38,7 @@
             await localStorage.setItem("BDcomp_gen", JSON.stringify(data))
             this.getBDcomp_gen = await JSON.parse(localStorage.getItem("BDcomp_gen"));
 
-            this.carrito = JSON.parse(localStorage.getItem("carritoGen"));
+            this.carrito = JSON.parse(localStorage.getItem(ls_carritoGen));
             console.log(this.carrito);
             await render.renderCarrito();
             await this.numrowsCarrito();
@@ -46,7 +51,7 @@
             var existe = false;
             
 
-            console.log(item);
+            
             var dato = {};
 
             for (var i in this.getBDcomp_gen){
@@ -57,7 +62,7 @@
                 }  
             }
            
-            console.log(dato);
+           
             
             if(existe == false){
                 location.reload();
@@ -122,14 +127,14 @@
         
                     this.carrito.push(datoN);
                     console.log(this.carrito);
-                    localStorage.setItem("carritoGen",JSON.stringify(this.carrito));
+                    localStorage.setItem(ls_carritoGen,JSON.stringify(this.carrito));
                     datoN = {};
                     return;
                 }
             }
             
 
-            console.log(dato);
+           
             dato.nolinea = max;
             dato.u_nom = u_nom;
             dato.u_sec = u_sec;
@@ -145,7 +150,7 @@
             this.carrito.push(datoX);
             
             console.log(this.carrito);
-            localStorage.setItem("carritoGen",JSON.stringify(this.carrito));
+            localStorage.setItem(ls_carritoGen,JSON.stringify(this.carrito));
             
 
             
@@ -163,13 +168,13 @@
                 //console.log(this.carrito);
             }
             
-            localStorage.setItem("carritoGen",JSON.stringify(this.carrito));
+            localStorage.setItem(ls_carritoGen,JSON.stringify(this.carrito));
             return;
         }
 
         this.varciarCarrito = function(){
             this.carrito.splice(0);
-            localStorage.setItem('carritoGen','[]');
+            localStorage.setItem(ls_carritoGen,'[]');
         }
 
         this.numrowsCarrito = function(){
@@ -354,9 +359,9 @@
             let descripcion = $1('#descripcion'+iditem).value;
             let nparte= $1('#nparte'+iditem).value;
             let nserie= $1('#nserie'+iditem).value;
-
-            console.log();
             let id_unidad = document.querySelector("#session_idunidad").value;
+
+            bdcomp.constructor();
 
             //equipos
             const datos = new FormData();
@@ -475,11 +480,18 @@
             bdcomp.agregarItem(iditem,u_nom,u_sec,id_equi,referencia,nom_equipo,cant);
             render.renderCarrito();
             bdcomp.numrowsCarrito();
+            bdcomp.constructor();
             $('#exampleModalCenter').modal('hide');
         }
 
         //console.log(bdcomp.carrito.length);
     });
+
+    $1('#btnguardarcomp').addEventListener("click", async function(ev){
+        console.log("click");
+        //bdcomp.constructor();
+
+    })
 
     $1('#productosCarrito').addEventListener("click",function(ev){
         ev.preventDefault();

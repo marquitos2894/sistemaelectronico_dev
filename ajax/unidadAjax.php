@@ -8,5 +8,5 @@ $unidadCont = new unidadControlador();
 
 if(isset($_POST["chngecuenta"])){
     session_start(['name'=>'SBP']);
-  echo  $unidadCont->cambiar_cuenta($_POST["chngecuenta"]);  
+    echo  $unidadCont->cambiar_cuenta($_POST["chngecuenta"]);  
 }

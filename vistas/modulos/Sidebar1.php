@@ -59,7 +59,7 @@
           <i class="fas fa-fw fa-wrench"></i>
           <span>Utilities</span>
         </a>
-        <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+        <!--div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">Custom Utilities:</h6>
             <a class="collapse-item" href="utilities-color.html">Colors</a>
@@ -67,7 +67,7 @@
             <a class="collapse-item" href="utilities-animation.html">Animations</a>
             <a class="collapse-item" href="utilities-other.html">Other</a>
           </div>
-        </div>
+        </div-->
       </li>
 
       <!-- Divider -->
@@ -131,7 +131,12 @@
             
             <!--a class="collapse-item" href="<?php //echo SERVERURL;?>NuevoAlmacen/">Nuevo Almacen</a -->
             <a class="collapse-item" href="<?php echo SERVERURL;?>almacen/">Almacen</a>
+            <a class="collapse-item" href="<?php echo SERVERURL;?>RValeSalida/">Vale salida</a>
+            <a class="collapse-item" href="<?php echo SERVERURL;?>RValeIngreso/">Vale ingreso</a>
             <h6 class="collapse-header">Reportes</h6>
+            <a class="collapse-item" href="<?php echo SERVERURL;?>reporteAlmacen/">ingreso/salida</a>
+            <a class="collapse-item" href="<?php echo SERVERURL;?>kardex/">Kardex</a>
+            <a class="collapse-item" href="<?php echo SERVERURL;?>reportevales/">Reporte vales</a>
             <!--a class="collapse-item" href="<?php echo SERVERURL;?>almacen/">Reportes</a-->
           </div>
         </div>

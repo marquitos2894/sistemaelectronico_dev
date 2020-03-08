@@ -1,6 +1,6 @@
 
  $('.FormularioAjax').submit(function(e){
-         console.log( "submit" );
+ 
         e.preventDefault();
         var form=$(this);
         var tipo=form.attr('data-form');

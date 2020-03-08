@@ -22,38 +22,12 @@
 
 <div class="container-fluid">
     <?php  include "vistas/modulos/nav-almacen.php";?> 
-    <ul class="nav nav-tabs">
-        <li class="nav-item">
-            <a class="nav-link " href="<?php echo SERVERURL;?>insideAlmacen/">Almacen</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="<?php echo SERVERURL;?>RValeSalida/">Vale salida</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="<?php echo SERVERURL;?>RValeIngreso/">Vale de ingreso</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link " href="<?php echo SERVERURL;?>ingresoAlmacen/" aria-disabled="true">Ingreso Almacen</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link active" href="<?php echo SERVERURL;?>reporteAlmacen/" aria-disabled="true">Reportes</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link " href="" aria-disabled="true">Import</a>
-            </li>
-    </ul><br>
-    <ul class="nav nav-pills mb-4">
-        <li class="nav-item">
-            <a class="nav-link active" data-toggle="pill" href="#pills-historial"  aria-selected="false">Historial almacen</a>
-            
-        </li>
-        <li class="nav-item">
-            <a class="nav-link"  data-toggle="pill" href="#pills-vales" aria-selected="true">Vales</a>     
-        </li>
-    </ul>
+    <br>
+    
+
     <div class="tab-content" id="pills-tabContent">
 
-        <div class="tab-pane fade show active"  id="pills-historial" role="tabpanel" aria-labelledby="pills-vales-tab">
+    
             <!-- INCIO -->
      
             <div class="card shadow mb-4">
@@ -126,127 +100,7 @@
                 </div>
             </div>
             <!-- FIN -->
-        </div>
-
-        <div class="tab-pane fade" id="pills-vales" role="tabpanel" aria-labelledby="pills-vales-tab">
-            <!-- INCIO -->
-
-            <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">Vales de ingreso/salida</h6>
-                </div>
-                <div class="card-body">
-                    <div class="accordion" id="accordionExample">
-                        <div class="card">
-                            <div class="card-header" id="headingOne">
-                                <h2 class="mb-0">
-                                    <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseValeSalida" aria-expanded="true" aria-controls="collapseValeSalida">
-                                    Reporte de vale de salida
-                                    </button>
-                                </h2>
-                            </div>
-                            <div id="collapseValeSalida" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
-                                <div class="card-body">
-                                    <div class="table-responsive">
-                                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                            <thead>
-                                                <tr>
-                                                    <th>#</th>
-                                                    <th>#Vale</th>
-                                                    <th>Fecha</th>
-                                                    <th>Hora</th>
-                                                    <th>Equipo</th>
-                                                    <th>Horometro</th>
-                                                    <th>Solicitado</th>
-                                                    <th>Atendido por</th>
-                                                    <th>Ver</th>
-                                                    <?php if($_SESSION['privilegio_sbp']==0 or $_SESSION['privilegio_sbp']==1): ?>
-                                                    <th>Cancel</th>
-                                                    <?php endif;?>
-                                                </tr>
-                                            </thead>
-                                            <tfoot>
-                                                <tr>
-                                                    <th>#</th>
-                                                    <th>#Vale</th>
-                                                    <th>Fecha</th>
-                                                    <th>Hora</th>
-                                                    <th>Equipo</th>
-                                                    <th>Horometro</th>
-                                                    <th>Solicitado</th>
-                                                    <th>Atendido por</th>
-                                                    <th>Ver</th>
-                                                    <?php if($_SESSION['privilegio_sbp']==0 or $_SESSION['privilegio_sbp']==1): ?>
-                                                    <th>Cancel</th>
-                                                    <?php endif;?>
-                                                </tr>
-                                            </tfoot>
-                                            <tbody id="dtbody">
-                                                <?php echo $almCont->reporte_valesalida_simple_controlador(0,$id_alm,"vista_simple",$_SESSION['privilegio_sbp']); ?>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>   
-                            </div>
-                        </div>
-
-                        <div class="card">
-                            <div class="card-header" id="headingTwo">
-                                <h2 class="mb-0">
-                                    <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseValeIngreso" aria-expanded="true" aria-controls="collapseValeIngreso">
-                                    Reporte de vale de ingreso
-                                    </button>
-                                </h2>
-                            </div>
-                            <div id="collapseValeIngreso" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
-                                <div class="card-body">
-                                    <div class="table-responsive">
-                                        <table class="table table-bordered" id="dataTable2" width="100%" cellspacing="0">
-                                            <thead>
-                                                <tr>
-                                                    <th>#</th>
-                                                    <th>#Vale</th>
-                                                    <th>Fecha</th>
-                                                    <th>Hora</th>
-                                                    <th>Documento</th>
-                                                    <th>#Documento</th>
-                                                    <th>Remitente</th>
-                                                    <th>Registrado por</th>
-                                                    <th>Ver</th>
-                                                    <?php if($_SESSION['privilegio_sbp']==0 or $_SESSION['privilegio_sbp']==1): ?>
-                                                    <th>Cancel</th>
-                                                    <?php endif;?>
-                                                </tr>
-                                            </thead>
-                                            <tfoot>
-                                                <tr>
-                                                    <th>#</th>
-                                                    <th>#Vale</th>
-                                                    <th>Fecha</th>
-                                                    <th>Hora</th>
-                                                    <th>Documento</th>
-                                                    <th>#Documento</th>
-                                                    <th>Remitente</th>
-                                                    <th>Registrado por</th>
-                                                    <th>Ver</th>
-                                                    <?php if($_SESSION['privilegio_sbp']==0 or $_SESSION['privilegio_sbp']==1): ?>
-                                                    <th>Cancel</th>
-                                                    <?php endif;?>
-                                                </tr>
-                                            </tfoot>
-                                            <tbody id="dtbody">
-                                                <?php echo $almCont->reporte_valeingreso_simple_controlador(0,$id_alm,"vista_simple",$_SESSION['privilegio_sbp']); ?>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>   
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div> 
-            <!-- FIN -->
-        </div>
+     
         
     </div>
    

@@ -35,12 +35,7 @@
         <li class="nav-item">
             <a class="nav-link active" href="<?php echo SERVERURL;?>ingresoAlmacen/" aria-disabled="true">Ingreso Almacen</a>
         </li>
-        <li class="nav-item">
-            <a class="nav-link " href="<?php echo SERVERURL;?>reporteAlmacen/" aria-disabled="true">Reportes</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link " href="#" aria-disabled="true">Import</a>
-        </li>
+
     </ul><br>
     <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#ModalNP">
     <i class="fas fa-plus-circle"></i>
@@ -143,6 +138,7 @@
         <input type="hidden"  name="privilegio_ingresoalmacen" value="<?php echo $_SESSION['privilegio_sbp']?>"/>
         <input type="submit" id="submit" class="btn btn-secondary btn-lg btn-block" value="" disabled='true'/>
         <input type="hidden"  name="privilegio_sbp_ia" value="<?php echo $_SESSION['privilegio_sbp']?>"/>
+        <input type="hidden" id='id_usuario' name="d_fk_usuario" value="<?php echo $_SESSION['id_sbp']?>"/>    
         <div class="RespuestaAjax"></div>
         <div id="alert"></div>
     </form> 
@@ -205,15 +201,15 @@
                     <div class="form-row">
                         <div class="form-group col-sm-6">
                             <label for="inputEmail4">Nparte</label>
-                            <input type="text" name="nparte1" class="form-control" id="inputEmail4" placeholder="Nparte" maxlength="14">
+                            <input type="text" name="nparte1" class="form-control"  placeholder="Nparte" maxlength="14">
                         </div>
                         <div class="form-group col-sm-6">
                             <label for="inputPassword4">Nparte 2</label>
-                            <input type="text" name="nparte2" class="form-control" id="inputPassword4" placeholder="Nparte 2" maxlength="14">
+                            <input type="text" name="nparte2" class="form-control"  placeholder="Nparte 2" maxlength="14">
                         </div>
                         <div  style="display:none" class="form-group col-sm-4">
                             <label for="inputPassword4">Nparte 3</label>
-                            <input type="hidden" name="nparte3" class="form-control" id="inputPassword4" placeholder="Nparte 3">
+                            <input type="hidden" name="nparte3" class="form-control"  placeholder="Nparte 3">
                         </div>
                     </div>
                     <div class="progress" style="height:1px;">
@@ -222,7 +218,7 @@
                     <div class="form-row">
                         <div class="form-group col-sm-8">
                             <label for="inputEmail4">N° Serie</label>
-                            <input type="text" name="nserie" class="form-control" id="inputEmail4" placeholder="N° de serie" maxlength="25">
+                            <input type="text" name="nserie" class="form-control"  placeholder="N° de serie" maxlength="25">
                         </div>
                     </div>
 
@@ -233,7 +229,7 @@
                     <div class="form-row">
                         <div class="form-group col-sm-6">
                             <label for="inputEmail4">Marca</label>
-                            <input type="text" name="marca" class="form-control" id="inputEmail4" placeholder="Marca" maxlength="18">
+                            <input type="text" name="marca" class="form-control"  placeholder="Marca" maxlength="18">
                         </div>
                         <div class="form-group col-sm-6">
                             <label for="inputEmail4">Unidad de medida</label>
@@ -263,8 +259,9 @@
                     </div>
                 </div>
             </div>
-            <input type="hidden"  name="privilegio_sbp" value="<?php echo $_SESSION['privilegio_sbp']?>"/>    
-          
+            <input type="hidden"  name="privilegio_sbp" value="<?php echo $_SESSION['privilegio_sbp']?>"/>
+              
+            
             <div class="RespuestaAjax"></div>
         
         <script src="../vistas/js/newcomponentes.js"></script>       
@@ -272,7 +269,7 @@
         <div class="modal-footer">
         <div id="alert_modal"></div>
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-            <button type="submit" id="btnAgregar" class="btn btn-primary" >Guardar</button>
+            <button type="submit" id="btnguardarcomp" class="btn btn-primary" >Guardar</button>
         </div>
         </form>
     </div>

@@ -8,80 +8,6 @@ if($peticionAjax){
 
 Class almacenControlador extends almacenModelo {
     
-    /*public function paginador_componentes_vales($paginador,$registros,$privilegio,$buscador,$vista,$TipoVale){
-
-        $paginador=mainModel::limpiar_cadena($paginador);
-        $registros=mainModel::limpiar_cadena($registros);
-        $privilegio=mainModel::limpiar_cadena($privilegio);
-        $tabla='';
-        echo $_SESSION['nombre_sbp'];
-        $paginador=(isset($paginador) && $paginador>0)?(int)$paginador:1; 
-        $inicio=($paginador>0)?(($paginador*$registros)-$registros):0;
-
-        $conexion = mainModel::conectar();
-        if($buscador!=""){
-            $datos=$conexion->query("SELECT SQL_CALC_FOUND_ROWS c.id_comp,c.codigo,c.descripcion,c.nparte1,c.nparte2,c.nparte3,c.unidad_med,ac.stock,ac.fk_idalm,ac.id_ac,ac.u_nombre,ac.u_seccion
-                                     FROM componentes c
-                                     INNER JOIN almacen_componente ac
-                                     ON ac.fk_idcomp = c.id_comp WHERE (c.codigo like '%{$buscador}%' or c.descripcion  like '%{$buscador}%'  or c.nparte1 like '%{$buscador}%' or c.nparte2 like '%{$buscador}%' ) and ac.est = 1 and ac.fk_idalm=1 LIMIT {$inicio},{$registros} ");
-        }else{
-            $datos=$conexion->query("SELECT SQL_CALC_FOUND_ROWS c.id_comp,c.codigo,c.descripcion,c.nparte1,c.nparte2,c.nparte3,c.unidad_med,ac.stock,ac.fk_idalm,ac.id_ac,ac.u_nombre,ac.u_seccion
-                                    FROM componentes c
-                                    INNER JOIN almacen_componente ac
-                                    ON ac.fk_idcomp = c.id_comp WHERE ac.est = 1 and ac.fk_idalm=1  LIMIT {$inicio},{$registros}");           
-        }
-        //$datos->execute();
-        $datos = $datos->fetchAll();
-        $total = $conexion->query("SELECT FOUND_ROWS()");
-
-        $total = (int)$total->fetchColumn();
-        //devuel valor entero redondeado hacia arriba 4.2 = 5
-        $Npaginas = ceil($total/$registros);
-        $tabla.='<div class="table-responsive"><table class="table table-bordered">
-        <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Cod.Interno</th>
-                <th scope="col">Descripcion</th>               
-                <th scope="col">NParte</th>
-                <th scope="col">Ubicacion</th>
-                <th scope="col">Stock</th>';
-                if($TipoVale=="Salida"){
-                    $tabla.= '<th scope="col">Solicitado</th>'; 
-                }else{
-                    $tabla.= '<th scope="col">Ingreso</th>'; 
-                }
-                '<th scope="col">Agregar</th>';
-                //programar privilegios
-        $tabla.="</tr>
-        </thead>
-        <tbody>";
-        if($total>=1 && $paginador<=$Npaginas)
-        {
-        $contador = $inicio+1;
-            foreach($datos as $row){
-                $tabla .="<tr>
-                            <td>{$contador}</td>
-                            <td>{$row['codigo']}</td>
-                            <td>{$row['descripcion']}</td>                      
-                            <td>{$row['nparte1']}</td>
-                            <td>{$row['u_nombre']}-{$row['u_seccion']}</td>
-                            <td>{$row['stock']}</td>
-                            <td><input type='number'  id='salida$row[id_ac]' /></td>
-                            <td> <a href='#' class='card-footer-item' id='addItem' data-producto='$row[id_ac]'>+</a></td>";
-                            $contador++;
-                $tabla.="</tr>";
-            }
-        }else{
-            $tabla.='<tr><td colspan="4"> No existen registros</td></tr>';
-        }
-
-        $tabla.='</tbody></table></div>';
-   
-        $tabla.= mainModel::paginador($total,$paginador,$Npaginas,$vista);
-        return $tabla;
-    }*/
-
     public function update_comp_almacen_controlador(){
 
         $fk_idcomp = mainModel::limpiar_cadena($_POST["id_comp_almacen"]);
@@ -138,58 +64,6 @@ Class almacenControlador extends almacenModelo {
         return mainModel::sweet_alert($alerta);
     }        
 
-    /*public function paginador_almacen($paginador,$registros,$vista){
-        $paginador=mainModel::limpiar_cadena($paginador);
-        $registros=mainModel::limpiar_cadena($registros);
-        $vista = mainModel::limpiar_cadena($vista);
-        $contenido ="";
-
-        $paginador=(isset($paginador) && $paginador>0)?(int)$paginador:1; 
-        $inicio=($paginador>0)?(($paginador*$registros)-$registros):0;
-
-        $conexion = mainModel::conectar();
-        $datos = $conexion->query("select SQL_CALC_FOUND_ROWS * from almacen");
-        $datos = $datos->fetchAll();
-        $total = $conexion->query("SELECT FOUND_ROWS()");
-        $total = (int)$total->fetchColumn();
-        $Npaginas = ceil($total/$registros);
-        $contenido .="";
-        $contenido.="
-        
-        <div id='card-almacen' class='card-group' style='width: 80%;' align='center' >";
-        foreach(array_slice($datos,0,4) as $row) {
-            $contenido .= "
-            <div  class='card'>
-                <img src='../vistas/img/almacen.png' class='card-img-top'>
-                <div class='card-body'>
-                <h5 class='card-title'>{$row["Alias"]}</h5>
-                <input type='hidden' id='nom_almacen$row[id_alm]' value='{$row["Alias"]}'/>
-                <p class='card-text'></p>
-                </div>
-                <div class='card-footer'>
-                    <a href='#' class='card-footer-item' id='almacen' data-almacen='$row[id_alm]'>Ingresar</a>
-                </div>
-            </div>";                
-        }
-
-        $contenido.="       
-        <div  class='card'>
-            <img src='' class='card-img-top'>
-            <div class='card-body'>
-            <h5 class='card-title'>Nuevo Almacen</h5>
-            <p class='card-text'></p>
-            </div>
-            <div class='card-footer'>
-            
-            </div>
-        </div>";
-        $contenido.="</div>";
-        $contenido.= mainModel::paginador($total,$paginador,$Npaginas,$vista);
-        return $contenido;
-
-    }*/
-
-    //paginador para la vistas de las unidades
 
     public function paginador_almacen_u($paginador,$registros,$privilegio,$buscador,$vista,$unidad){
 
@@ -269,100 +143,113 @@ Class almacenControlador extends almacenModelo {
         return $tabla;
     }
 
+
+    public function paginador_kardex($paginador,$registros,$privilegio,$buscador,$vista,$id_alm,$unidad,$fecha_ini,$fecha_fin){
+        
+        $paginador=mainModel::limpiar_cadena($paginador);
+        $registros=mainModel::limpiar_cadena($registros);
+        $privilegio=mainModel::limpiar_cadena($privilegio);
+        $buscador=mainModel::limpiar_cadena($buscador);
+        $vista=mainModel::limpiar_cadena($vista);
+        $unidad=mainModel::limpiar_cadena($unidad);
+        $id_alm=mainModel::limpiar_cadena($id_alm);
+  
+
+        $paginador=(isset($paginador) && $paginador>0)?(int)$paginador:1; 
+        $inicio=($paginador>0)?(($paginador*$registros)-$registros):0;
+
+        $tabla='';
+        $conexion = mainModel::conectar();
+
+        if($buscador !=0){
+            $datos=$conexion->query("SELECT SQL_CALC_FOUND_ROWS k.fecha,k.tipo,k.numero,k.codigo,c.descripcion,c.nparte1,k.entrada,k.salida,k.saldo,
+            eu.alias_equipounidad,k.cambio,k.fk_idper,k.fk_idusu
+            FROM kardex_almacen k
+            INNER JOIN componentes c
+            ON c.id_comp = k.codigo
+            INNER JOIN equipo_unidad eu
+            ON eu.id_equipounidad = k.fk_idflota
+            WHERE c.id_comp = {$buscador} AND k.fk_idalm = {$id_alm}  AND date(k.fecha) BETWEEN '{$fecha_ini}' and '{$fecha_fin}'
+            order by fecha desc LIMIT {$inicio},{$registros}");
+
+
+        }else{
+            $datos=$conexion->query("SELECT SQL_CALC_FOUND_ROWS k.fecha,k.tipo,k.numero,k.codigo,c.descripcion,c.nparte1,k.entrada,k.salida,k.saldo,
+            eu.alias_equipounidad,k.cambio,k.fk_idper,k.fk_idusu
+            FROM kardex_almacen k
+            INNER JOIN componentes c
+            ON c.id_comp = k.codigo
+            INNER JOIN equipo_unidad eu
+            ON eu.id_equipounidad = k.fk_idflota
+            WHERE k.fk_idalm = '{$id_alm}'
+            order by fecha desc LIMIT {$inicio},{$registros}");
+        }
+
+        $datos = $datos->fetchAll();
+        $total = $conexion->query("SELECT FOUND_ROWS()");
+        $total = (int)$total->fetchColumn();
+        $Npaginas = ceil($total/$registros);
+        $i=$inicio+1;
+        $tabla.="     
+        <div class='table-responsive-sm'>
+            <table class='table'>
+                <thead class='thead-light'>
+                    <tr>
+                        <th scope='col'>#</th>
+                        <th scope='col'>fecha y hora trans.</th>
+                        <th scope='col'>Tipo transaccion</th>
+                        <th scope='col'>Numero</th>
+                        <th scope='col'>Codigo</th>
+                        <th scope='col'>Producto</th>
+                        <th scope='col'>N° parte</th>
+                        <th scope='col'>Entrada</th>
+                        <th scope='col'>Salida</th>
+                        <th scope='col'>Saldo</th>
+                        <th scope='col'>Equipo</th>
+                    </tr>
+                </thead>
+                <tbody id='contenido_kardex'>         
+       ";
+
+        if($total>=1 && $paginador<=$Npaginas)
+        {   
+            foreach($datos as $row){
+                $badge=mainModel::badge_color($row['tipo']);
+                $tabla.="
+                <tr>
+                    <th scope='row'>{$i}</th>  
+                    <td>{$row['fecha']}</td>
+                    <td><span class='badge badge-{$badge}'>{$row['tipo']} </span></td>
+                    <td>{$row['numero']}</td>
+                    <td>{$row['codigo']}</td>
+                    <td>{$row['descripcion']}</td>
+                    <td>{$row['nparte1']}</td>
+                    <td>{$row['entrada']}</td>
+                    <td>{$row['salida']}</td>
+                    <td>{$row['saldo']}</td>
+                    <td>{$row['alias_equipounidad']}</td>
+                </tr>";
+                $i++;
+            }
+        }else{
+            $tabla.='
+            <tr><td colspan="10"> No existen registros</td></tr>';        
+        }
+
+        $tabla.='
+        </tbody>
+        </table>
+        </div>';
+
+        $tabla.= mainModel::paginador_ajax($total,$paginador,$Npaginas,$vista);
+        
+        return $tabla;
+
+
+    }
     public function validar_paginador_controlador($buscador,$vista,$eliminar_buscador){
         return mainModel::validar_paginador($buscador,$vista,$eliminar_buscador);
     }
-    /* SE REEMPLARON LOS DATATABLES, LA CARGA ES MUY LENTA
-    public function databale_componentes($id_alm,$tipo,$privilegio){
-        
-        $conexion = mainModel::conectar();
-        $datos = $conexion->prepare("SELECT ac.id_ac,c.id_comp,c.descripcion,c.nparte1,c.nparte2,c.nparte3,
-        um.abreviado,ac.stock,ac.fk_idalm,ac.u_nombre,ac.u_seccion,e.Nombre_Equipo,e.Id_Equipo,
-        eu.alias_equipounidad,ac.Referencia,ac.control_stock
-            FROM componentes c
-            INNER JOIN almacen_componente ac ON ac.fk_idcomp = c.id_comp 
-            INNER JOIN equipos e  ON e.Id_Equipo = ac.fk_Id_Equipo
-            INNER JOIN unidad_medida um ON um.id_unidad_med = c.fk_idunidad_med
-            INNER JOIN equipo_unidad eu ON eu.fk_idequipo = e.Id_Equipo
-            WHERE ac.est = 1 and ac.fk_idalm = {$id_alm}  "); 
-        $datos->execute();
-        $datos=$datos->fetchAll(); 
-       
-        $dtable = '';
-        $contador = 1;
-        if($tipo == "simple"){
-
-            foreach($datos as $row){
-            $dtable .="
-                    <tr>
-                        <td>{$contador}</td>
-                        <td>{$row['id_comp']}</td>
-                        <td>{$row['descripcion']}</td>
-                        <td>{$row['nparte1']}</td>
-                        <td>{$row['nparte2']}</td>
-                        <td>{$row['nparte3']}</td>
-                        <td>{$row['u_nombre']}-{$row['u_seccion']}</td>
-                        <td>{$row['stock']}</td>";
-                        if($row['control_stock']==1){
-                            $dtable .="
-                            <td><span style='font-size: 1.2rem; color: Tomato;'><i class='fas fa-check'></i></span></td>";
-                        }else{
-                            $dtable .="
-                            <td><span style='font-size: 1.2rem;'><i class='fas fa-times'></i></span></td>";
-                        }
-        
-                        $dtable .=" 
-                        <td>{$row['abreviado']}</td>
-                        <td>{$row['alias_equipounidad']}</td>
-                        <td>{$row['Referencia']}</td>";
-                        if($privilegio==0 or $privilegio==1){   
-                        $dtable .=" 
-                        <td><a href='#'  data-toggle='modal' data-target='#config_comp' ><span style='font-size: 1.5rem;' ><i id='controlstock' data-producto='{$row['id_ac']}' class='fas fa-cog'></i></span></a></td>";
-                        
-                        $dtable .="
-                        <td>
-                            <form name='Frm_del_id_ac' action='".SERVERURL."ajax/almacenAjax.php' method='POST' class='FormularioAjax' 
-                                data-form='delete' entype='multipart/form-data' autocomplete='off'>
-                                <input type='hidden' name='id_comp_del' value='{$row['id_comp']}'/>
-                                <input type='hidden' name='id_alm_del' value='{$id_alm}'/>
-                                <input type='hidden' name='id_ac_del' value='".mainModel::encryption($row['id_ac'])."'/>
-                                <button type='submit' class='btn btn-danger'><i class='far fa-trash-alt' ></i></button>
-                                <div class='RespuestaAjax'></div>   
-                            </form>
-                        </td>";
-                        }    
-                    $dtable .="
-                    </tr>";    
-            
-                $contador++;
-            }
-            
-        }else{
-            foreach($datos as $row){
-                $dtable .="
-                        <tr>
-                            <td>{$contador}</td>
-                            <td>{$row['id_comp']}</td>
-                            <td>{$row['descripcion']}</td>
-                            <td>{$row['nparte1']}</td>
-                            <td>{$row['alias_equipounidad']}</td>
-                            <td>{$row['Referencia']}</td>
-                            <td>{$row['u_nombre']}-{$row['u_seccion']}</td>
-                            <td>{$row['abreviado']}</td>
-                            <td>{$row['stock']}</td>
-                            <td><input type='number' id='salida{$row['id_ac']}' /></td>
-                            <td> <a href='#' class='card-footer-item' id='addItem' data-producto='{$row['id_ac']}'>+</a></td>
-                        </tr>
-                ";
-                $contador++;
-              }
-    
-          }
-      
-
-      return $dtable;
-
-    }*/
 
 
     public function paginador_log_in_out($paginador,$registros,$privilegio,$buscador,$vista,$id_alm,$tipo,$filtros){
@@ -394,12 +281,13 @@ Class almacenControlador extends almacenModelo {
             if($switch=='false'){
                 if($buscador!=""){
                     $datos=$conexion->query("SELECT SQL_CALC_FOUND_ROWS 'salida','danger',vs.id_vsalida as vale,ac.fk_idcomp,dvs.dv_descripcion as descripcion,dvs.dv_nparte1 as nparte1,
-                    DATE(vs.fecha) AS fecha ,TIME(vs.fecha) as hora,vs.nom_equipo,vs.dr_referencia,vs.nombres,dvs.dv_entregado as cantidad,
+                    DATE(vs.fecha) AS fecha ,TIME(vs.fecha) as hora,eu.alias_equipounidad as nom_equipo,vs.dr_referencia,vs.nombres,dvs.dv_entregado as cantidad,
                     CONCAT(u.Nombre,' ',u.Apellido) as usuario
                     FROM almacen_componente ac
                     INNER JOIN detalle_vale_salida dvs ON dvs.fk_id_ac = ac.id_ac
                     INNER JOIN vale_salida vs ON vs.id_vsalida = dvs.fk_vsalida
                     INNER JOIN usuario u ON u.id_usu = vs.fk_idusuario
+                    INNER JOIN equipo_unidad eu ON eu.id_equipounidad = dvs.fk_idflota 
                     WHERE (dvs.dv_descripcion like '%$buscador%' or dvs.dv_nparte1 like '%$buscador%' or ac.fk_idcomp like '%$buscador%') AND
                     vs.fk_idalm={$id_alm} AND dvs.fk_id_almacen={$id_alm}  AND  vs.est = 1 
                     UNION
@@ -416,12 +304,13 @@ Class almacenControlador extends almacenModelo {
                     
                 }else{
                     $datos=$conexion->query("SELECT SQL_CALC_FOUND_ROWS 'salida','danger',vs.id_vsalida as vale,ac.fk_idcomp,dvs.dv_descripcion as descripcion,dvs.dv_nparte1 as nparte1,
-                    DATE(vs.fecha) AS fecha ,TIME(vs.fecha) as hora,vs.nom_equipo,vs.dr_referencia,vs.nombres,dvs.dv_entregado as cantidad,
+                    DATE(vs.fecha) AS fecha ,TIME(vs.fecha) as hora,eu.alias_equipounidad as nom_equipo,vs.dr_referencia,vs.nombres,dvs.dv_entregado as cantidad,
                     CONCAT(u.Nombre,' ',u.Apellido) as usuario
                     FROM almacen_componente ac
                     INNER JOIN detalle_vale_salida dvs ON dvs.fk_id_ac = ac.id_ac
                     INNER JOIN vale_salida vs ON vs.id_vsalida = dvs.fk_vsalida
                     INNER JOIN usuario u ON u.id_usu = vs.fk_idusuario
+                    INNER JOIN equipo_unidad eu ON eu.id_equipounidad = dvs.fk_idflota 
                     WHERE vs.fk_idalm={$id_alm} AND dvs.fk_id_almacen={$id_alm} AND vs.est = 1 
                     UNION
                     SELECT 'ingreso','success',vi.id_vingreso as vale,ac.fk_idcomp,dvi.dvi_descripcion as descripcion ,dvi.dvi_nparte1 as nparte1,
@@ -437,12 +326,13 @@ Class almacenControlador extends almacenModelo {
             }else{
                 $condiciones = $this->condicionales($tipo,$filtros);                
                 $datos=$conexion->query("SELECT SQL_CALC_FOUND_ROWS 'salida','danger',vs.id_vsalida as vale,ac.fk_idcomp,dvs.dv_descripcion as descripcion,dvs.dv_nparte1 as nparte1,
-                DATE(vs.fecha) AS fecha ,TIME(vs.fecha) as hora,vs.nom_equipo,vs.dr_referencia,vs.nombres,dvs.dv_entregado as cantidad,
+                DATE(vs.fecha) AS fecha ,TIME(vs.fecha) as hora,eu.alias_equipounidad as nom_equipo,vs.dr_referencia,vs.nombres,dvs.dv_entregado as cantidad,
                 CONCAT(u.Nombre,' ',u.Apellido) as usuario
                 FROM almacen_componente ac
                 INNER JOIN detalle_vale_salida dvs ON dvs.fk_id_ac = ac.id_ac
                 INNER JOIN vale_salida vs ON vs.id_vsalida = dvs.fk_vsalida
                 INNER JOIN usuario u ON u.id_usu = vs.fk_idusuario
+                INNER JOIN equipo_unidad eu ON eu.id_equipounidad = dvs.fk_idflota 
                 WHERE vs.fk_idalm={$id_alm} AND dvs.fk_id_almacen={$id_alm}  AND vs.est = 1 {$condiciones[1]} AND date(fecha) between '{$fecha_ini}' and '{$fecha_fin}'
                 UNION
                 SELECT 'ingreso','success',vi.id_vingreso as vale,ac.fk_idcomp,dvi.dvi_descripcion as descripcion ,dvi.dvi_nparte1 as nparte1,
@@ -463,36 +353,39 @@ Class almacenControlador extends almacenModelo {
             if($switch=='false'){
                 if($buscador!=""){
                     $datos=$conexion->query("SELECT SQL_CALC_FOUND_ROWS 'salida','danger',vs.id_vsalida as vale,ac.fk_idcomp,dvs.dv_descripcion as descripcion,dvs.dv_nparte1 as nparte1,
-                    DATE(vs.fecha) AS fecha ,TIME(vs.fecha) as hora,vs.nom_equipo,vs.dr_referencia,vs.nombres,dvs.dv_entregado as cantidad,
+                    DATE(vs.fecha) AS fecha ,TIME(vs.fecha) as hora,eu.alias_equipounidad as nom_equipo,vs.dr_referencia,vs.nombres,dvs.dv_entregado as cantidad,
                 CONCAT(u.Nombre,' ',u.Apellido) as usuario
                 FROM almacen_componente ac
                 INNER JOIN detalle_vale_salida dvs ON dvs.fk_id_ac = ac.id_ac
                 INNER JOIN vale_salida vs ON vs.id_vsalida = dvs.fk_vsalida
                 INNER JOIN usuario u ON u.id_usu = vs.fk_idusuario
+                INNER JOIN equipo_unidad eu ON eu.id_equipounidad = dvs.fk_idflota 
                 WHERE (dvs.dv_descripcion like '%$buscador%' or dvs.dv_nparte1 like '%$buscador%' or ac.fk_idcomp like '%$buscador%') AND
                 vs.fk_idalm={$id_alm} AND dvs.fk_id_almacen={$id_alm} AND vs.est = 1 
                 ORDER BY fecha DESC, hora DESC  LIMIT {$inicio},{$registros}");
                     
                 }else{
                 $datos=$conexion->query("SELECT SQL_CALC_FOUND_ROWS 'salida','danger',vs.id_vsalida as vale,ac.fk_idcomp,dvs.dv_descripcion as descripcion,dvs.dv_nparte1 as nparte1,
-                DATE(vs.fecha) AS fecha ,TIME(vs.fecha) as hora,vs.nom_equipo as nom_equipo,vs.dr_referencia,vs.nombres,dvs.dv_entregado as cantidad,
+                DATE(vs.fecha) AS fecha ,TIME(vs.fecha) as hora,eu.alias_equipounidad as nom_equipo,vs.dr_referencia,vs.nombres,dvs.dv_entregado as cantidad,
                 CONCAT(u.Nombre,' ',u.Apellido) as usuario
                 FROM almacen_componente ac
                 INNER JOIN detalle_vale_salida dvs ON dvs.fk_id_ac = ac.id_ac
                 INNER JOIN vale_salida vs ON vs.id_vsalida = dvs.fk_vsalida
                 INNER JOIN usuario u ON u.id_usu = vs.fk_idusuario
+                INNER JOIN equipo_unidad eu ON eu.id_equipounidad = dvs.fk_idflota 
                 WHERE vs.fk_idalm={$id_alm} AND dvs.fk_id_almacen={$id_alm}  AND vs.est = 1 
                 ORDER BY fecha DESC, hora DESC  LIMIT {$inicio},{$registros}");
                 }
             }else{
                 $condiciones = $this->condicionales($tipo,$filtros); 
                 $datos=$conexion->query("SELECT SQL_CALC_FOUND_ROWS 'salida','danger',vs.id_vsalida as vale,ac.fk_idcomp,dvs.dv_descripcion as descripcion,dvs.dv_nparte1 as nparte1,
-                DATE(vs.fecha) AS fecha ,TIME(vs.fecha) as hora,vs.nom_equipo as nom_equipo,vs.dr_referencia,vs.nombres,dvs.dv_entregado as cantidad,
+                DATE(vs.fecha) AS fecha ,TIME(vs.fecha) as hora,eu.alias_equipounidad as nom_equipo,vs.dr_referencia,vs.nombres,dvs.dv_entregado as cantidad,
                 CONCAT(u.Nombre,' ',u.Apellido) as usuario
                 FROM almacen_componente ac
                 INNER JOIN detalle_vale_salida dvs ON dvs.fk_id_ac = ac.id_ac
                 INNER JOIN vale_salida vs ON vs.id_vsalida = dvs.fk_vsalida
                 INNER JOIN usuario u ON u.id_usu = vs.fk_idusuario
+                INNER JOIN equipo_unidad eu ON eu.id_equipounidad = dvs.fk_idflota 
                 WHERE vs.fk_idalm={$id_alm} AND dvs.fk_id_almacen={$id_alm} AND vs.est = 1  {$condiciones[1]} AND date(fecha) between '{$fecha_ini}' and '{$fecha_fin}'
                 ORDER BY fecha DESC, hora DESC  
                 {$limit}"); 
@@ -696,7 +589,7 @@ Class almacenControlador extends almacenModelo {
             <button type='button' class='btn btn-primary'>
                 Total de productos <span class='badge badge-light'>{$total}</span>
             </button>
-            <div class='table-responsive-sm'><table class='table'>
+            <div class='table-responsive-sm'><table class='table-inverse'>
             <thead>
                 <tr>
                     <th scope='col'>Codigo</th>
@@ -851,13 +744,18 @@ Class almacenControlador extends almacenModelo {
         $fk_idusuario = mainModel::limpiar_cadena($_POST["usuario"]);
         $fk_idpersonal = mainModel::limpiar_cadena($_POST["personal"]);
         $turno = mainModel::limpiar_cadena($_POST["turno"]);
-        $fk_idflota=mainModel::limpiar_cadena($_POST["codequipo"]);
-        $horometro=($_POST["horometro"]=="")?$horometro=0:mainModel::limpiar_cadena($_POST["horometro"]);
+        //$fk_idflota=mainModel::limpiar_cadena($_POST["codequipo"]);
+        //$horometro=($_POST["horometro"]=="")?$horometro=0:mainModel::limpiar_cadena($_POST["horometro"]);
+        $fk_idflota=1;
+        $horometro=0;
+    
         $comentario=mainModel::limpiar_cadena($_POST["comentario"]);   
         $id_alm= mainModel::limpiar_cadena($_POST["id_alm_vs"]);
         $objDateTime = new DateTime('NOW');
         $fecha=$objDateTime->format('Y-m-d H:i:s');
-        $nom_equipo=mainModel::ejecutar_consulta_simple("SELECT eu.alias_equipounidad FROM equipo_unidad eu WHERE eu.id_equipounidad  = {$fk_idflota} ")['alias_equipounidad'];
+        $fecha_despacho=mainModel::limpiar_cadena($_POST["fecha_despacho"]);
+        //$nom_equipo=mainModel::ejecutar_consulta_simple("SELECT eu.alias_equipounidad FROM equipo_unidad eu WHERE eu.id_equipounidad  = {$fk_idflota} ")['alias_equipounidad'];
+        $nom_equipo="sin equipo";   
         $datospersonal = mainModel::ejecutar_consulta_simple("select  concat(p.nom_per,',',p.Ape_per) as nombres,p.dni_per from personal p where id_per = {$fk_idpersonal} ");
         $nombre_per = $datospersonal['nombres'];
         $dni_per = $datospersonal['dni_per'];
@@ -874,17 +772,20 @@ Class almacenControlador extends almacenModelo {
         $dv_entregado[]=$_POST["dv_entregado"];
         $dv_unombre[]=$_POST["dv_unombre"];
         $dv_useccion[]=$_POST["dv_useccion"];
+        $dv_idflota[]=$_POST["dv_idflota"];
+        $dv_horometro[]=$_POST["dv_horometro"];
+        $dv_motivo[]=$_POST["dv_motivo"];
+        $dv_cambio[]=$_POST["dv_cambio"];
+        
         
         
         $datos = [
             "fk_idusuario"=>$fk_idusuario,
             "fk_idpersonal"=>$fk_idpersonal,
             "turno"=>$turno,
-            "fk_idflota"=>$fk_idflota,
-            "horometro"=>$horometro,
             "comentario"=>$comentario,
             "fecha"=>$fecha,
-            "nom_equipo"=>$nom_equipo,
+            "fecha_despacho"=>$fecha_despacho,
             "nombre_per"=>$nombre_per,
             "dni_per"=>$dni_per,
             "id_alm"=>$id_alm,
@@ -904,10 +805,12 @@ Class almacenControlador extends almacenModelo {
             $validar=$validar[0][0];
             
             if($validar==$id_vsalida){
-                $info_dvsalida=almacenModelo::save_dvsalida_modelo($id_vsalida,$id_ac,$dv_descripcion,$dv_nparte1,$dv_stock,$dv_solicitado,$dv_entregado,$dv_unombre,$dv_useccion,$id_alm);
+                $info_dvsalida=almacenModelo::save_dvsalida_modelo($id_vsalida,$id_ac,$dv_descripcion,$dv_nparte1,$dv_stock,$dv_solicitado,
+                $dv_entregado,$dv_unombre,$dv_useccion,$id_alm,$dv_idflota,$dv_horometro,$dv_motivo,$dv_cambio,$fecha,$fk_idusuario,
+                $fk_idpersonal,$datos_referencia);
                 if($id_vsalida!=0){
-                    if($info_dvsalida[0]==""){
-                    mainModel::ejecutar_consulta_simple("UPDATE vale_salida SET est = 0 WHERE id_vsalida = {$id_vsalida}");                       
+                    if($info_dvsalida[0]=='false'){
+                    mainModel::ejecutar_consulta_simple("UPDATE vale_salida SET est = 0,fecha_anulacion=NOW() WHERE id_vsalida = {$id_vsalida} AND fk_idalm={$id_alm}");                       
                         $alerta=[
                             "alerta"=>"simple",
                             "Titulo"=>"Vale salida N°{$id_vsalida} ha sido anulado",
@@ -934,14 +837,16 @@ Class almacenControlador extends almacenModelo {
                         $datos = ["tipo"=>"success","mensaje"=>"<h5><strong>Vale de salida N°{$id_vsalida}</strong> generado con exito !! haga <a href='../PDFvalesalida/{$id_vsalida}/{$id_alm}' target='_blank' >CLICK AQUI </a> para ver su registro, o la pagina se actualizara en 5s</h5> "];
                         
                         $localStorage = [
-                            "BDcomp_gen",
-                            "BDproductos",
-                            "carritoIn",
-                            "carritoIn2",
-                            "carritoS"
+                            "CarritoVs"
                         ];
                         
-                        echo "<script>document.querySelector('#btnvale').disabled = true;</script>";
+                        echo "<script>
+                        document.querySelector('#btnvale').disabled = true;
+                        document.querySelector('#btnagregar').disabled = true;
+                        setTimeout(function(){
+                            window.location.reload(1);
+                         }, 5000);
+                        </script>";
                         echo mainModel::localstorage_reiniciar($localStorage);
                         echo mainModel::bootstrap_alert($datos);
                         //echo "<script>setTimeout('document.location.reload()',10000)</script>";
@@ -994,12 +899,15 @@ Class almacenControlador extends almacenModelo {
     public function save_vingreso_controlador(){
 
         $fk_idusuario = mainModel::limpiar_cadena($_POST["usuario"]);
-        $turno = mainModel::limpiar_cadena($_POST["turno"]);
+        //$turno = mainModel::limpiar_cadena($_POST["turno"]);
+        $turno = "-";
         $ref_documento=mainModel::limpiar_cadena($_POST["ref_documento"]);
         $comentario=mainModel::limpiar_cadena($_POST["comentario"]);
         $id_alm= mainModel::limpiar_cadena($_POST["id_alm_vi"]);
         $objDateTime = new DateTime('NOW');
         $fecha=$objDateTime->format('Y-m-d H:i:s');
+        $fecha_llegada=mainModel::limpiar_cadena($_POST["fecha_llegada"]);
+        
         $fk_idpersonal = mainModel::limpiar_cadena($_POST["personal"]);
         $documento=mainModel::limpiar_cadena($_POST["documento"]);
         //$fk_idpersonal = ($documento==1)? $fk_idpersonal=$fk_idpersonal:$fk_idpersonal=$fk_idusuario; 
@@ -1017,7 +925,7 @@ Class almacenControlador extends almacenModelo {
         
         //Detalle
         $dvi_id_ac[]=$_POST["id_ac_carritoin"];
-        //$dvi_codigo[]=$_POST["dv_codigo"];
+        $dvi_codigo[]=$_POST["dv_codigo"];
         $dvi_descripcion[]=$_POST["dv_descripcion"];
         $dvi_nparte1[]=$_POST["dv_nparte1"];
         $dvi_stock[]=$_POST["dv_stock"];
@@ -1036,6 +944,7 @@ Class almacenControlador extends almacenModelo {
             "fecha"=>$fecha,
             "nombre_per"=>$nombre_per,
             "dni_per"=>$dni_per,
+            "fecha_llegada"=>$fecha_llegada,
             "id_alm"=>$id_alm
         ];
 
@@ -1055,7 +964,8 @@ Class almacenControlador extends almacenModelo {
 
             if($validar==$id_vingreso){
 
-                $ingreso=almacenModelo::save_dvingreso_modelo($id_vingreso,$dvi_id_ac,$dvi_descripcion,$dvi_nparte1,$dvi_stock,$dvi_ingreso,$dvi_nom_equipo,$dvi_fkidflota,$id_alm,$dvi_referencia);
+                $ingreso=almacenModelo::save_dvingreso_modelo($id_vingreso,$dvi_codigo,$dvi_id_ac,$dvi_descripcion,$dvi_nparte1,
+                $dvi_stock,$dvi_ingreso,$dvi_nom_equipo,$dvi_fkidflota,$id_alm,$dvi_referencia,$fecha,$fk_idpersonal,$fk_idusuario);
                 if($id_vingreso!=0){
                     if($ingreso->rowCount()>0){
                         $alerta=[
@@ -1069,11 +979,8 @@ Class almacenControlador extends almacenModelo {
                         
                         
                         $localStorage = [
-                            "BDcomp_gen",
-                            "BDproductos",
-                            "carritoIn",
-                            "carritoIn2",
-                            "carritoS"
+                            "carritoIn-{$fk_idusuario}-{$id_alm}",
+                            "carritoIn2-{$fk_idusuario}-{$id_alm}"
                         ];
                         
                         echo "<script>document.querySelector('#btnvale').disabled = true;</script>";
@@ -1120,13 +1027,7 @@ Class almacenControlador extends almacenModelo {
 
     public function save_registro_almacen_controlador(){
 
-       /* $id_comp = mainModel::limpiar_cadena($_POST["id_comp"]);
-        //$d_descripcion = mainModel::limpiar_cadena($_POST["d_descripcion"]);
-        $d_u_nom = mainModel::limpiar_cadena($_POST["d_u_nom"]);
-        $d_u_sec = mainModel::limpiar_cadena($_POST["d_u_sec"]);
-        $d_id_equipo = mainModel::limpiar_cadena($_POST["d_id_equipo"]);
-        $d_referencia = mainModel::limpiar_cadena($_POST["d_referencia"]);*/
-        
+        //STOCK INICIAL
         //datos #1
         $id_alm= mainModel::limpiar_cadena($_POST["id_alm_frmIA"]);
         $privilegio= mainModel::limpiar_cadena($_POST["privilegio_sbp_ia"]);
@@ -1142,19 +1043,17 @@ Class almacenControlador extends almacenModelo {
         $d_fk_idflota[] = $_POST["d_id_equipo"];
         $d_nom_equipo[] = $_POST["d_nom_equipo"];
         $d_referencia[] = $_POST["d_referencia"];
+        $d_fk_usuario = $_POST["d_fk_usuario"];
         
-        
-        
-
         // se reemplazara por lo datos 1, se reduce a un solo array datos.
         //datos #2
-
 
         $validarPrivilegios=mainModel::privilegios_transact($privilegio);
 
         if($validarPrivilegios){
 
-            $validar=almacenModelo::save_registro_almacen_modelo($id_comp,$d_u_nom,$d_nserie,$d_descripcion,$d_u_sec,$d_fk_idflota,$d_referencia,$id_alm,$d_stock,$d_cant,$t_reg);
+            $validar=almacenModelo::save_registro_almacen_modelo($id_comp,$d_u_nom,$d_nserie,$d_descripcion,$d_u_sec,
+            $d_fk_idflota,$d_referencia,$id_alm,$d_stock,$d_cant,$t_reg,$d_fk_usuario);
             $val_registro=($validar[0]!='')?$val_registro=$validar[0]->rowCount():$val_registro=0;
 
             if($val_registro==0){
@@ -1188,13 +1087,13 @@ Class almacenControlador extends almacenModelo {
 
                     
                     $localStorage = [
-                        "carritoGen",
+                        "carritoGen-{$d_fk_usuario}-{$id_alm}",
                     ];
                     echo mainModel::localstorage_reiniciar($localStorage);
   
                     //Seteamos en el nuevo localstorage los datos enviados de ingreso almacen
                     if($t_reg==1){
-                        echo mainModel::localstorage_set("carritoIn2",$newdatos);
+                        echo mainModel::localstorage_set("carritoIn2-{$d_fk_usuario}-{$id_alm}",$newdatos);
 
                         $alerta=[
                             "alerta"=>"redire",
@@ -1295,17 +1194,6 @@ Class almacenControlador extends almacenModelo {
         return mainModel::obtener_consulta_json($consulta);
     }
 
-   /* public function obtener_consulta_json_controlador($id_alm){
-           
-        $consulta = "SELECT ac.id_ac,c.id_comp,c.descripcion,c.nparte1,
-        c.nparte2,c.nparte3,c.unidad_med,ac.stock,ac.fk_idalm,ac.u_nombre,ac.u_seccion,e.Nombre_Equipo,e.Id_Equipo
-        FROM componentes c
-        INNER JOIN almacen_componente ac ON ac.fk_idcomp = c.id_comp 
-        INNER JOIN equipos e  ON e.Id_Equipo = ac.fk_idequipo 
-        WHERE ac.fk_idalm = {$id_alm} ";
-        return mainModel::obtener_consulta_json($consulta);
-
-    }*/
 
     /********** REPORTES  - VISTA REPOTEALMACEN *******/
 
@@ -1314,8 +1202,8 @@ Class almacenControlador extends almacenModelo {
         $template = "";
         $conexion = mainModel::conectar();
         if($formato == "ticket"){
-            $resp = $conexion->prepare("SELECT vs.id_vsalida, vs.nombres,vs.d_identidad,DATE(vs.fecha) AS fecha,TIME(vs.fecha) AS hora,vs.turno,vs.nom_equipo,
-            vs.horometro,vs.comentario,a.Alias,u.Nombre,u.Apellido,vs.dr_referencia,vs.est
+            $resp = $conexion->prepare("SELECT vs.id_vsalida, vs.nombres,vs.d_identidad,DATE(vs.fecha) AS fecha,TIME(vs.fecha) AS hora,vs.turno,vs.nom_equipo
+            ,DATE(vs.fecha_despacho) as fec_despacho,vs.horometro,vs.comentario,a.Alias,u.Nombre,u.Apellido,vs.dr_referencia,vs.est
             FROM vale_salida vs
             INNER JOIN almacen a ON 
             a.id_alm = vs.fk_idalm
@@ -1325,13 +1213,15 @@ Class almacenControlador extends almacenModelo {
             $resp->execute();
             $resp=$resp->fetchAll();
 
-            $resp_dv = $conexion->prepare("SELECT c.id_comp,dvs.dv_descripcion,dvs.dv_nparte1,dvs.dv_stock,dvs.dv_solicitado,
+            $resp_dv = $conexion->prepare("SELECT c.id_comp,dvs.dv_descripcion,dvs.dv_nparte1,eu.alias_equipounidad as nom_equipo,
             dvs.dv_entregado
             FROM detalle_vale_salida dvs
             INNER JOIN almacen_componente ac
             ON ac.id_ac = dvs.fk_id_ac
             INNER JOIN componentes c
-            ON c.id_comp = ac.fk_idcomp 
+            ON c.id_comp = ac.fk_idcomp
+            INNER JOIN equipo_unidad eu 
+            ON eu.id_equipounidad = dvs.fk_idflota  
             WHERE dvs.fk_vsalida = {$idvs} AND dvs.fk_id_almacen = {$idalm}");
 
             $resp_dv->execute();
@@ -1355,10 +1245,10 @@ Class almacenControlador extends almacenModelo {
                             alt='Logotipo'>
                       
                         <p class='centrado'>
-                        VALE DE SALIDA #0{$row["id_vsalida"]}
+                        VALE DE SALIDA #{$row["id_vsalida"]}
                         <br>
                         <br>".mainModel::dateFormat($row["fecha"])." | {$row["hora"]}
-                        <br>{$row["nom_equipo"]} | {$row["horometro"]} hrs
+                        <br>Despacho: ".mainModel::dateFormat($row["fec_despacho"])." 
                         <br>{$row["dr_referencia"]}
                         <br>{$row["Alias"]}
                         </p>
@@ -1368,9 +1258,8 @@ Class almacenControlador extends almacenModelo {
                                     <th class='codigo'>COD.</th>
                                     <th class='producto'>PRODUCTO</th>
                                     <th class='nparte'>NPARTE</th>
-                                    <th class='cantidad'>STOCK</th>
-                                    <th class='cantidad'>SOL</th>
-                                    <th class='cantidad'>SAL</th>
+                                    <th class='cantidad'>QTY</th>
+                                    <th class='cantidad'>EQUIPO</th>
                                 </tr>
                             </thead>
                             <tbody>";
@@ -1381,9 +1270,8 @@ Class almacenControlador extends almacenModelo {
                                         <td class='codigo'>{$row_dv["id_comp"]}</td>
                                         <td class='producto'>{$row_dv["dv_descripcion"]}</td>
                                         <td class='nparte'>{$row_dv["dv_nparte1"]}</td>
-                                        <td class='cantidad'>{$row_dv["dv_stock"]}</td>
-                                        <td class='cantidad'>{$row_dv["dv_solicitado"]}</td>
                                         <td class='cantidad'>{$row_dv["dv_entregado"]}</td>
+                                        <td class='nparte'>{$row_dv["nom_equipo"]}</td>
                                     </tr>";
                             }
                         
@@ -1395,8 +1283,8 @@ Class almacenControlador extends almacenModelo {
                         <br>
                         <p class='firma'>
                         <hr/>
-                        <br>Solicitante: {$row["nombres"]}</p>
-                        <p class='centrado'>Atendido por: {$row["Nombre"]},{$row["Apellido"]}</p>
+                        <br>Solicita: {$row["nombres"]}</p>
+                        <p class='centrado'>Atendido por {$row["Nombre"]},{$row["Apellido"]}</p>
                     </div>
                     <h1>{$mensaje}</h1>
                 </body>
@@ -1404,8 +1292,8 @@ Class almacenControlador extends almacenModelo {
             }
         }else if($formato=="vista_simple"){
 
-            $resp = $conexion->prepare("SELECT vs.id_vsalida, vs.nombres,vs.d_identidad,DATE(vs.fecha) AS fecha,TIME(vs.fecha) AS hora,vs.turno,
-            vs.nom_equipo,vs.horometro,vs.comentario,a.Alias,u.Nombre,u.Apellido,vs.est
+            $resp = $conexion->prepare("SELECT vs.id_vsalida, vs.nombres,vs.d_identidad,fecha as fecha_hora,DATE(vs.fecha) AS fecha,TIME(vs.fecha) AS hora,vs.turno,
+            vs.nom_equipo,DATE(vs.fecha_despacho) as fec_despacho,vs.horometro,vs.comentario,a.Alias,u.Nombre,u.Apellido,vs.est,vs.fecha_anulacion,u.id_usu
             FROM vale_salida vs
             INNER JOIN almacen a ON 
             a.id_alm = vs.fk_idalm
@@ -1429,20 +1317,38 @@ Class almacenControlador extends almacenModelo {
                     <td>{$row['id_vsalida']}</td>
                     <td>". mainModel::dateFormat($row['fecha']) ."</td>
                     <td>{$row['hora']}</td>
-                    <td>{$row['nom_equipo']}</td>
-                    <td>{$row['horometro']}</td>
+                    <td>". mainModel::dateFormat($row['fec_despacho']) ."</td>
                     <td>{$row['nombres']}</td>
                     <td>{$row['Nombre']}, {$row["Apellido"]}</td>
                     <td><a style='font-size: 2em;' href='../PDFvalesalida/{$row["id_vsalida"]}/{$idalm}' target='_blank' ><i class='fas fa-ticket-alt'></i></a></td>";
                     if($privilegio==0 or $privilegio==1){
-                    $template .="     
-                    <td>
-                        <form name='FrmAnularVS' action='".SERVERURL."ajax/almacenAjax.php' method='POST' class='FormularioAjax' data-form='anular' entype='multipart/form-data' autocomplete='off'>
-                            <input type='hidden' name='id_vsalida_anular' value='{$row['id_vsalida']}' />
-                            <button type='submit' class='btn btn-danger'><i class='fas fa-ban'></i></button>
-                            <div class='RespuestaAjax'></div>
-                        </form>
-                    </td>";
+                        //$disabled=($row['est']==0)?$disabled='disabled':$disabled='';
+                        
+                        $fecha_reg= new DateTime($row['fecha_hora']);
+                        $fecha_actual = new DateTime('NOW');
+                        //$fecha_actual =$objDateTime->format('Y-m-d H:i:s');
+                        $diff = $fecha_reg->diff($fecha_actual);
+                        $diff_days = $diff->days;
+                        $diff_horas = ($diff->h);
+                        ;$display='';
+                        if($row['est']==0){$disabled='disabled';$display='none';
+                        }elseif($diff_days>=1){$disabled='disabled';
+                        }elseif($diff_horas>8){$disabled='disabled';
+                        }else{$disabled='';
+                        }
+                            $template .="     
+                            <td>
+                                <form name='FrmAnularVS' action='".SERVERURL."ajax/almacenAjax.php' method='POST' class='FormularioAjax' data-form='anular' entype='multipart/form-data' autocomplete='off'>
+                                    <input type='hidden' name='id_vsalida_anular' value='{$row['id_vsalida']}' />
+                                    <input type='hidden' name='almacen_vs_anular' value='{$idalm}' />
+                                    <input type='hidden' name='usuario_vs_anular' value='{$row['id_usu']}' />
+                                    
+                                    <button type='submit' style='display:{$display}' class='btn btn-danger' {$disabled}><i class='fas fa-ban'></i></button>
+                                    <div class='RespuestaAjax'></div>
+                                </form>
+                            </td>";
+                        
+  
                     }
                 $template .="
                 </tr>
@@ -1461,7 +1367,7 @@ Class almacenControlador extends almacenModelo {
         $conexion = mainModel::conectar();
 
         if($formato == "ticket"){
-            $resp = $conexion->prepare("SELECT vi.id_vingreso, DATE(vi.fecha) AS fecha ,TIME(vi.fecha) as hora,vi.turno,vi.ref_documento,vi.ref_nrodocumento,
+            $resp = $conexion->prepare("SELECT vi.id_vingreso, DATE(vi.fecha) AS fecha ,TIME(vi.fecha) as hora,vi.fecha_llegada,vi.turno,vi.ref_documento,vi.ref_nrodocumento,
             vi.nombres,u.Nombre,u.Apellido,a.Alias,vi.comentario,vi.est
             FROM vale_ingreso vi
             INNER JOIN almacen a ON 
@@ -1503,11 +1409,11 @@ Class almacenControlador extends almacenModelo {
                             alt='Logotipo'>
                         
                         <p class='centrado'>
-                        VALE DE INGRESO #0{$row["id_vingreso"]}
+                        VALE DE INGRESO #{$row["id_vingreso"]}
                         <br>
                         <br>".mainModel::dateFormat($row["fecha"])." | {$row["hora"]}
+                        <br>Llegada: ".mainModel::dateFormat($row["fecha_llegada"])."
                         <br>{$row["ref_documento"]} : {$row["ref_nrodocumento"]}
-                        
                         <br>{$row["Alias"]}
                         </p>
                         <table>
@@ -1516,9 +1422,9 @@ Class almacenControlador extends almacenModelo {
                                     <th class='codigo'>COD.</th>
                                     <th class='producto'>PRODUCTO</th>
                                     <th class='nparte'>NPARTE</th>
-                                    <th class='cantidad'>ING.</th>
+                                    <th class='cantidad'>QTY</th>
                                     <th class='cantidad'>EQUIPO</th>
-                                    <th class='cantidad'>REF.</th>
+                                    
                                 </tr>
                             </thead>
                             <tbody>";
@@ -1530,7 +1436,7 @@ Class almacenControlador extends almacenModelo {
                                         <td class='nparte'>{$row_dv["dvi_nparte1"]}</td>
                                         <td class='cantidad'>{$row_dv["dvi_ingreso"]}</td>
                                         <td class='cantidad'>{$row_dv["dvi_nombre_equipo"]}</td>
-                                        <td class='cantidad'>{$row_dv["dr_referencia"]}</td>
+                                        
                                     </tr>";
                             }
                             $template .="
@@ -1550,8 +1456,8 @@ Class almacenControlador extends almacenModelo {
             </html>";
             }
         }else if($formato=="vista_simple"){
-            $resp = $conexion->prepare("SELECT vi.id_vingreso, DATE(vi.fecha) AS fecha ,TIME(vi.fecha) as hora,vi.ref_documento,vi.ref_nrodocumento,
-            vi.nombres,u.Nombre,u.Apellido,vi.est
+            $resp = $conexion->prepare("SELECT vi.id_vingreso, vi.fecha as fecha_hora,DATE(vi.fecha) AS fecha ,TIME(vi.fecha) as hora,vi.ref_documento,vi.ref_nrodocumento,
+            vi.nombres,u.Nombre,u.Apellido,vi.est,vi.fk_idusuario
             FROM vale_ingreso vi
             INNER JOIN almacen a ON 
             a.id_alm = vi.fk_idalm
@@ -1581,11 +1487,28 @@ Class almacenControlador extends almacenModelo {
                     <td>{$row['Nombre']}, {$row["Apellido"]}</td>
                     <td><a style='font-size: 2em;' href='../PDFvaleingreso/{$row["id_vingreso"]}/{$idalm}' target='_blank' ><i class='fas fa-ticket-alt'></i></a></td>";
                     if($privilegio==0 or $privilegio==1){
+
+                        $fecha_reg= new DateTime($row['fecha_hora']);
+                        $fecha_actual = new DateTime('NOW');
+                        //$fecha_actual =$objDateTime->format('Y-m-d H:i:s');
+                        $diff = $fecha_reg->diff($fecha_actual);
+                        $diff_days = $diff->days;
+                        $diff_horas = ($diff->h);
+                        ;$display='';
+                        if($row['est']==0){$disabled='disabled';$display='none';
+                        }elseif($diff_days>=1){$disabled='disabled';
+                        }elseif($diff_horas>8){$disabled='disabled';
+                        }else{$disabled='';
+                        }
+                          
+                          
                     $template .=" 
                     <td>
                         <form action='".SERVERURL."ajax/almacenAjax.php' method='POST' class='FormularioAjax' data-form='anular' entype='multipart/form-data' autocomplete='off'>
                             <input type='hidden' name='id_vingreso_anular' value='{$row['id_vingreso']}' />
-                            <button type='submit' class='btn btn-danger'><i class='fas fa-ban'></i></button>
+                            <input type='hidden' name='almacen_vi_anular' value='{$idalm}' />
+                            <input type='hidden' name='usuario_vi_anular' value='{$row['fk_idusuario']}' />
+                            <button type='submit' style='display:{$display}' class='btn btn-danger' {$disabled}><i class='fas fa-ban'></i></button>
                             <div class='RespuestaAjax'></div>
                         </form>
                     </td>";
@@ -1603,9 +1526,26 @@ Class almacenControlador extends almacenModelo {
 
     public function anular_vsalida_controlador(){
         $id_vsalida = mainModel::limpiar_cadena($_POST["id_vsalida_anular"]);
+        $id_alm = mainModel::limpiar_cadena($_POST["almacen_vs_anular"]);
+        $usuario = mainModel::limpiar_cadena($_POST["usuario_vs_anular"]);
+        $objDateTime = new DateTime('NOW');
+        $fecha=$objDateTime->format('Y-m-d H:i:s');
 
-        $validar=almacenModelo::anular_vsalida_modelo($id_vsalida);
-
+        $validar_anulado = mainModel::ejecutar_consulta_simple("SELECT vs.est FROM vale_salida vs WHERE 
+        vs.id_vsalida = {$id_vsalida} AND vs.fk_idalm = {$id_alm} AND est = 0");
+        
+        if($validar_anulado){
+            $alerta=[
+                "alerta"=>"recargar",
+                "Titulo"=>"Vale salida N°{$id_vsalida} ya ha si anulado",
+                "Texto"=>"No puedo voler ha anular este vale",
+                "Tipo"=>"warning"
+            ];
+            return mainModel::sweet_alert($alerta);
+        }else{
+            $validar=almacenModelo::anular_vsalida_modelo($id_vsalida,$id_alm,$fecha,$usuario);
+        }
+        
         if($validar->rowCount()>0){
             $alerta=[
                 "alerta"=>"recargar",
@@ -1631,8 +1571,28 @@ Class almacenControlador extends almacenModelo {
 
 
         $id_vingreso = mainModel::limpiar_cadena($_POST["id_vingreso_anular"]);
+        $id_alm = mainModel::limpiar_cadena($_POST["almacen_vi_anular"]);
+        $usuario = mainModel::limpiar_cadena($_POST["usuario_vi_anular"]);
+        $objDateTime = new DateTime('NOW');
+        $fecha=$objDateTime->format('Y-m-d H:i:s');
 
-        $validar=almacenModelo::anular_vingreso_modelo($id_vingreso);
+
+        $validar_anulado = mainModel::ejecutar_consulta_simple("SELECT vi.est FROM vale_ingreso vi WHERE 
+        vi.id_vingreso = {$id_vingreso}  AND vi.fk_idalm={$id_alm} AND vi.est = 0");
+        
+        if($validar_anulado){
+            $alerta=[
+                "alerta"=>"recargar",
+                "Titulo"=>"Vale ingreso N°{$id_vingreso} ya ha si anulado",
+                "Texto"=>"No puedo voler ha anular este vale",
+                "Tipo"=>"warning"
+            ];
+            return mainModel::sweet_alert($alerta);
+        }else{
+            $validar=almacenModelo::anular_vingreso_modelo($id_vingreso,$id_alm,$fecha,$usuario);
+        }
+
+        
 
         if($validar->rowCount()>0){
             $alerta=[
@@ -1678,7 +1638,7 @@ Class almacenControlador extends almacenModelo {
             $cond_out = "AND (ac.fk_idcomp={$codigoF})";
             if($equipoF!=''){
                 $cond_in = "AND (ac.fk_idcomp={$codigoF} AND dvi.fk_idflota = {$equipoF})";
-                $cond_out = "AND (ac.fk_idcomp={$codigoF} AND vs.fk_idflota = {$equipoF})";  
+                $cond_out = "AND (ac.fk_idcomp={$codigoF} AND dvs.fk_idflota = {$equipoF})";  
             }
             if($referenciaF!=''){
                 $cond_in = "AND (ac.fk_idcomp={$codigoF} AND dvi.dr_referencia='{$referenciaF}')";
@@ -1686,14 +1646,14 @@ Class almacenControlador extends almacenModelo {
             }
             if($equipoF!='' && $referenciaF!='' ){
                 $cond_in = "AND (ac.fk_idcomp={$codigoF} AND dvi.fk_idflota = {$equipoF} AND dvi.dr_referencia='{$referenciaF}')";
-                $cond_out = "AND (ac.fk_idcomp={$codigoF} AND vs.fk_idflota = {$equipoF} AND vs.dr_referencia='{$referenciaF}')";  
+                $cond_out = "AND (ac.fk_idcomp={$codigoF} AND dvs.fk_idflota = {$equipoF} AND vs.dr_referencia='{$referenciaF}')";  
             }
         }else if($equipoF!=''){
             $cond_in = "AND (dvi.fk_idflota = {$equipoF})";
-            $cond_out = "AND (vs.fk_idflota = {$equipoF})";
+            $cond_out = "AND (dvs.fk_idflota = {$equipoF})";
             if($referenciaF !=''){
                 $cond_in = "AND (dvi.fk_idflota = {$equipoF} AND dvi.dr_referencia='{$referenciaF}')";
-                $cond_out = "AND (vs.fk_idflota = {$equipoF} AND vs.dr_referencia = '{$referenciaF}')";  
+                $cond_out = "AND (dvs.fk_idflota = {$equipoF} AND vs.dr_referencia = '{$referenciaF}')";  
             }
         }else if($referenciaF!=''){
             $cond_in = "AND (dvi.dr_referencia='{$referenciaF}')";
@@ -1706,7 +1666,6 @@ Class almacenControlador extends almacenModelo {
 
         $condiciones=[$cond_in,$cond_out];
         return $condiciones;
-
     }
 
     public function combo_personal($val,$vis){
