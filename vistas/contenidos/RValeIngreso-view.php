@@ -76,10 +76,10 @@
                                 <label for="inputEmail4">Tipo Documento</label>                                                         
                                 <select class="form-control" name="documento" id="documento" required>
                                     <option value="">Seleccione documento</option>
-                                    <option value="1">Guia remision</option>
-                                    <option value="2">Devolucion</option>
-                                    <option value="3">Vale despacho</option>
-                                    <option value="4">Existencia en almacen</option>
+                                    <option value="Guia remision">Guia remision</option>
+                                    <option value="Devolucion">Devolucion</option>
+                                    <option value="Vale despacho">Vale despacho</option>
+                                    <option value="Existencia en almacen">Existencia en almacen</option>
                                 </select>    
                             </div>
                             <div class="form-group col-md-3">

@@ -1,2 +1,4 @@
 test/
-Sidebar1.php
+.cpanel.yml
+core/configApp.php
+core/configGeneral.php

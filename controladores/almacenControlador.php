@@ -837,7 +837,7 @@ Class almacenControlador extends almacenModelo {
                         $datos = ["tipo"=>"success","mensaje"=>"<h5><strong>Vale de salida N°{$id_vsalida}</strong> generado con exito !! haga <a href='../PDFvalesalida/{$id_vsalida}/{$id_alm}' target='_blank' >CLICK AQUI </a> para ver su registro, o la pagina se actualizara en 5s</h5> "];
                         
                         $localStorage = [
-                            "CarritoVs"
+                            "CarritoVs-{$fk_idusuario}-{$id_alm}"
                         ];
                         
                         echo "<script>
@@ -912,13 +912,12 @@ Class almacenControlador extends almacenModelo {
         $documento=mainModel::limpiar_cadena($_POST["documento"]);
         //$fk_idpersonal = ($documento==1)? $fk_idpersonal=$fk_idpersonal:$fk_idpersonal=$fk_idusuario; 
         $privilegio=mainModel::limpiar_cadena($_POST["privilegio_in"]);
-        if($documento==1){
+        if($documento !="Devolucion"){
             $id_usuario= mainModel::ejecutar_consulta_simple("SELECT fk_idper FROM usuario WHERE id_usu = {$fk_idusuario}");
             $fk_idpersonal = $id_usuario["fk_idper"];
         }
         
-
-        $documento = ($documento==1)? $documento="guia remision":$documento="devolucion";
+        //$documento = ($documento==1)? $documento="guia remision":$documento="devolucion";
         $datospersonal = mainModel::ejecutar_consulta_simple("select  concat(p.nom_per,',',p.Ape_per) as nombres,p.dni_per from personal p where id_per = {$fk_idpersonal} ");
         $nombre_per = mainModel::limpiar_cadena($datospersonal['nombres']);
         $dni_per = mainModel::limpiar_cadena($datospersonal['dni_per']);
